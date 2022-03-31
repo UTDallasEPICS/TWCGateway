@@ -1,8 +1,9 @@
 
 const Home = () => {
+    console.log("ho,me")
     return ( 
         <div className="home">
-            <a href="/">Home</a>
+            <p>home</p>
         </div>
     );
 }

@@ -1,5 +1,3 @@
-import Home from "./Home";
-import Messages from "./Messages";
 import logo from "./images/The-Warren-Center-logo.png"
 
 const Navbar = () => {
@@ -7,9 +5,8 @@ const Navbar = () => {
         <div className="navbar">
             <img src={logo}/>
             <div className="sections">
-                <Home/>
-                <Messages/>
-                
+                <a href="/home">Home</a>
+                <a href="/messages">Messages</a>
             </div>
         </div>
      );
