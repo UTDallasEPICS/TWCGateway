@@ -10,8 +10,8 @@ function App() {
       {/* defining routes */}
       <BrowserRouter>
         <Routes>
-          <Route path="/home" element={<Home/>}/>
           <Route path="/messages" element={<Messages/>}/>
+          <Route path="/" element={<Home/>}/>
         </Routes>
       </BrowserRouter>
     </>
