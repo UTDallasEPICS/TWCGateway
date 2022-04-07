@@ -17,8 +17,10 @@ const LoginForm = () => {
                     </label>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-                <p class="mt-5 mb-3 text-muted">&copy; 2022</p>
+                <div class = "mt-4"> <a href="#">Reset password</a></div>
+                <p class="mt-3 mb-3 text-muted">&copy; 2022</p>
             </form>
+            
         </div>
         </div>
     );
