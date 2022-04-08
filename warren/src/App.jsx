@@ -15,7 +15,7 @@ function App() {
           <Route path = "/login" element= {<LoginForm/>}/>
           <Route path = "/" element= {<LoginForm/>}/>
           <Route path="/messages" element={<Messages/>}/>
-          <Route path="/home" element={<div><Navbar/><Home/></div>}/>
+          <Route path="/home" element={<div><Navbar/><Home/><TaskForm/></div>}/>
           <Route path='/taskform' element= {<TaskForm/>}/>
         </Routes>
       </BrowserRouter>

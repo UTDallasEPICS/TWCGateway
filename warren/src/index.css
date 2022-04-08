@@ -96,3 +96,7 @@ body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+.col-8{
+  padding-left: 0px;
+}
