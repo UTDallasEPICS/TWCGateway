@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.29db86bc.css",
+    "main.js": "/static/js/main.ced27f82.js",
+    "static/js/787.ce603eda.chunk.js": "/static/js/787.ce603eda.chunk.js",
+    "static/media/The-Warren-Center-logo.png": "/static/media/The-Warren-Center-logo.73e9d8fce51503cba37f.png",
+    "index.html": "/index.html",
+    "main.29db86bc.css.map": "/static/css/main.29db86bc.css.map",
+    "main.ced27f82.js.map": "/static/js/main.ced27f82.js.map",
+    "787.ce603eda.chunk.js.map": "/static/js/787.ce603eda.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.29db86bc.css",
+    "static/js/main.ced27f82.js"
+  ]
+}
