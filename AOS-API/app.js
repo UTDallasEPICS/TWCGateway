@@ -51,3 +51,10 @@ app.post('/DT', (req, res) => {
     res.send('Recieved Task Delete Request for T-ID: ' + req.body.TaskID);
     res.end();
 });
+
+app.post('/CU', function (req, res) {
+    console.log("User Created: " + req.url);
+    console.log(req.body);
+    res.send('Recieved User Creation Request for T-ID: ' + req.body.UserID);
+    res.end();
+});

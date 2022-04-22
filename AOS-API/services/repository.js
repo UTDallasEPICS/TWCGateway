@@ -21,3 +21,31 @@ function retrieveTask(TID) {
 }
 
 module.exports = { retrieveTask };
+
+function createTask() {
+    
+}
+
+function deleteTask() {
+
+}
+
+function updateTask() {
+
+}
+
+function createUser() {
+
+}
+
+function updateUserData() {
+
+}
+
+function deleteUser() {
+
+}
+
+function retrieveUser(UID) {
+
+}
