@@ -1,19 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
 
-* {
-  margin: 0;
-  font-family: "Quicksand";
-  color: #333;
-}
+
 
 .navbar {
-  background-color: #333;
-  padding: 20px;
+  background-color: #f5f5f5 !important;
+  padding: 5px ;
   display: flex;
   align-items: center;
   /*max-width: 600px;*/
   margin: 0 auto;
-  border-bottom: 1px solid #f2f2f2;
+  
 }
 
 .navbar img{
@@ -22,7 +18,7 @@
 }
 
 .navbar h1 {
-  color: #61dafb;
+  background-color: #f5f5f5;
 }
 
 .sections{
@@ -38,7 +34,7 @@
 .navbar a {
   margin: left;
   text-decoration: none;
-  color: #61dafb;
+  background-color: #f5f5f5;
   padding: 6px;
   text-align: rigth;
 }
@@ -49,7 +45,7 @@
 html,
 body {
   height: 100%;
-  background-color: #f5f5f5
+  background-color: #f5f5f5;
 }
 
 .signin-body {
