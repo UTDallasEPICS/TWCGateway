@@ -2,7 +2,7 @@
 
 const TaskForm = () => {
     return (
-        <div class="container">
+        
             <form>
                 <div class="form-row">
                     <div class="col-md-8 mb-3">
@@ -18,7 +18,7 @@ const TaskForm = () => {
                     </div>
                 </div>
             </form>
-        </div>
+        
     );
 }
 
