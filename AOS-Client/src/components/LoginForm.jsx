@@ -16,7 +16,7 @@ const LoginForm = () => {
                     <input type="checkbox" value="remember-me"/> Remember me
                     </label>
                 </div>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" href="/home">Sign in</button>
                 <div class = "mt-4"> <a href="#">Reset password</a></div>
                 <p class="mt-3 mb-3 text-muted">&copy; 2022</p>
             </form>

@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+/warren/node_modules
 /.pnp
 .pnp.js
 
