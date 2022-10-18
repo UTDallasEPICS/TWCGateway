@@ -30,6 +30,7 @@ const DefaultTasks = () => {
                   <th>Confirm</th>
                   <th>Confirmation Date</th>
                   <th>Employee</th>
+                  <th>Member Assigned</th>
                   
                 </tr>
               </thead>
@@ -39,10 +40,10 @@ const DefaultTasks = () => {
                   <td>Generates Written Offer letter for CEO to sign.</td>
                   <td>Basic Onboarding</td>
                   <td>2+ weeks before hire</td>
-                  
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>COO</td>
                 </tr>
                 <tr>
                   <th scope="row">2</th>
@@ -52,6 +53,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>COO</td>
                 </tr>
                 <tr>
                   <th scope="row">3</th>
@@ -61,6 +63,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">4</th>
@@ -70,6 +73,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">5</th>
@@ -79,6 +83,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">6</th>
@@ -88,6 +93,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">7</th>
@@ -97,6 +103,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager/Billing Director</td>
                 </tr>
                 <tr>
                   <th scope="row">8</th>
@@ -106,6 +113,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">9</th>
@@ -115,6 +123,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">10</th>
@@ -124,6 +133,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">11</th>
@@ -133,6 +143,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">12</th>
@@ -142,6 +153,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">13</th>
@@ -151,6 +163,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">14</th>
@@ -160,15 +173,17 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>COO</td>
                 </tr>
                 <tr>
                   <th scope="row">15</th>
                   <td>Identify Desk.</td>
                   <td>Basic Onboarding</td>
-                  <td>10 business days before start</td>
+                  <td>1+ days before start</td>
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">16</th>
@@ -178,6 +193,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">17</th>
@@ -187,6 +203,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">18</th>
@@ -196,6 +213,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">19</th>
@@ -205,6 +223,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">20</th>
@@ -214,6 +233,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Department Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">21</th>
@@ -223,6 +243,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">22</th>
@@ -232,6 +253,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">23</th>
@@ -241,6 +263,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">24</th>
@@ -250,6 +273,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">25</th>
@@ -259,6 +283,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">26</th>
@@ -268,6 +293,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">27</th>
@@ -277,6 +303,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">28</th>
@@ -286,6 +313,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>COO</td>
                 </tr>
                 <tr>
                   <th scope="row">29</th>
@@ -295,6 +323,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">30</th>
@@ -304,6 +333,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
                 <tr>
                   <th scope="row">31</th>
@@ -313,6 +343,7 @@ const DefaultTasks = () => {
                   <td><button><img src={checkMark} alt =""/></button></td>
                   <td>NA</td>
                   <td>NA</td>
+                  <td>Office Manager</td>
                 </tr>
               </tbody>
             </Table>
