@@ -9,6 +9,7 @@ import {
   FormGroup,
   Label,
   Input,
+  Select,
   FormText,
   Dropdown,
   DropdownItem,
@@ -18,6 +19,7 @@ import {
 import { useState } from "react";
 
 
+
 const NewEmployeeForm = () => {
   const [firstname, setFname] = useState('');
   const [lastname, setLname] = useState('');
@@ -25,6 +27,8 @@ const NewEmployeeForm = () => {
   const [jobTitle, setjobTitle] = useState('');
   const [startDate, setstartDate] = useState('');
   const [dropdownOpen, setDropdownOpen]= useState(false); 
+  const [valuedept, setValuedept]= useState('');
+  const [valueoffice, setValueoffice]= useState('');
   const toggle = () => setDropdownOpen((prevState) => !prevState);
 
   return (
@@ -111,22 +115,26 @@ const NewEmployeeForm = () => {
 
               <FormGroup>
                 <Label for="selectDepartment">Department</Label>
-                  <Dropdown  isOpen ={dropdownOpen}  toggle = {function noRefCheck(){}}>
-                    <DropdownToggle caret>Select Department</DropdownToggle>
-                    <DropdownMenu>
-                      <DropdownItem onClick = {function noRefCheck(){}}>Department 1</DropdownItem>
-                      <DropdownItem>Department 2</DropdownItem>
-                      <DropdownItem>Department 3</DropdownItem>
-                      <DropdownItem>Department 4</DropdownItem>
-                      <DropdownItem>Department 5</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+                  <Input  type="select"  name= "Department" value = {valuedept}
+                  onChange = {(e) => setValuedept(e.target.value)}>
+
+
+                      <option>Department 1</option>
+                      <option>Department 2</option>
+                      <option>Department 3</option>
+                      <option>Department 4</option>
+                      <option>Department 5</option>
+                      <option>Department 5</option>
+                </Input>
               </FormGroup>
+
+              
 
               <FormGroup>
                 <Label for="selectoffice">Office</Label>
-                <Input id="selectoffice" name="selectoffice" type="select">
-                  <option hidden value="">Select Office</option>
+                <Input id="selectoffice" name="selectoffice" type="select" value = {valueoffice}
+                  onChange = {(e) => setValueoffice(e.target.value)}>
+                  <option>Select Office</option>
                   <option>Central</option>
                   <option>East</option>
                   <option>West</option>
@@ -158,6 +166,8 @@ const NewEmployeeForm = () => {
               </FormGroup>
               */}
               <Button>Submit</Button>
+              <p>{valuedept}</p>
+              <p>{valueoffice}</p>
             </Form>
           </CardBody>
         </Card>
