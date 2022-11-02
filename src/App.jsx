@@ -4,10 +4,11 @@ import Home from './pages/Home';
 import Messages from './pages/Messages';
 import LoginForm from './components/LoginForm';
 import TaskForm from './components/TaskForm';
-import Account from './pages/Account'
+import Account from './pages/Account';
 import CurrentOnboarding from './pages/CurrentOnboarding';
 import FullLayout from './layouts/FullLayout';
 import NewEmployeeForm from './pages/NewEmployeeForm.js';
+import NewSupervisorForm from './pages/NewSupervisorForm.js';
 import DefaultTasks from './pages/DefaultTasks';
 import { Container } from 'reactstrap';
 
@@ -31,6 +32,7 @@ function App() {
             <Route path='/admin/CurrentOnboarding' element={<CurrentOnboarding/>} />
             <Route path='/admin/NewEmployeeForm' element = {<NewEmployeeForm/>}/>
             <Route path='/admin/DefaultTasks' element = {<DefaultTasks/>}/>
+            <Route path='/admin/NewSupervisorForm' element = {<NewSupervisorForm/>}/>
           </Route>
         </Routes>
       </BrowserRouter>

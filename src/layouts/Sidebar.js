@@ -14,6 +14,11 @@ const navigation = [
     
   },
   {
+    title: "New Supervisor Form",
+    href: "/admin/NewSupervisorForm",
+    
+  },
+  {
     title: "Current Onboarding",
     href: "/admin/CurrentOnboarding",
     
@@ -23,6 +28,7 @@ const navigation = [
     href: "/admin/DefaultTasks",
     
   },
+
   
 ];
 
