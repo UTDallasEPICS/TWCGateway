@@ -1,6 +1,10 @@
 import logo from "./images/The-Warren-Center-logo.png"
+import { useAuth0 } from "@auth0/auth0-react";
 
 const Navbar = () => {
+
+    const { logout } = useAuth0();
+
     return (
         <div>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -18,9 +22,12 @@ const Navbar = () => {
                             <a class="nav-link" href="/admin">Admin</a>
                         </li>
 
-                        <li class="nav-item">
+                        {/* <li class="nav-item">
                             <a class="nav-link" href="/login">Sign Out</a>
-                        </li>
+                        </li> */}
+                        <button onClick={() => logout({ returnTo: window.location.origin })}>
+                        Log Out
+                        </button>
                     </ul>
                 </div>
             </nav>

@@ -10,10 +10,26 @@ import FullLayout from './layouts/FullLayout';
 import NewEmployeeForm from './pages/NewEmployeeForm.js';
 import DefaultTasks from './pages/DefaultTasks';
 import { Container } from 'reactstrap';
+import {useState, useEffect} from 'react';
+import DatabaseFunctions from './Database/DatabaseFunctions.js';
 
 
 function App() {
   
+  const [dataBase, setDb] = useState([])
+
+  useEffect( () => {
+    fetchDB();
+  }, [])
+
+  const fetchDB = async () => {
+    const response = await fetch("http://localhost:5001/Employee");
+    const data = await response.json();
+    setDb(data);
+  }
+
+
+
   return (
     <>
      
@@ -30,7 +46,7 @@ function App() {
             <Route path='/admin/Account/EditInformation' element = {<div></div>}/>
             <Route path='/admin/CurrentOnboarding' element={<CurrentOnboarding/>} />
             <Route path='/admin/NewEmployeeForm' element = {<NewEmployeeForm/>}/>
-            <Route path='/admin/DefaultTasks' element = {<DefaultTasks/>}/>
+            <Route path='/admin/DefaultTasks' element = {<DefaultTasks/>}/>  
           </Route>
         </Routes>
       </BrowserRouter>
@@ -38,6 +54,9 @@ function App() {
   );
 }
 
+//<Route path='/signIn' element = {<DatabaseFunctions/>}/> 
+//<Route path='/confirmTask' element = {<DatabaseFunctions/>}/>
+//<Route path='/makeAccount' element = {<DatabaseFunctions/>}/> 
 
 export default App;
 
