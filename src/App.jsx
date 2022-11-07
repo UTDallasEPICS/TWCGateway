@@ -10,6 +10,9 @@ import FullLayout from './layouts/FullLayout';
 import NewEmployeeForm from './pages/NewEmployeeForm.js';
 import NewSupervisorForm from './pages/NewSupervisorForm.js';
 import DefaultTasks from './pages/DefaultTasks';
+import  Home_newhire from './pages/Home_newhire'; 
+import Navbar_newhire from './components/Navbar_newhire';
+
 import { Container } from 'reactstrap';
 
 
@@ -24,7 +27,8 @@ function App() {
           <Route path = "/login" element= {<LoginForm/>}/>
           <Route path = "/" element= {<LoginForm/>}/>
           <Route path="/messages" element={<Messages/>}/>
-          <Route path="/home" element={<div><Navbar/><Home/><Container><TaskForm/></Container></div>}/>
+          <Route path= "/home_newhire" element = {<div><Navbar_newhire/><Home_newhire/><Container><CurrentOnboarding/></Container></div>}/>
+          <Route path="/home" element={<div><Navbar/><Home/><Container><CurrentOnboarding/></Container></div>}/>
           <Route path= "/admin" element={ <div><Navbar/><FullLayout/></div>}>
             <Route path="/admin/Account" element={<Account/>}/>
             <Route path='/admin/Account/ChangePassword' element = {<div></div>}/>

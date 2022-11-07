@@ -123,7 +123,7 @@ import {
                     onChange = {(e) => setsuperValuedept(e.target.value)}>
   
   
-                        <option>Department 1</option>
+                        <option >Department 1</option>
                         <option>Department 2</option>
                         <option>Department 3</option>
                         <option>Department 4</option>

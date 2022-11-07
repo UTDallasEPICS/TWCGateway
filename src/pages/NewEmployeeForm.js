@@ -130,8 +130,6 @@ return (
               </Input>
             </FormGroup>
 
-            
-
             <FormGroup>
               <Label htmlFor="selectoffice">Office</Label>
               <Input  required id="selectoffice" name="selectoffice" type="select" value = {valueoffice}
@@ -167,7 +165,7 @@ return (
               </FormText>
             </FormGroup>
             */}
-            <Button type = "submit">Submit</Button>
+            <Button type = "button">Submit</Button>
           </Form>
         </CardBody>
       </Card>
