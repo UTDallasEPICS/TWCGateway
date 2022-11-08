@@ -10,10 +10,10 @@ const client = new Client({
 })
 
 var email = 'bad@yahoo.com';
-var accountID = -1;
+var accountID = 2;
 var userName = '';
 var userRole = '';
-var taskID = -1;
+var taskID = 2;
 
 
 // connect to database
@@ -36,6 +36,7 @@ async function connect() {
     }
 }
 
+// works with test database
 app.get("/signIn", async (req, resSign) => {
     try{
         const results = await client.query("select * from public.employee where email = '"+email+"'");
@@ -78,41 +79,50 @@ app.get("/Employee", async (req, res) => {
     }
 });
 
+// works with test database
 app.put("/confirmTask", async (req, res) => {
     try{
-        const results = await client.query("UPDATE public.task_list SET confirmed = TRUE WHERE taskID = "+taskID);
+        const results = await client.query('UPDATE public.task_list SET confrim_status = TRUE WHERE "taskID" = '+taskID);
         res.json(results);
+        console.log("update successful");
+
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
-        res.send("there was an error");
+        res.send("there was an error" + e.stack);
     }
 });
 
+// works for test database
 app.post("/insertNewTaskGroup", async (req, res) => {
     try{
         const results = await client.query("select * from public.employee");
-        /*
+        
         await client.query("INSERT INTO public.task_list (task_description, department_name,"+
         " deadline, member_assigned, assigned_employee_id) VALUES "
-        +"('t1', 'b1', 2022-10-26, 'm1', "+accountID+")"
-        +"('t2', 'b2', 2022-10-26, 'm2', "+accountID+")"
-        +"('t3', 'b3', 2022-10-26, 'm3', "+accountID+")"
-        +"('t4', 'b4', 2022-10-26, 'm4', "+accountID+")"
-        +"('t5', 'b5', 2022-10-26, 'm5', "+accountID+")");
-        */
+        +"('t1', 'b1', '2022-10-26', 'm1', "+accountID+")"
+        +"('t2', 'b2', '2022-10-26', 'm2', "+accountID+")"
+        +"('t3', 'b3', '2022-10-26', 'm3', "+accountID+")"
+        +"('t4', 'b4', '2022-10-26', 'm4', "+accountID+")"
+        +"('t5', 'b5', '2022-10-26', 'm5', "+accountID+")");
+        
+
         res.json(results);
         console.log("insert successful")
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
-        res.send("there was an error");
+        res.send("there was an error" + e.stack);
     }
 });
 
+// works with test database
 app.get("/displayEmployeeTaskGroup", async (req, res) => {
     try{
-        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = 1")
+        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = 2");
+
+        console.log('for loop start');
+
         for(var i = 0; i < results.rowCount; i++){
             var number = i+1;
             var task = results.rows[i].task;
@@ -121,8 +131,10 @@ app.get("/displayEmployeeTaskGroup", async (req, res) => {
             var confirmationDate = results.rows[i].confirmationDate;
             var employee = results.rows[i].employee;
             var member_assigned = results.rows[i].member_assigned;
-            console.log(number, task, department, deadline, confirmationDate, employee, member_assigned);
+            console.log(number +" "+ task +" "+ department +" "+ deadline +" "+ confirmationDate +" "+ employee +" "+ member_assigned);
         }
+        res.json("number of tasks = " + results.rowCount);
+        console.log('for loop successful');
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
