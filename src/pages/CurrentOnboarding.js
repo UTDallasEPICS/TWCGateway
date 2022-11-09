@@ -3,6 +3,33 @@ import trash from '../assets/images/logos/trash.svg';
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 
+const testarray = [10,20,30,40];
+let elementArray = [<tr></tr>, <tr></tr>];
+var elements = Array(30).fill(<tr>hello</tr>);
+
+
+function taskFiller(taskList, elements){
+  try{
+    for(let i = 0; i < elements.length; i++){
+      elements[i]=<tr>
+                  <th scope="row">{i+1}</th>
+                  <td>{taskList[i%4]}</td>
+                  <td>{taskList[i%4]}</td>
+                  <td>{taskList[i%4]}</td>
+                  <td><button><img src={trash} alt =""/></button></td>
+                  </tr>;
+    }
+    console.log(elements);
+    return elements;
+  }catch(e){
+    console.log("there was an error");
+    console.log(e);
+    return e;
+  }
+};
+
+taskFiller(testarray);
+
 const CurrentOnboarding = () => {
   return (
     <Row>
@@ -33,28 +60,7 @@ const CurrentOnboarding = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>This is example task #1</td>
-                  <td>Manager Name</td>
-                  <td>Date</td>
-                  
-                  <td><button><img src={trash} alt =""/></button></td>
-                </tr>
-                <tr>
-                  <th scope="row">2</th>
-                  <td>This is example task #2</td>
-                  <td>Manager Name</td>
-                  <td>Date</td>
-                  <td><button><img src={trash} alt =""/></button></td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>This is example task #3</td>
-                  <td>Manager Name</td>
-                  <td>Date</td>
-                  <td><button><img src={trash} alt =""/></button></td>
-                </tr>
+                {taskFiller(testarray,elements)}
               </tbody>
             </Table>
           </CardBody>

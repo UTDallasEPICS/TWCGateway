@@ -15,6 +15,51 @@ var userName = '';
 var userRole = '';
 var taskID = 2;
 
+var account = {
+    email: 'bad@yahoo.com',
+    accountID: -1,
+    userName: '',
+    userRole: '',
+    department: '',
+    password: ''
+};
+
+async function signIn(req, res, account, email){
+    try{
+        const results = await client.query("select * from public.employee where email = '"+email+"'")
+        if(results.rowCount == 1){
+            account.email = results.rows[0].email;
+            account.accountID = results.rows[0].accountid;
+            account.userRole = results.rows[0].account_role;
+            account.department = results.rows[0].account_department;
+            account.userName = results.rows[0].name;
+            account.password = results.rows[0].password;
+        }
+        else{
+            console.log("no matching account was found");
+        }
+
+        if(userRole == "Admin"){
+            console.log("go to admin");
+            //resSign.json("go to admin");
+        }
+        if(userRole == "Supervisor"){
+            console.log("go to supervisor");
+            //resSign.json("go to supervisor");
+
+        }
+        if(userRole == "NewHire"){
+            console.log("go to new hire");
+            //resSign.json("go to new hire");
+        }
+
+        res.json(results.rows[0].name);
+    } catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+};
 
 // connect to database
 connect();
@@ -73,6 +118,53 @@ app.get("/Employee", async (req, res) => {
         const results = await client.query("select * from public.employee");
         res.json(results.rows[0].name);
     }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+app.get("/EmployeeTest", async (req, res) => {
+    try{
+        signIn(req,res,account);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
+    try{
+        const results = await client.query("select * from public.employee where email = '"+email+"'")
+        if(results.rowCount == 1){
+            account.email = results.rows[0].email;
+            account.accountID = results.rows[0].accountid;
+            account.userRole = results.rows[0].account_role;
+            account.department = results.rows[0].account_department;
+            account.userName = results.rows[0].name;
+            account.password = results.rows[0].password;
+        }
+        else{
+            console.log("no matching account was found");
+        }
+
+        if(userRole == "Admin"){
+            console.log("go to admin");
+            //resSign.json("go to admin");
+        }
+        if(userRole == "Supervisor"){
+            console.log("go to supervisor");
+            //resSign.json("go to supervisor");
+
+        }
+        if(userRole == "NewHire"){
+            console.log("go to new hire");
+            //resSign.json("go to new hire");
+        }
+
+        res.json(results.rows[0].name);
+    } catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
         res.send("there was an error");
