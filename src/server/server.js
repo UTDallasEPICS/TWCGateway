@@ -1,6 +1,20 @@
+//import {taskFiller} from './Database/DatabaseFunctions.js';
+//import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+
+
 const express = require('express')
 const { Client } =  require("pg")
 const app = express()
+
+const cors=require("cors");
+const corsOptions ={
+   origin:'*', 
+   credentials:true,            //access-control-allow-credentials:true
+   optionSuccessStatus:200,
+}
+
+app.use(cors(corsOptions)) // Use this after the variable declaration
+
 const client = new Client({
     user: "team",
     password: "epic",
@@ -22,6 +36,16 @@ var account = {
     userRole: '',
     department: '',
     password: ''
+};
+
+var task ={
+    number: 0,
+    description: '',
+    department: '',
+    deadline: '',
+    confirmationDate: '',
+    employee: '',
+    member_assigned: ''
 };
 
 async function signIn(req, res, account, email){
@@ -174,6 +198,7 @@ app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
 // works with test database
 app.put("/confirmTask", async (req, res) => {
     try{
+        const date = new Date();
         const results = await client.query('UPDATE public.task_list SET confrim_status = TRUE WHERE "taskID" = '+taskID);
         res.json(results);
         console.log("update successful");
@@ -215,18 +240,27 @@ app.get("/displayEmployeeTaskGroup", async (req, res) => {
         const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = 2");
 
         console.log('for loop start');
+        var taskList = Array(38).fill(task);
 
         for(var i = 0; i < results.rowCount; i++){
             var number = i+1;
-            var task = results.rows[i].task;
+            task.number = number;
+            var description = results.rows[i].task;
+            task.description = description;
             var department = results.rows[i].department;
+            task.department = department;
             var deadline = results.rows[i].deadline;
+            task.deadline = deadline;
             var confirmationDate = results.rows[i].confirmationDate;
+            task.confirmationDate = confirmationDate;
             var employee = results.rows[i].employee;
+            task.employee = employee;
             var member_assigned = results.rows[i].member_assigned;
-            console.log(number +" "+ task +" "+ department +" "+ deadline +" "+ confirmationDate +" "+ employee +" "+ member_assigned);
+            task.member_assigned = member_assigned;
+            console.log(number +" "+ description +" "+ department +" "+ deadline +" "+ confirmationDate +" "+ employee +" "+ member_assigned);
+            taskList[i] = task;
         }
-        res.json("number of tasks = " + results.rowCount);
+        res.json(results.rows[0].department);
         console.log('for loop successful');
     }catch(e){
         console.error(`query failed ${e}`);

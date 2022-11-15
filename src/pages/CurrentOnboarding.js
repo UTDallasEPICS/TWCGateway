@@ -2,10 +2,10 @@ import ProjectTables from "../components/dashboard/ProjectTable";
 import trash from '../assets/images/logos/trash.svg';
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
+import {useState, useEffect} from 'react';
 
 const testarray = [10,20,30,40];
-let elementArray = [<tr></tr>, <tr></tr>];
-var elements = Array(30).fill(<tr>hello</tr>);
+var elements = Array(38).fill(<tr>hello</tr>);
 
 
 function taskFiller(taskList, elements){
@@ -28,9 +28,21 @@ function taskFiller(taskList, elements){
   }
 };
 
-taskFiller(testarray);
 
 const CurrentOnboarding = () => {
+
+  const [dataBase, setDb] = useState([])
+
+  useEffect( () => {
+    fetchDB();
+  }, [])
+
+  const fetchDB = async () => {
+    const response = await fetch("http://localhost:5001/Employee");
+    const data = await response.json();
+    setDb(data);
+  }
+
   return (
     <Row>
      
@@ -44,7 +56,7 @@ const CurrentOnboarding = () => {
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
             <i className="bi bi-card-text me-2"> </i>
-            Employee Name
+            Employee Name {dataBase}
           </CardTitle>
           <CardBody className="">
             <TaskForm/>
