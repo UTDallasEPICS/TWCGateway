@@ -1,6 +1,7 @@
 
 
  function taskFiller(taskList){
+  
     try{
         var elements = Array(38);
         for(let i = 0; i < elements.length; i++){

@@ -92,24 +92,17 @@ async function connect() {
         await client.connect();
         console.log(`connected`);
         const res = await client.query('SELECT * FROM public.employee');
-        const resSign = await client.query("SELECT * FROM public.employee");
         const resTask = await client.query("SELECT * FROM public.task_list");
-        //console.log(res.rows[0].name);
-        //console.log(res.rows);
-        //console.log(resSign.rows[0].password);
-        //const pword = resSign.rows[0].password;
-        //console.log(typeof(pword));
-        
     } catch(e){
         console.error(`connection failed ${e}`);
     }
 }
 
 // works with test database
-app.get("/signIn", async (req, resSign) => {
+app.get("/signIn", async (req, res) => {
     try{
         const results = await client.query("select * from public.employee where email = '"+email+"'");
-        resSign.json(results.rows[0].account_role + " " + results.rows[0].name);
+        res.json(results.rows[0].account_role + " " + results.rows[0].name);
         console.log(results.rows[0].name);
         userName = results.rows[0].name;
         userRole = results.rows[0].account_role;
@@ -132,7 +125,7 @@ app.get("/signIn", async (req, resSign) => {
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
-        resSign.send("there was an error");
+        res.send("there was an error");
     }
 });
 
@@ -140,7 +133,7 @@ app.get("/signIn", async (req, resSign) => {
 app.get("/Employee", async (req, res) => {
     try{
         const results = await client.query("select * from public.employee");
-        res.json(results.rows[0].name);
+        res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
@@ -148,15 +141,7 @@ app.get("/Employee", async (req, res) => {
     }
 });
 
-app.get("/EmployeeTest", async (req, res) => {
-    try{
-        signIn(req,res,account);
-    }catch(e){
-        console.error(`query failed ${e}`);
-        console.log(e.stack);
-        res.send("there was an error");
-    }
-});
+
 
 app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
     try{
@@ -239,29 +224,7 @@ app.get("/displayEmployeeTaskGroup", async (req, res) => {
     try{
         const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = 2");
 
-        console.log('for loop start');
-        var taskList = Array(38).fill(task);
-
-        for(var i = 0; i < results.rowCount; i++){
-            var number = i+1;
-            task.number = number;
-            var description = results.rows[i].task;
-            task.description = description;
-            var department = results.rows[i].department;
-            task.department = department;
-            var deadline = results.rows[i].deadline;
-            task.deadline = deadline;
-            var confirmationDate = results.rows[i].confirmationDate;
-            task.confirmationDate = confirmationDate;
-            var employee = results.rows[i].employee;
-            task.employee = employee;
-            var member_assigned = results.rows[i].member_assigned;
-            task.member_assigned = member_assigned;
-            console.log(number +" "+ description +" "+ department +" "+ deadline +" "+ confirmationDate +" "+ employee +" "+ member_assigned);
-            taskList[i] = task;
-        }
-        res.json(results.rows[0].department);
-        console.log('for loop successful');
+        res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
