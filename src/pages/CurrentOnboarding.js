@@ -1,5 +1,5 @@
 import ProjectTables from "../components/dashboard/ProjectTable";
-import trash from '../assets/images/logos/trash.svg';
+import checkMark from '../assets/images/logos/checkmark.svg';
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import {useState, useEffect} from 'react';
@@ -30,14 +30,14 @@ var task ={
 const testarray = [10,20,30,40];
 function displayFiller(taskList){
   try{
-    var elements = Array(2).fill(<tr>hello</tr>);
+    var elements = Array(taskList.length).fill(<tr>hello</tr>);
     for(let i = 0; i < elements.length; i++){
           elements[i]=<tr>
                   <th scope="row">{i + 1}</th>
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button><img src={trash} alt =""/></button></td>
+                  <td><button><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -55,7 +55,6 @@ function displayFiller(taskList){
 function taskFillerVersion2(results){
   try{
     let taskList = [];
-    console.log(results.rowCount);
     for(var i = 0; i < results.rowCount; i++){
       task.number = i+1;
       task.description = String(results.rows[i].task_description);
@@ -85,7 +84,7 @@ function taskFiller(taskList){
                   <td>{taskList[i%4]}</td>
                   <td>{taskList[i%4]}</td>
                   <td>{taskList[i%4]}</td>
-                  <td><button><img src={trash} alt =""/></button></td>
+                  <td><button><img src={checkMark} alt =""/></button></td>
                   </tr>;
     }
     console.log(elements);

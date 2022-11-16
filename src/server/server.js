@@ -223,7 +223,6 @@ app.post("/insertNewTaskGroup", async (req, res) => {
 app.get("/displayEmployeeTaskGroup", async (req, res) => {
     try{
         const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = 2");
-
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
