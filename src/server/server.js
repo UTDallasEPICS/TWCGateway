@@ -220,9 +220,10 @@ app.post("/insertNewTaskGroup", async (req, res) => {
 
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
-app.get("/displayEmployeeTaskGroup", async (req, res) => {
+app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
     try{
-        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = 2");
+        const {id} = req.params;
+        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = $1", [id]);
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);

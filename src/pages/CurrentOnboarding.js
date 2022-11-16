@@ -4,6 +4,8 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import {useState, useEffect} from 'react';
 
+const accountID = 2;
+
 class Task{
   constructor(number, description, department,
      deadline, confirmationDate, employee, member_assigned){
@@ -106,7 +108,7 @@ const CurrentOnboarding = () => {
   }, [])
 
   const fetchDB = async () => {
-    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup");
+    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/:"+accountID);
     const data = await response.json();
     //console.log("fetch test" + data.rowCount + data.rows[0].task_description);
     setDb(data);
