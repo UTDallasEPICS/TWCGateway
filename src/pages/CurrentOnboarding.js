@@ -77,28 +77,6 @@ function taskFillerVersion2(results){
 
 }
 
-function taskFiller(taskList){
-  try{
-    var elements = Array(38).fill(<tr>hello</tr>);
-    for(let i = 0; i < elements.length; i++){
-      elements[i]=<tr>
-                  <th scope="row">{i+1}</th>
-                  <td>{taskList[i%4]}</td>
-                  <td>{taskList[i%4]}</td>
-                  <td>{taskList[i%4]}</td>
-                  <td><button><img src={checkMark} alt =""/></button></td>
-                  </tr>;
-    }
-    console.log(elements);
-    return elements;
-  }catch(e){
-    console.log("there was an error");
-    console.log(e);
-    return e;
-  }
-};
-
-
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([])
@@ -108,7 +86,7 @@ const CurrentOnboarding = () => {
   }, [])
 
   const fetchDB = async () => {
-    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/:"+accountID);
+    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
     const data = await response.json();
     //console.log("fetch test" + data.rowCount + data.rows[0].task_description);
     setDb(data);
@@ -145,7 +123,6 @@ const elements = displayFiller(taskList);
                   <th>Confirmation Date</th>
                   <th>Employee</th>
                   <th>Member Assigned</th>
-                  
                 </tr>
               </thead>
               <tbody>
