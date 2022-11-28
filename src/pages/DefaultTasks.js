@@ -237,7 +237,7 @@ const DefaultTasks = () => {
                 </tr>
                 <tr>
                   <th scope="row">21</th>
-                  <td>Collect HR documents:  Driver's license and Auto Insurance,  license, transcripts, CPR, direct deposit.</td>
+                  <td>Collect HR documents: Driver's license and Auto Insurance, license, transcripts, CPR, direct deposit.</td>
                   <td>Basic Onboarding</td>
                   <td>First Day</td>
                   <td><button><img src={checkMark} alt =""/></button></td>
@@ -397,7 +397,7 @@ const DefaultTasks = () => {
                 </tr>
                 <tr>
                   <th scope="row">37</th>
-                  <td>Take picture in TWC shirt – save in Common Drive, print and put on poster</td>
+                  <td>Take picture in TWC shirt - save in Common Drive, print and put on poster</td>
                   <td>Basic Onboarding</td>
                   <td>First Day</td>
                   <td><button><img src={checkMark} alt =""/></button></td>
