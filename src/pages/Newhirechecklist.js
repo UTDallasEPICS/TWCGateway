@@ -8,11 +8,12 @@ const accountID = 2;
 
 class Task{
   constructor(number, description, department,
-     deadline, confirmationDate, employee, member_assigned){
+     deadline, confrim, confirmationDate, employee, member_assigned){
       this.number = number;
       this.description = description;
       this.department = department;
       this.deadline = deadline;
+      this.confrim = confrim; 
       this.confirmationDate = confirmationDate;
       this.employee = employee;
       this.member_assigned = member_assigned;
@@ -23,9 +24,10 @@ var task ={
   number: 0,
   description: 'hi',
   department: 'hi',
-  deadline: 'hi',
+  deadline: '0000-00-00T00:00:00.000Z',
+  confrim :'nope',
   confirmationDate: 'hi',
-  employee: 'hi',
+  employee: 'Not Completed',
   member_assigned: 'hi'
 };
 
@@ -39,13 +41,13 @@ function displayFiller(taskList){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button><img src={checkMark} alt =""/></button></td>
+                  <td>{taskList[i].confrim}</td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
                   </tr>;
     }
-    //console.log(elements);
+    console.log(elements);
     return elements;
   }catch(e){
     console.log("there was an error");
@@ -61,45 +63,35 @@ function taskFillerVersion2(results){
       task.number = i+1;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
-      task.deadline = String(results.rows[i].deadline);
-      task.confirmationDate = String(results.rows[i].confrim_date);
-      task.employee = String(results.rows[i].employee_name);
+      task.deadline = results.rows[i].deadline.substring(0, results.rows[i].deadline.indexOf('T'));
+      if(String(results.rows[i].confrim_status) === "true")
+      {
+        task.confrim = "DONE!";
+        task.confirmationDate = String(results.rows[i].confrim_date);
+        task.employee = String(results.rows[i].employee_name);
+      }
+      else
+      {
+        task.confrim = "NOT DONE";
+        task.confirmationDate = "";
+        task.employee = "";
+      }
       task.member_assigned = String(results.rows[i].member_assigned);
       const testTask = new Task(task.number, task.description,
-         task.department, task.deadline, task.confirmationDate,
+         task.department, task.deadline, task.confrim, task.confirmationDate,
          task.employee, task.member_assigned);
-      taskList.push(testTask);    
+      taskList.push(testTask);  
     }
-    return taskList;
+        {return taskList}
   }catch(e){
     console.log(e);
   }
 
 }
 
-function taskFiller(taskList){
-  try{
-    var elements = Array(38).fill(<tr>hello</tr>);
-    for(let i = 0; i < elements.length; i++){
-      elements[i]=<tr>
-                  <th scope="row">{i+1}</th>
-                  <td>{taskList[i%4]}</td>
-                  <td>{taskList[i%4]}</td>
-                  <td>{taskList[i%4]}</td>
-                  <td><button><img src={checkMark} alt =""/></button></td>
-                  </tr>;
-    }
-    console.log(elements);
-    return elements;
-  }catch(e){
-    console.log("there was an error");
-    console.log(e);
-    return e;
-  }
-};
 
 
-const CurrentOnboarding = () => {
+const Newhirechecklist = () => {
 
   const [dataBase, setDb] = useState([])
 
@@ -114,14 +106,15 @@ const CurrentOnboarding = () => {
     setDb(data);
   }
 
+
 const taskList = taskFillerVersion2(dataBase);
-const elements = displayFiller(taskList);
+const elementstrue = displayFiller(taskList);
 
   return (
     <Row>
      
       <Col lg="12">
-        <ProjectTables />
+       { /*<ProjectTables />*/}
       </Col>
       {/* --------------------------------------------------------------------------------*/}
       {/* table-3*/}
@@ -130,10 +123,10 @@ const elements = displayFiller(taskList);
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
             <i className="bi bi-card-text me-2"> </i>
-            Employee Name {5}
+            Hello! This is your Onboarding Checklist
           </CardTitle>
           <CardBody className="">
-            <TaskForm/>
+          { /* <TaskForm/>*/}
             <Table bordered striped>
               <thead>
                 <tr>
@@ -145,11 +138,10 @@ const elements = displayFiller(taskList);
                   <th>Confirmation Date</th>
                   <th>Employee</th>
                   <th>Member Assigned</th>
-                  
                 </tr>
               </thead>
               <tbody>
-                {elements}
+                {elementstrue}
               </tbody>
             </Table>
           </CardBody>
@@ -161,4 +153,4 @@ const elements = displayFiller(taskList);
   );
 };
 
-export default CurrentOnboarding;
+export default Newhirechecklist;

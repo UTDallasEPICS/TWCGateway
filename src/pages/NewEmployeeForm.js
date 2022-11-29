@@ -25,10 +25,29 @@ const [valueoffice, setValueoffice]= useState('');
 
 const handleSubmit = (e) => { 
   const data = {firstname, lastname, email, jobTitle, startDate, valuedept, valueoffice}
+  e.preventDefault(); 
+  console.log(data);
+  fetchDB();
+};
 
-  
-}
-
+const fetchDB = async() =>{
+  const response = await fetch("http://localhost:5001/insertNewTaskGroup", {
+    method: "POST", 
+    headers: {
+      "Content-Type": "application/json",
+    },
+    email: JSON.stringify({email}), 
+    firstname: JSON.stringify({firstname}), 
+  });
+  setEmail("");
+  setFname("");
+  setLname("");
+  setjobTitle("");
+  setstartDate(""); 
+  setValuedept("");
+  setValueoffice("");
+  {/* make a rest api call that outs the data in the database*/}
+} 
 return (
   <Row>
     <Col>
@@ -165,7 +184,7 @@ return (
               </FormText>
             </FormGroup>
             */}
-            <Button type = "button">Submit</Button>
+            <button>Submit</button>
           </Form>
         </CardBody>
       </Card>

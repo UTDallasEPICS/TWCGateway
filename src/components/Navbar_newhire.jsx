@@ -1,4 +1,7 @@
 import logo from "./images/The-Warren-Center-logo.png"
+import profilepic from "./images/profilepic.png"
+import home from "./images/home.png"
+import signout from "./images/signout.png"
 
 const Navbar_newhire = () => {
     return (
@@ -8,18 +11,18 @@ const Navbar_newhire = () => {
                 <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
                 </button>
-                <div className="collapse navbar-collapse" id="navbarNavDropdown">
+                <div     style={{ flexDirection: "row", justifyContent: "flex-end"}} className="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul className="navbar-nav">
                         <li className="nav-item active">
-                            <a className="nav-link" href="/home_newhire">Home <span className="sr-only">(current)</span></a>
-                        </li>
-                        
-                        <li className="nav-item">
-                            <a className="nav-link" href="/profile_newhire">Profile</a>
+                            <a className="nav-link" href="/home_newhire"><img style={{ width: 40, height: 40 }}  src={home} alt="Home"></img><span className="sr-only">(current)</span></a>
                         </li>
 
                         <li className="nav-item">
-                            <a className="nav-link" href="/login">Sign Out</a>
+                            <a className="nav-link" href="/New_hire_profile"><img style={{ width: 40, height: 40 }}  src={profilepic} alt="Profile" /></a>
+                        </li>
+
+                        <li className="nav-item">
+                            <a className="nav-link" href="/login"><img style={{ width: 40, height: 40 }}  src={signout} alt="Sign Out"></img></a>
                         </li>
                     </ul>
                 </div>

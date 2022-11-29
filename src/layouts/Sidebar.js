@@ -16,7 +16,6 @@ const navigation = [
   {
     title: "New Supervisor Form",
     href: "/admin/NewSupervisorForm",
-    
   },
   {
     title: "Current Onboarding",
