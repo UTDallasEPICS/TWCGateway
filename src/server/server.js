@@ -1,6 +1,8 @@
 const express = require('express')
 const { Client } =  require("pg")
 const app = express()
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
 
 const cors=require("cors");
 const corsOptions ={
@@ -179,13 +181,16 @@ app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
 });
 
 // works with test database
-app.put("/confirmTask/:date/:employeeName/:task", async (req, res) => {
+app.put("/confirmTask/:date/:employeeName/:task_num/:emp_num", async (req, res) => {
     try{
         const date = req.params['date'];
         const employeeName = req.params['employeeName'];
-        const task = req.params['task']; 
+        const task = req.params['task_num'];
+        const emp_num = req.params['emp_num']; 
 
-        const results = await client.query("UPDATE public.task_list SET confirm_status = true, employee_name = '"+employeeName+"', confirm_date = '"+date+"' WHERE task_id = "+task);
+        console.log("trying to update " + task);
+
+        const results = await client.query("UPDATE public.task_list SET confirm_status = true, employee_name = '"+employeeName+"', confirm_date = '"+date+"' WHERE task_num = "+task+" AND assigned_employee_id = " + emp_num);
         res.json(results);
         console.log("update successful");
 
@@ -292,7 +297,7 @@ app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
 app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
     try{
         const {dep} = req.params;
-        const results = await client.query("SELECT * FROM public.task_list WHERE department_name = '"+dep+"'");
+        const results = await client.query("SELECT * FROM public.task_list WHERE department_name = '"+dep+"' ORDER BY assigned_employee_id, task_num");
         console.log(results);
         res.json(results);
     }catch(e){

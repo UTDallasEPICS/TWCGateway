@@ -3,6 +3,7 @@ import checkMark from '../assets/images/logos/checkmark.svg';
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
 import {useState, useEffect} from 'react';
+import axios from 'axios';
 
 const accountID = 6;
 const depName = "Basic Onboarding";
@@ -31,6 +32,32 @@ var task ={
   member_assigned: 'hi'
 };
 
+async function confirm(emp_name, emp_num, task_num, date){
+  try{
+    console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
+
+    const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
+	  const data = { firstName: 'John', secondName: 'Doe', email: 'jd@gmail.com' };
+	  const config = { 'content-type': 'application/json' };
+
+    const fin = await axios.put(url);
+
+    
+    // const fin = await fetch(putFunction);
+
+    //axios.put(putFunction);
+    //const data = await fin.json();
+
+    
+    console.log("I have confirmed task " + task_num);
+    //console.log("trying to show the data " + data);
+  }catch(e){
+    console.log("there was an error");
+    console.log(e);
+    return e;
+  }
+};
+
 function displayFillerSingleEmployee(taskList){
   try{
     var elements = Array(taskList.length).fill(<tr>hello</tr>);
@@ -40,7 +67,7 @@ function displayFillerSingleEmployee(taskList){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button><img src={checkMark} alt =""/></button></td>
+                  <td><button onClick={() => confirm("Lisa",3,3,'2022-8-8')}><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -57,13 +84,13 @@ function displayFillerSingleEmployee(taskList){
 function taskFillerForSingleEmployee(results, empNum){
   try{
     let taskList = [];
-    console.log(results.rowCount);
+    console.log(results.rows[0]);
     for(var i = empNum*38; i < (empNum+1)*38; i++){
       task.number = results.rows[i].task_num;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
       task.deadline = String(results.rows[i].deadline);
-      task.confirmationDate = String(results.rows[i].confrim_date);
+      task.confirmationDate = String(results.rows[i].confirm_date);
       task.employee = String(results.rows[i].employee_name);
       task.member_assigned = String(results.rows[i].member_assigned);
       const testTask = new Task(task.number, task.description,
@@ -82,7 +109,7 @@ function taskFillerForMultipleEmployees(results, numEmployee){
     // call taskFiller for single employee for every employee in 
     var employeeTasks = [];
     var tempList = [];
-
+    console.log("taskfiller multiple test: " + results);
     for(var i = 0; i < numEmployee; i++){
    
       tempList = taskFillerForSingleEmployee(results, i);
@@ -155,6 +182,7 @@ const CurrentOnboarding = () => {
     
     const data = await response.json();
     const data2 = await response2.json();
+
     if(sup){
     setDb(data);
     }
@@ -165,10 +193,14 @@ const CurrentOnboarding = () => {
 
 //const taskList = taskFillerForSingleEmployee(dataBase, 0);
 //const elements = displayFillerSingleEmployee(taskList);
-
+  console.log(dataBase.rowCount);
 
   const taskList = taskFillerForMultipleEmployees(dataBase, 4);
+
+
   const elements = displayFillerMultipleEmployees(taskList);
+
+  //var elements = [];
 
   return (
     <Row>
