@@ -32,6 +32,63 @@ var task ={
   member_assigned: 'hi'
 };
 
+
+
+const CurrentOnboarding = () => {
+
+  const [dataBase, setDb] = useState([]);
+
+  useEffect( () => {
+    fetchDB();
+  }, [])
+
+  const fetchDB = async () => {
+    
+    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
+  
+    
+    const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+depName);
+    
+    const data = await response.json();
+    const data2 = await response2.json();
+
+    if(sup){
+      setDb(data);
+    }
+    else{
+      setDb(data2);
+    }
+  }
+
+
+//const taskList = taskFillerForSingleEmployee(dataBase, 0);
+//const elements = displayFillerSingleEmployee(taskList);
+  console.log(typeof dataBase);
+  var elements = [];
+  if(typeof dataBase.rowCount !== "undefined"){
+    var taskList = taskFillerForMultipleEmployees(dataBase, 4);
+
+
+    var elements = displayFillerMultipleEmployees(taskList);
+  }
+
+
+  return (
+    <Row>
+     
+      <Col lg="12">
+        <ProjectTables />
+      </Col>
+      {/* --------------------------------------------------------------------------------*/}
+      {/* table-3*/}
+      {/* --------------------------------------------------------------------------------*/}
+     
+                {elements}
+
+    </Row>
+  );
+};
+
 async function confirm(emp_name, emp_num, task_num, date){
   try{
     console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
@@ -42,7 +99,7 @@ async function confirm(emp_name, emp_num, task_num, date){
 
     const fin = await axios.put(url);
 
-    
+    window.location.reload();    
     // const fin = await fetch(putFunction);
 
     //axios.put(putFunction);
@@ -67,7 +124,7 @@ function displayFillerSingleEmployee(taskList){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button onClick={() => confirm("Lisa",3,3,'2022-8-8')}><img src={checkMark} alt =""/></button></td>
+                  <td><button type ="button" onClick={() => confirm("willy",5,20,'2022-8-8')}><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -164,58 +221,5 @@ function displayFillerMultipleEmployees(employeeTasks){
     console.log(e);
   }
 }
-
-const CurrentOnboarding = () => {
-
-  const [dataBase, setDb] = useState([]);
-
-  useEffect( () => {
-    fetchDB();
-  }, [])
-
-  const fetchDB = async () => {
-    
-    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
-  
-    
-    const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+depName);
-    
-    const data = await response.json();
-    const data2 = await response2.json();
-
-    if(sup){
-    setDb(data);
-    }
-    else{
-      setDb(data2);
-    }
-  }
-
-//const taskList = taskFillerForSingleEmployee(dataBase, 0);
-//const elements = displayFillerSingleEmployee(taskList);
-  console.log(dataBase.rowCount);
-
-  const taskList = taskFillerForMultipleEmployees(dataBase, 4);
-
-
-  const elements = displayFillerMultipleEmployees(taskList);
-
-  //var elements = [];
-
-  return (
-    <Row>
-     
-      <Col lg="12">
-        <ProjectTables />
-      </Col>
-      {/* --------------------------------------------------------------------------------*/}
-      {/* table-3*/}
-      {/* --------------------------------------------------------------------------------*/}
-     
-                {elements}
-
-    </Row>
-  );
-};
 
 export default CurrentOnboarding;
