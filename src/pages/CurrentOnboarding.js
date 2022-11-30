@@ -11,7 +11,7 @@ var sup = false;
 
 class Task{
   constructor(number, description, department,
-     deadline, confirmationDate, employee, member_assigned){
+     deadline, confirmationDate, employee, member_assigned, assigned_employee_id, task_num){
       this.number = number;
       this.description = description;
       this.department = department;
@@ -19,6 +19,8 @@ class Task{
       this.confirmationDate = confirmationDate;
       this.employee = employee;
       this.member_assigned = member_assigned;
+      this.assigned_employee_id = assigned_employee_id;
+      this.task_num = task_num;
      }
 }; 
 
@@ -29,7 +31,9 @@ var task ={
   deadline: 'hi',
   confirmationDate: 'hi',
   employee: 'hi',
-  member_assigned: 'hi'
+  member_assigned: 'hi',
+  assigned_employee_id: 0,
+  task_num: 0
 };
 
 
@@ -89,9 +93,12 @@ const CurrentOnboarding = () => {
   );
 };
 
-async function confirm(emp_name, emp_num, task_num, date){
+async function confirm(emp_name, emp_num, task_num){
   try{
     console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
+
+    var date = new Date();
+    var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
 
     const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
 	  const data = { firstName: 'John', secondName: 'Doe', email: 'jd@gmail.com' };
@@ -100,14 +107,8 @@ async function confirm(emp_name, emp_num, task_num, date){
     const fin = await axios.put(url);
 
     window.location.reload();    
-    // const fin = await fetch(putFunction);
-
-    //axios.put(putFunction);
-    //const data = await fin.json();
-
     
     console.log("I have confirmed task " + task_num);
-    //console.log("trying to show the data " + data);
   }catch(e){
     console.log("there was an error");
     console.log(e);
@@ -115,7 +116,7 @@ async function confirm(emp_name, emp_num, task_num, date){
   }
 };
 
-function displayFillerSingleEmployee(taskList){
+function displayFillerSingleEmployee(taskList, emp_num){
   try{
     var elements = Array(taskList.length).fill(<tr>hello</tr>);
     for(let i = 0; i < elements.length; i++){
@@ -124,7 +125,7 @@ function displayFillerSingleEmployee(taskList){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button type ="button" onClick={() => confirm("willy",5,20,'2022-8-8')}><img src={checkMark} alt =""/></button></td>
+                  <td><button type ="button" onClick={() => confirm("willy",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -150,9 +151,17 @@ function taskFillerForSingleEmployee(results, empNum){
       task.confirmationDate = String(results.rows[i].confirm_date);
       task.employee = String(results.rows[i].employee_name);
       task.member_assigned = String(results.rows[i].member_assigned);
-      const testTask = new Task(task.number, task.description,
-         task.department, task.deadline, task.confirmationDate,
-         task.employee, task.member_assigned);
+      task.assigned_employee_id = results.rows[i].assigned_employee_id;
+      task.task_num = results.rows[i].task_num;
+      const testTask = new Task(task.number, 
+         task.description,
+         task.department, 
+         task.deadline, 
+         task.confirmationDate,
+         task.employee, 
+         task.member_assigned, 
+         task.assigned_employee_id, 
+         task.task_num);
       taskList.push(testTask);    
     }
     return taskList;
@@ -191,7 +200,7 @@ function displayFillerMultipleEmployees(employeeTasks){
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
-        Employee Name {i+1}
+        Employee ID {employeeTasks[i][0].assigned_employee_id}
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>
@@ -208,7 +217,7 @@ function displayFillerMultipleEmployees(employeeTasks){
             </tr>
           </thead>
           <tbody>
-            {displayFillerSingleEmployee(employeeTasks[i])}
+            {displayFillerSingleEmployee(employeeTasks[i], i+1)}
           </tbody>
         </Table>
       </CardBody>
