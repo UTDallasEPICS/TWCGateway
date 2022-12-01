@@ -24,30 +24,64 @@ const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
 
 const handleSubmit = (e) => { 
-  const data = {firstname, lastname, email, jobTitle, startDate, valuedept, valueoffice}
   e.preventDefault(); 
-  console.log(data);
+  //console.log(data);
   fetchDB();
+  fetchDB2(); 
 };
 
-const fetchDB = async() =>{
-  const response = await fetch("http://localhost:5001/insertNewTaskGroup", {
-    method: "POST", 
-    headers: {
-      "Content-Type": "application/json",
-    },
-    email: JSON.stringify({email}), 
-    firstname: JSON.stringify({firstname}), 
-  });
-  setEmail("");
-  setFname("");
-  setLname("");
-  setjobTitle("");
-  setstartDate(""); 
-  setValuedept("");
-  setValueoffice("");
-  {/* make a rest api call that outs the data in the database*/}
-} 
+const fetchDB = async() =>{ 
+  const name = firstname + " " + lastname; 
+  const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
+  try{
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ valuedept +"/"+ 'newhire', {
+      method: "POST",
+    });
+  }
+  catch(e)
+  {
+    console.log(e); 
+    console.log("there was an error"); 
+  }
+};
+
+const fetchDB2 = async() =>{ 
+  try{
+    const response = await fetch("http://localhost:5001/getEmployeedata/"+email);
+    const data = await response.json();
+    
+    console.log(data.rows[0].accountid); 
+    
+    delete data.fields; 
+    delete data._parsers;
+    delete data._types;
+    delete data.RowCtor;
+    delete data.rowAsArray;
+    delete data.command;
+    delete data.rowCount;
+    delete data.oid;
+    try{
+      await fetch("http://localhost:5001/insertNewTaskGroup/" + data.rows[0].accountid +"/"+ startDate, {
+        method: "POST",
+      });
+    }
+    catch(e)
+    {
+      console.log(e); 
+      console.log("there was an error"); 
+    }
+  }
+  catch(e)
+  {
+    console.log(e); 
+    console.log("there was an error"); 
+  }
+};
+
+
+
+
+
 return (
   <Row>
     <Col>

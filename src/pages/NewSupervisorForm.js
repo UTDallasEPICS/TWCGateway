@@ -28,8 +28,26 @@ import {
       console.log(data); 
       Array.from(document.querySelectorAll("input")).forEach(
         input => (input.value = "")  );
+  
+      e.preventDefault(); 
+      fetchDB();
 
     }
+    
+    const fetchDB = async() =>{ 
+      const name = supervisorfirstname + " " + supervisorlastname; 
+      const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
+      try{
+        await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valuesupervisordept +"/"+ valueaccess, {
+          method: "POST",
+        });
+      }
+      catch(e)
+      {
+        console.log(e); 
+        console.log("there was an error"); 
+      }
+    };
   
     return (
       <Row>

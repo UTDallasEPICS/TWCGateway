@@ -4,16 +4,16 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import {useState, useEffect} from 'react';
 
-const accountID = 2;
+const accountID = 10;
 
 class Task{
   constructor(number, description, department,
-     deadline, confrim, confirmationDate, employee, member_assigned){
+     deadline, confirm, confirmationDate, employee, member_assigned){
       this.number = number;
       this.description = description;
       this.department = department;
       this.deadline = deadline;
-      this.confrim = confrim; 
+      this.confirm = confirm; 
       this.confirmationDate = confirmationDate;
       this.employee = employee;
       this.member_assigned = member_assigned;
@@ -25,7 +25,7 @@ var task ={
   description: 'hi',
   department: 'hi',
   deadline: '0000-00-00T00:00:00.000Z',
-  confrim :'nope',
+  confirm :'nope',
   confirmationDate: 'hi',
   employee: 'Not Completed',
   member_assigned: 'hi'
@@ -41,7 +41,7 @@ function displayFiller(taskList){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td>{taskList[i].confrim}</td>
+                  <td>{taskList[i].confirm}</td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -64,21 +64,21 @@ function taskFillerVersion2(results){
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
       task.deadline = results.rows[i].deadline.substring(0, results.rows[i].deadline.indexOf('T'));
-      if(String(results.rows[i].confrim_status) === "true")
+      if(String(results.rows[i].confirm_status) === "true")
       {
-        task.confrim = "DONE!";
-        task.confirmationDate = String(results.rows[i].confrim_date);
+        task.confirm = "DONE!";
+        task.confirmationDate = String(results.rows[i].confirm_date);
         task.employee = String(results.rows[i].employee_name);
       }
       else
       {
-        task.confrim = "NOT DONE";
+        task.confirm = "NOT DONE";
         task.confirmationDate = "";
         task.employee = "";
       }
       task.member_assigned = String(results.rows[i].member_assigned);
       const testTask = new Task(task.number, task.description,
-         task.department, task.deadline, task.confrim, task.confirmationDate,
+         task.department, task.deadline, task.confirm, task.confirmationDate,
          task.employee, task.member_assigned);
       taskList.push(testTask);  
     }
