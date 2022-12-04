@@ -96,3 +96,23 @@ body {
 .col-8{
   padding-left: 0px;
 }
+
+.footer{
+  margin-top: 1rem;
+  padding: 1rem;
+  background-color: rgb(235, 195, 64);
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.p-3
+{
+  color: rgb(127,63,152);
+  background-color: rgb(167,169,172);
+  height: 100%;
+  font-family: system-ui;
+  
+}
+

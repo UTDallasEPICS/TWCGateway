@@ -1,90 +1,88 @@
 import {
-  Card,
-  Row,
-  Col,
-  CardTitle,
-  CardBody,
-  Button
-} from "reactstrap";
+    Card,
+    Row,
+    Col,
+    CardTitle,
+    CardBody,
+    Button
+  } from "reactstrap";
 import {useState, useEffect} from 'react';
-
-const accountID = 81;
+  const accountID = 81;
 
  
-class Task{
-  constructor( name, email, accountid, account_role,account_department ){
-      this.name = name;
-      this.email = email;
-      this.accountid = accountid;
-      this.account_role = account_role;
-      this.account_department = account_department;
-     }
-}; 
-
-var task ={
-  name: '',
-  email: '',
-  accountid: 0,
-  account_role: '',
-  account_department: '',
-};
-
-
-function taskFillerVersion2(results){
-  try{
-    let taskList = [];
-      task.name = String(results.rows[0].name);
-      task.email = String(results.rows[0].email);
-      task.accountid = String(results.rows[0].accountid);
-      task.account_role = String(results.rows[0].account_role);
-      task.account_department = String(results.rows[0].account_department);
-      const testTask = new Task(task.name, task.email,
-         task.accountid, task.account_role, task.account_department);
-      taskList.push(testTask);    
-    return taskList;
-  }catch(e){
-    console.log(e);
+  class Task{
+    constructor( name, email, accountid, account_role,account_department ){
+        this.name = name;
+        this.email = email;
+        this.accountid = accountid;
+        this.account_role = account_role;
+        this.account_department = account_department;
+       }
+  }; 
+  
+  var task = {
+    name: '',
+    email: '',
+    accountid: 0,
+    account_role: '',
+    account_department: '',
+  };
+  
+  
+  function taskFillerVersion2(results){
+    try{
+      let taskList = [];
+        task.name = String(results.rows[0].name);
+        task.email = String(results.rows[0].email);
+        task.accountid = String(results.rows[0].accountid);
+        task.account_role = String(results.rows[0].account_role);
+        task.account_department = String(results.rows[0].account_department);
+        const testTask = new Task(task.name, task.email,
+           task.accountid, task.account_role, task.account_department);
+        taskList.push(testTask);    
+      return taskList;
+    }catch(e){
+      console.log(e);
+    }
+  
   }
+  const  New_hire_profile = () => {
 
-}
- 
-const  Account = () => {
   const [dataBase, setDb] = useState([])
 
-  useEffect( () => {
-    fetchDB();
-  }, [])
-
-  const fetchDB = async () => {
-    const response = await fetch("http://localhost:5001/displayEmployeedata/"+accountID);
-    const data = await response.json();
-    delete data.fields; 
-    delete data._parsers;
-    delete data._types;
-    delete data.RowCtor;
-    delete data.rowAsArray;
-    delete data.command;
-    delete data.rowCount;
-    delete data.oid;
-    //task.name = data.rows[0].name; 
-    //console.log("fetch test" + data.rowCount + data.rows[0].name);
-    setDb(data);
-  }
-  const taskList = taskFillerVersion2(dataBase);
-
+    useEffect( () => {
+      fetchDB();
+    }, [])
   
-  return (
-    <Row>
-      <Col>
-        <Card>
-          <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-            <i className="bi bi-bell me-2"> </i>
-            Information
-          </CardTitle>
-          <CardBody>
-            <Row>
-            <Col  style={{ color: "rgb(99,100,102)", fontFamily: 'Times', borderSpacing: 100}}>
-                <h5 style ={{height: 50}}>
+    const fetchDB = async () => {
+      const response = await fetch("http://localhost:5001/displayEmployeedata/"+accountID);
+      const data = await response.json();
+      delete data.fields; 
+      delete data._parsers;
+      delete data._types;
+      delete data.RowCtor;
+      delete data.rowAsArray;
+      delete data.command;
+      delete data.rowCount;
+      delete data.oid;
+      //task.name = data.rows[0].name; 
+      //console.log("fetch test" + data.rowCount + data.rows[0].name);
+      setDb(data);
+    }
+    const taskList = taskFillerVersion2(dataBase);
+
+    return (
+      <Row>
+        <Col>
+          <Card>
+            <CardTitle tag="h6" className="border-bottom p-3 mb-0">
+              <i className="bi bi-bell me-2"> </i>
+              <h2 style={{color: "rgb(99,100,102)", fontFamily: 'Times'}}>Personal Information</h2>
+            </CardTitle>
+            <CardBody>
+              <Row>
+              <Col  style={{ color: "rgb(99,100,102)", fontFamily: 'Times', borderSpacing: 100}}>
+              <h5 style ={{height: 50}}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" style={{padding: "10px"}}>
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                     <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
@@ -108,25 +106,27 @@ const  Account = () => {
                   {task.account_department}</h5>
 
                 </Col>
-              </Row>
-              <Row md={4}>
-                <Col>
-                    <a href="/admin/Account/ChangePassword">
-                    Change Password
-                    </a>
-                  
-                  </Col>
-                  <Col>
-                  <a href="/admin/Account/EditInformation">
-                    Edit Information
-                  </a>
-                </Col>
                 </Row>
-          </CardBody>
-        </Card>
-      </Col>
-    </Row>
-  );
-};
-
-export default  Account;
+                {/*
+                <Row md={4}>
+                  <Col>
+                    
+                      <a href="/admin/Account/ChangePassword">
+                      Change Password
+                      </a>
+                    
+                    </Col>
+                    <Col>
+                    <a href="/admin/Account/EditInformation">
+                      Edit Information
+                    </a>
+                  </Col>
+                  </Row>
+                */}
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    );
+  };
+  export default  New_hire_profile;
