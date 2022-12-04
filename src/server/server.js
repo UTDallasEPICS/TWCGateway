@@ -379,6 +379,20 @@ app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
     }
 });
 
+app.get("/displayemployeeindept/:dep", async (req, res) => {
+    try{
+        const {dep} = req.params;
+        const results = await client.query("SELECT * FROM public.employee WHERE (account_department = '"+dep+"' and account_role = 'NewHire')");
+        console.log(results);
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+
 
 app.listen(5001, () => console.log("listening on port 5001...."));
 

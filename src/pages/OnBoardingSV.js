@@ -70,7 +70,7 @@ const CurrentOnboarding = () => {
   console.log(typeof dataBase);
   var elements = [];
   if(typeof dataBase.rowCount !== "undefined"){
-    var taskList = taskFillerForMultipleEmployees(dataBase, 4);
+    var taskList = taskFillerForMultipleEmployees(dataBase, (dataBase.rowCount)/38);
 
 
     var elements = displayFillerMultipleEmployees(taskList);
@@ -95,7 +95,7 @@ const CurrentOnboarding = () => {
 
     </Row>
   );
-};
+
 
 async function confirm(emp_name, emp_num, task_num){
   try{
@@ -232,6 +232,6 @@ function displayFillerMultipleEmployees(employeeTasks){
   catch(e){
     console.log(e);
   }
-}
+}};
 
 export default CurrentOnboarding;
