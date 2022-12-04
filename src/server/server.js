@@ -351,6 +351,32 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
         console.log(e.stack);
         res.send("there was an error" + e.stack);
     }
+
+});
+
+app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = $1 ORDER BY task_num", [id]);
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
+    try{
+        const {dep} = req.params;
+        const results = await client.query("SELECT * FROM public.task_list WHERE department_name = '"+dep+"' ORDER BY assigned_employee_id, task_num");
+        console.log(results);
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
 });
 
 

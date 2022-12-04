@@ -1,15 +1,15 @@
 import { Outlet } from "react-router-dom";
-import Sidebar from "./Sidebar";
+import SuperSidebar from "./SuperSidebar";
 
 import { Container } from "reactstrap";
 
-const FullLayout = () => {
+const FullLayoutSuper = () => {
   return (
     <main>
-      <div className="pageWrapper d-lg-flex" style={{backgroundColor: "#a7a9ac"}}> 
+      <div className="pageWrapper d-lg-flex" style={{backgroundColor: "#a7a9ac"}}>
         {/********Sidebar**********/}
         <aside className="sidebarArea shadow" id="sidebarArea">
-          <Sidebar />
+          <SuperSidebar />
         </aside>
         {/********Content Area**********/}
 
@@ -26,4 +26,4 @@ const FullLayout = () => {
   );
 };
 
-export default FullLayout;
+export default FullLayoutSuper;

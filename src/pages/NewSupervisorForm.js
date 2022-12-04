@@ -26,10 +26,9 @@ import {
     const handleSubmit = (e) => { 
       const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice}
       console.log(data); 
-  
-      //e.preventDefault(); 
+ 
       fetchDB();
-      alert("The supervisor has been added"); 
+  
 
     }
     
@@ -40,6 +39,7 @@ import {
         await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valuesupervisordept +"/"+ valueaccess, {
           method: "POST",
         });
+        alert("The supervisor has been added");
       }
       catch(e)
       {

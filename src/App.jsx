@@ -1,6 +1,8 @@
 import Navbar from './components/Navbar';
 import { BrowserRouter, Routes, Route} from 'react-router-dom'
 import Home from './pages/Home';
+import SuperNavbar from './components/SuperNavbar';
+import HomeS from './pages/HomeS';
 import Messages from './pages/Messages';
 import LoginForm from './components/LoginForm';
 import TaskForm from './components/TaskForm';
@@ -17,6 +19,10 @@ import {useState, useEffect} from 'react';
 import DatabaseFunctions from './Database/DatabaseFunctions.js';
 import Newhirechecklist from './pages/Newhirechecklist.js';
 import New_hire_profile from './pages/New_hire_profile.js';
+import AccountS from './pages/AccountS.js';
+import NewEmployee from './pages/NewEmployee.js';
+import FullLayoutSuper from './layouts/FullLayoutSuper';
+import OnBoardingSV from './pages/OnBoardingSV';
 function App() {
   
   const [dataBase, setDb] = useState([])
@@ -52,6 +58,15 @@ function App() {
             <Route path='/admin/NewEmployeeForm' element = {<NewEmployeeForm/>}/>
             <Route path='/admin/DefaultTasks' element = {<DefaultTasks/>}/> 
             <Route path='/admin/NewSupervisorForm' element = {<NewSupervisorForm/>}/>
+          </Route>
+          <Route path = "/homeS" element = {<div><SuperNavbar/><HomeS/><Container><OnBoardingSV/></Container></div>}/>
+          <Route path = "/supervisor" element = {<div><SuperNavbar/><FullLayoutSuper/></div>}>
+            <Route path = "/supervisor/AccountS" element = {<AccountS/>}/>
+            <Route path='/supervisor/AccountS/ChangePassword' element = {<div></div>}/>
+            <Route path='/supervisor/AccountS/EditInformation' element = {<div></div>}/>
+            <Route path = '/supervisor/NewEmployeeForm' element = {<NewEmployeeForm/>}/>
+            <Route path = '/supervisor/OnBoardingSV' element = {<OnBoardingSV/>}/>
+            <Route path = '/supervisor/DefaultTasks' element = {<DefaultTasks/>}/>
           </Route>
         </Routes>
       </BrowserRouter>
