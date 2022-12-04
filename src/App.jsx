@@ -12,12 +12,11 @@ import NewSupervisorForm from './pages/NewSupervisorForm.js';
 import DefaultTasks from './pages/DefaultTasks';
 import  Home_newhire from './pages/Home_newhire'; 
 import Navbar_newhire from './components/Navbar_newhire';
-import { Container } from 'reactstrap';
+import { Container, Row, Col} from 'reactstrap';
 import {useState, useEffect} from 'react';
 import DatabaseFunctions from './Database/DatabaseFunctions.js';
 import Newhirechecklist from './pages/Newhirechecklist.js';
 import New_hire_profile from './pages/New_hire_profile.js';
-
 function App() {
   
   const [dataBase, setDb] = useState([])
@@ -31,8 +30,6 @@ function App() {
     const data = await response.json();
     setDb(data);
   }
-
-
 
   return (
     <>

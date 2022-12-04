@@ -26,11 +26,10 @@ import {
     const handleSubmit = (e) => { 
       const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice}
       console.log(data); 
-      Array.from(document.querySelectorAll("input")).forEach(
-        input => (input.value = "")  );
   
-      e.preventDefault(); 
+      //e.preventDefault(); 
       fetchDB();
+      alert("The supervisor has been added"); 
 
     }
     
@@ -166,7 +165,7 @@ import {
                 </FormGroup>
 
 
-                <Button type="button" onClick={handleSubmit} id="button">Submit</Button>
+                <Button type="submit" onClick={handleSubmit} id="button">Submit</Button>
               </Form>
             </CardBody>
           </Card>

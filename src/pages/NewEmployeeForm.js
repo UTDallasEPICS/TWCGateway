@@ -22,12 +22,13 @@ const [jobTitle, setjobTitle] = useState('');
 const [startDate, setstartDate] = useState('');
 const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
-
 const handleSubmit = (e) => { 
-  e.preventDefault(); 
+  //e.preventDefault(); 
   //console.log(data);
   fetchDB();
-  fetchDB2(); 
+  fetchDB2();
+  alert("The new employee has been added"); 
+
 };
 
 const fetchDB = async() =>{ 
@@ -94,7 +95,7 @@ return (
           New Employee Form
         </CardTitle>
         <CardBody>
-          <Form  onSubmit={handleSubmit}>
+          <Form  >
             <Row>
               <Col xs="6">
                 <FormGroup>
@@ -218,7 +219,7 @@ return (
               </FormText>
             </FormGroup>
             */}
-            <button>Submit</button>
+            <Button type="submit" onClick={handleSubmit} id="button">Submit</Button>
           </Form>
         </CardBody>
       </Card>
