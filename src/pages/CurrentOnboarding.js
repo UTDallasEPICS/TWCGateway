@@ -75,7 +75,11 @@ const CurrentOnboarding = () => {
 
     var elements = displayFillerMultipleEmployees(taskList);
   }
-
+ /*
+  else if (typeof dataBase.rowCount !== "undefined" && !sup){
+    var taskList = taskFillerForSingleEmployee()
+  }
+*/
 
   return (
     <Row>
@@ -101,8 +105,7 @@ async function confirm(emp_name, emp_num, task_num){
     var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
 
     const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
-	  const data = { firstName: 'John', secondName: 'Doe', email: 'jd@gmail.com' };
-	  const config = { 'content-type': 'application/json' };
+
 
     const fin = await axios.put(url);
 
@@ -125,7 +128,7 @@ function displayFillerSingleEmployee(taskList, emp_num){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button type ="button" onClick={() => confirm("willy",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
+                  <td><button type ="button" onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
