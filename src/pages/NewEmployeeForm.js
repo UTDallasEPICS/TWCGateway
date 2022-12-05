@@ -30,12 +30,12 @@ const handleSubmit = (e) => {
   alert("The new employee has been added"); 
 
 };
-
+//
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
   const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ valuedept +"/"+ 'newhire', {
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'newhire' +"/"+ valuedept, {
       method: "POST",
     });
   }

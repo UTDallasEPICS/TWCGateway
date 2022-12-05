@@ -1,18 +1,10 @@
-<<<<<<< HEAD
 const express = require('express')
 const { Client } =  require("pg")
 const app = express()
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-=======
-//import {taskFiller} from './Database/DatabaseFunctions.js';
-//import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 
 
-const express = require('express')
-const { Client } =  require("pg")
-const app = express()
->>>>>>> origin/Gurjotedits
 
 const cors=require("cors");
 const corsOptions ={
@@ -24,7 +16,6 @@ const corsOptions ={
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 const client = new Client({
-<<<<<<< HEAD
     user: "team",
     password: "epic",
     host: "localhost",
@@ -34,16 +25,6 @@ const client = new Client({
 
 var email = 'bad@yahoo.com';
 var accountID = 2;
-=======
-    user: "gurjotchohan",
-    password: "",
-    host: "localhost",
-    port: "5432",
-    database: "gurjotchohan"
-})
-
-var email = 'bad@yahoo.com';
->>>>>>> origin/Gurjotedits
 var userName = '';
 var userRole = '';
 var taskID = 2;
@@ -67,47 +48,8 @@ var task ={
     member_assigned: ''
 };
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> origin/Gurjotedits
-async function signIn(req, res, account, email){
-    try{
-        const results = await client.query("select * from public.employee where email = '"+email+"'")
-        if(results.rowCount == 1){
-            account.email = results.rows[0].email;
-            account.accountID = results.rows[0].accountid;
-            account.userRole = results.rows[0].account_role;
-            account.department = results.rows[0].account_department;
-            account.userName = results.rows[0].name;
-            account.password = results.rows[0].password;
-        }
-        else{
-            console.log("no matching account was found");
-        }
-
-        if(userRole == "Admin"){
-            console.log("go to admin");
-            //resSign.json("go to admin");
-        }
-        if(userRole == "Supervisor"){
-            console.log("go to supervisor");
-            //resSign.json("go to supervisor");
-
-        }
-        if(userRole == "NewHire"){
-            console.log("go to new hire");
-            //resSign.json("go to new hire");
-        }
-
-        res.json(results.rows[0].name);
-    } catch(e){
-        console.error(`query failed ${e}`);
-        console.log(e.stack);
-        res.send("there was an error");
-    }
-};
 
 // connect to database
 connect();
@@ -123,8 +65,9 @@ async function connect() {
 }
 
 // works with test database
-app.get("/signIn", async (req, res) => {
+app.get("/signIn/:email", async (req, res) => {
     try{
+        const email = res.params['email'];
         const results = await client.query("select * from public.employee where email = '"+email+"'");
         res.json(results.rows[0].account_role + " " + results.rows[0].name);
         console.log(results.rows[0].name);
@@ -205,7 +148,6 @@ app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
 });
 
 // works with test database
-<<<<<<< HEAD
 app.put("/confirmTask/:date/:employeeName/:task_num/:emp_num", async (req, res) => {
     try{
         const date = req.params['date'];
@@ -216,12 +158,6 @@ app.put("/confirmTask/:date/:employeeName/:task_num/:emp_num", async (req, res) 
         console.log("trying to update " + task);
 
         const results = await client.query("UPDATE public.task_list SET confirm_status = true, employee_name = '"+employeeName+"', confirm_date = '"+date+"' WHERE task_num = "+task+" AND assigned_employee_id = " + emp_num);
-=======
-app.put("/confirmTask", async (req, res) => {
-    try{
-        const date = new Date();
-        const results = await client.query('UPDATE public.task_list SET confirm_status = TRUE WHERE "taskID" = '+taskID);
->>>>>>> origin/Gurjotedits
         res.json(results);
         console.log("update successful");
 
@@ -233,28 +169,7 @@ app.put("/confirmTask", async (req, res) => {
 });
 
 // works for test database
-<<<<<<< HEAD
-=======
-app.post("/insertNewTaskGroup", async (req, res) => {
-    try{
-        //const results = 
-        await client.query("INSERT INTO public.task_list (task_description, department_name,"+
-        " deadline, member_assigned, assigned_employee_id) VALUES "
-        +"('t1', 'b1', '2022-10-26', 'm1', "+($1)+")"
-        +"('t2', 'b2', '2022-10-26', 'm2', "+($1)+")"
-        +"('t3', 'b3', '2022-10-26', 'm3', "+($1)+")"
-        +"('t4', 'b4', '2022-10-26', 'm4', "+($1)+")"
-        +"('t5', 'b5', '2022-10-26', 'm5', "+($1)+")", [process.env.REACT_APP_ACCOUNTID]);
-        
-//INSERT INTO task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id) VALUES ('t1', 'b1', '2022-10-26', 'm1', '3')
-        res.json(results);
-        console.log("insert successful")
-    }catch(e){
-        console.error(`query failed ${e}`);
-        console.log(e.stack);
-        res.send("there was an error" + e.stack);
-    }
-});
+
 
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
@@ -270,17 +185,6 @@ app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
     }
 });
 
-app.get("/displayEmployeedata/:id", async (req, res) => {
-    try{
-        const {id} = req.params;
-        const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
-        res.json(results); 
-    }catch(e){
-        console.error(`query failed ${e}`);
-        console.log(e.stack);
-        res.send("there was an error");
-    }
-});
 
 app.get("/getEmployeedata/:email", async (req, res) => {
     try{
@@ -315,7 +219,7 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department", async
 }); 
 
 // works for test database
->>>>>>> origin/Gurjotedits
+
 app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
     try{
         const results = await client.query("select * from public.employee");
@@ -386,11 +290,8 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
         +"('Update Organizational chart', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+")");
         
         res.json(results);
-<<<<<<< HEAD
         console.log("insert successful")
-=======
-        console.log("insert successful list")
->>>>>>> origin/Gurjotedits
+
     }catch(e){
         console.error(`query failed ${e}`);
         console.log(e.stack);
@@ -398,7 +299,6 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
     }
 });
 
-<<<<<<< HEAD
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
 app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
@@ -438,8 +338,7 @@ app.get("/displayFirstDayTaskGroup/:id", async (req, res) => {
         res.send("there was an error");
     }
 });
-=======
->>>>>>> origin/Gurjotedits
+
 
 app.listen(5001, () => console.log("listening on port 5001...."));
 
