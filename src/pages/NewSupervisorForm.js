@@ -24,11 +24,21 @@ import {
     const [valueaccess, setaccesslevel]= useState('');
     const [posted, isposted] = useState('');
   
-    const handleSubmit = (e) => { 
+    const handleSubmit = (e) => {
+      e.preventDefault(); 
       const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice}
-      console.log(data);  
-      fetchDB();
-      alert("The supervisor has been added");
+      if(!(supervisorfirstname === "") && !(supervisorlastname === "") && !(supervisoremail === ""))
+      {
+          fetchDB();
+          window.location.reload(false);
+          alert("The supervisor has been added");
+
+      }
+      else
+      {
+        alert("The form is missing information");
+      }
+      
       
   
 
@@ -38,7 +48,7 @@ import {
       const name = supervisorfirstname + " " + supervisorlastname; 
       const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
       try{
-        await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valuesupervisordept +"/"+ valueaccess, {
+        await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
           method: "POST"
         });
         

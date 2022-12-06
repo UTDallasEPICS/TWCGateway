@@ -6,7 +6,7 @@ import { Container } from "reactstrap";
 const FullLayout = () => {
   return (
     <main>
-      <div className="pageWrapper d-lg-flex" style={{backgroundColor: "#a7a9ac"}}> 
+      <div className="pageWrapper d-lg-flex" style={{backgroundColor: "#ededed"}}> 
         {/********Sidebar**********/}
         <aside className="sidebarArea shadow" id="sidebarArea">
           <Sidebar />
