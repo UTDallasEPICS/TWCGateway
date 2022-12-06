@@ -22,14 +22,15 @@ import {
     const [valuesupervisordept, setsuperValuedept]= useState('');
     const [valuesupervisoroffice, setsuperValueoffice]= useState('');
     const [valueaccess, setaccesslevel]= useState('');
+    const [posted, isposted] = useState('');
   
     const handleSubmit = (e) => { 
       const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice}
-      console.log(data); 
-  
-      //e.preventDefault(); 
+      console.log(data);  
       fetchDB();
-      alert("The supervisor has been added"); 
+      alert("The supervisor has been added");
+      
+  
 
     }
     
@@ -38,8 +39,9 @@ import {
       const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
       try{
         await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valuesupervisordept +"/"+ valueaccess, {
-          method: "POST",
+          method: "POST"
         });
+        
       }
       catch(e)
       {

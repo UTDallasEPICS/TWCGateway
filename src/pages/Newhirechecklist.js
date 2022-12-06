@@ -4,7 +4,7 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import {useState, useEffect} from 'react';
 
-const accountID = 81;
+const accountID = 88;
 
 class Task{
   constructor(number, description, department,
@@ -72,7 +72,7 @@ function taskFillerVersion2(results){
       }
       else
       {
-        task.confirm = "NOT DONE";
+        task.confirm = "NOT COMPLETED";
         task.confirmationDate = "";
         task.employee = "";
       }

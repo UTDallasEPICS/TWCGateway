@@ -39,7 +39,7 @@
   text-align: rigth;
 }
 .navbar a:hover {
-  color: #f1356d;
+  background-color: rgb(127,63,152);
 }
 
 html,
@@ -109,10 +109,18 @@ body {
 
 .p-3
 {
-  color: rgb(127,63,152);
-  background-color: rgb(167,169,172);
+  color: rgb(253,226,75);
+  background-color: rgb(127,63,152);
   height: 100%;
   font-family: system-ui;
   
 }
+
+.sidenav-bg 
+{
+  color: rgb(253,226,75);
+}
+
+
+
 
