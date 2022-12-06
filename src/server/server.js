@@ -392,6 +392,18 @@ app.get("/displayemployeeindept/:dep", async (req, res) => {
     }
 });
 
+app.get("/displayFirstDayTaskGroup/:id", async (req, res) => {
+    try{
+        const id = req.params['id'];
+        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = "+id+" AND deadline = (SELECT max(deadline) FROM public.task_list WHERE assigned_employee_id = "+id+") ORDER BY task_num;");
+        console.log(results);
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
 
 
 app.listen(5001, () => console.log("listening on port 5001...."));
