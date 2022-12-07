@@ -16,11 +16,11 @@ const corsOptions ={
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 const client = new Client({
-    user: "gurjotchohan",
-    password: "",
+    user: "team",
+    password: "epic",
     host: "localhost",
     port: "5432",
-    database: "gurjotchohan"
+    database: "postgres"
 })
 
 var email = 'bad@yahoo.com';
@@ -180,10 +180,13 @@ app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
 });
 
 // works with test database
-app.put("/confirmTask", async (req, res) => {
+app.put("/confirmTask/:date/:emp_name/:task_num/:emp_num", async (req, res) => {
     try{
-        const date = new Date();
-        const results = await client.query('UPDATE public.task_list SET confirm_status = TRUE WHERE "taskID" = '+taskID);
+        const date = req.params['date'];
+        const emp_name = req.params['emp_name'];
+        const task_num = req.params['task_num'];
+        const emp_num = req.params['emp_num'];
+        const results = await client.query("UPDATE public.task_list SET confirm_status = TRUE, confirm_date = '"+date+"', employee_name = '"+emp_name+"' WHERE task_num = "+task_num+" AND assigned_employee_id = "+emp_num);
         res.json(results);
         console.log("update successful");
 
@@ -194,27 +197,6 @@ app.put("/confirmTask", async (req, res) => {
     }
 });
 
-// works for test database
-app.post("/insertNewTaskGroup", async (req, res) => {
-    try{
-        //const results = 
-        await client.query("INSERT INTO public.task_list (task_description, department_name,"+
-        " deadline, member_assigned, assigned_employee_id) VALUES "
-        +"('t1', 'b1', '2022-10-26', 'm1', "+($1)+")"
-        +"('t2', 'b2', '2022-10-26', 'm2', "+($1)+")"
-        +"('t3', 'b3', '2022-10-26', 'm3', "+($1)+")"
-        +"('t4', 'b4', '2022-10-26', 'm4', "+($1)+")"
-        +"('t5', 'b5', '2022-10-26', 'm5', "+($1)+")", [process.env.REACT_APP_ACCOUNTID]);
-        
-//INSERT INTO task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id) VALUES ('t1', 'b1', '2022-10-26', 'm1', '3')
-        res.json(results);
-        console.log("insert successful")
-    }catch(e){
-        console.error(`query failed ${e}`);
-        console.log(e.stack);
-        res.send("there was an error" + e.stack);
-    }
-});
 
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
@@ -253,6 +235,20 @@ app.get("/getEmployeedata/:email", async (req, res) => {
         res.send("there was an error");
     }
 });
+
+app.get("/getEmployeeName/:id", async (req, res) => {
+    try{
+    const {id} = req.params;
+    const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
+    console.log(results.rows[0].name);
+    res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
 
 app.post("/insertEmployee/:name/:email/:account_role/:account_department", async (req, res) => {
 
@@ -370,7 +366,7 @@ app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
     try{
         const {dep} = req.params;
         const results = await client.query("SELECT * FROM public.task_list WHERE department_name = '"+dep+"' ORDER BY assigned_employee_id, task_num");
-        console.log(results);
+        //console.log(results);
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -404,7 +400,7 @@ app.get("/displayFirstDayTaskGroup/:id", async (req, res) => {
         res.send("there was an error");
     }
 });
-//
+
 
 app.listen(5001, () => console.log("listening on port 5001...."));
 

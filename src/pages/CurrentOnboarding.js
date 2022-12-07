@@ -7,6 +7,8 @@ import axios from 'axios';
 
 const accountID = 6;
 const depName = "Basic Onboarding";
+var numEmployee = 4;
+var numTasks = 38;
 var sup = false;
 
 class Task{
@@ -65,12 +67,11 @@ const CurrentOnboarding = () => {
   }
 
 
-//const taskList = taskFillerForSingleEmployee(dataBase, 0);
-//const elements = displayFillerSingleEmployee(taskList);
-  console.log(typeof dataBase);
+
   var elements = [];
   if(typeof dataBase.rowCount !== "undefined"){
-    var taskList = taskFillerForMultipleEmployees(dataBase, 4);
+    console.log(dataBase.rowCount/numTasks);
+    var taskList = taskFillerForMultipleEmployees(dataBase, dataBase.rowCount/numTasks);
 
 
     var elements = displayFillerMultipleEmployees(taskList);
@@ -97,11 +98,14 @@ const CurrentOnboarding = () => {
   );
 };
 
+
+
 async function confirm(emp_name, emp_num, task_num){
   try{
     console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
 
     var date = new Date();
+    
     var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
 
     const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
@@ -110,7 +114,8 @@ async function confirm(emp_name, emp_num, task_num){
     const fin = await axios.put(url);
 
     window.location.reload();    
-    
+
+    console.log(date);
     console.log("I have confirmed task " + task_num);
   }catch(e){
     console.log("there was an error");
@@ -118,6 +123,20 @@ async function confirm(emp_name, emp_num, task_num){
     return e;
   }
 };
+
+async function getTaskOwnerName(emp_id){
+  try{
+    console.log("try get name");
+    const results = await fetch ("http://localhost:5001/getEmployeeName/"+emp_id);
+    const name = await results.rows[0].name;
+    console.log(name);
+    return name;
+  }catch(e){
+    console.log("there was an error in getTaskOwnerName");
+    console.log(e);
+    return e;
+  }
+}
 
 function displayFillerSingleEmployee(taskList, emp_num){
   try{
@@ -145,8 +164,8 @@ function displayFillerSingleEmployee(taskList, emp_num){
 function taskFillerForSingleEmployee(results, empNum){
   try{
     let taskList = [];
-    console.log(results.rows[0]);
-    for(var i = empNum*38; i < (empNum+1)*38; i++){
+    //console.log(results.rows[0]);
+    for(var i = empNum*numTasks; i < (empNum+1)*numTasks; i++){
       task.number = results.rows[i].task_num;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
@@ -178,7 +197,7 @@ function taskFillerForMultipleEmployees(results, numEmployee){
     // call taskFiller for single employee for every employee in 
     var employeeTasks = [];
     var tempList = [];
-    console.log("taskfiller multiple test: " + results);
+    //console.log("taskfiller multiple test: " + results);
     for(var i = 0; i < numEmployee; i++){
    
       tempList = taskFillerForSingleEmployee(results, i);

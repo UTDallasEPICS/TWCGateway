@@ -3,8 +3,9 @@ import checkMark from '../assets/images/logos/checkmark.svg';
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import {useState, useEffect} from 'react';
+import { Tab } from "bootstrap";
 
-const accountID = 88;
+const accountID = 3;
 
 class Task{
   constructor(number, description, department,
@@ -37,7 +38,7 @@ function displayFiller(taskList){
     var elements = Array(taskList.length).fill(<tr>hello</tr>);
     for(let i = 0; i < elements.length; i++){
           elements[i]=<tr>
-                  <th scope="row">{i + 1}</th>
+                  <th scope="row">{taskList[i].number}</th>
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
@@ -64,6 +65,7 @@ function taskFillerVersion2(results){
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
       task.deadline = results.rows[i].deadline.substring(0, results.rows[i].deadline.indexOf('T'));
+      console.log(results.rows[i].confirm_status);
       if(String(results.rows[i].confirm_status) === "true")
       {
         task.confirm = "DONE!";
@@ -72,7 +74,7 @@ function taskFillerVersion2(results){
       }
       else
       {
-        task.confirm = "NOT COMPLETED";
+        task.confirm = "NOT DONE";
         task.confirmationDate = "";
         task.employee = "";
       }
@@ -106,10 +108,11 @@ const Newhirechecklist = () => {
     setDb(data);
   }
 
-
-const taskList = taskFillerVersion2(dataBase);
-const elementstrue = displayFiller(taskList);
-
+  var elementstrue = [];
+  if(typeof dataBase.rowCount !== "undefined"){
+    const taskList = taskFillerVersion2(dataBase);
+    elementstrue = displayFiller(taskList);
+  }
   return (
     <Row>
      
@@ -123,13 +126,14 @@ const elementstrue = displayFiller(taskList);
         <Card>
           <CardTitle tag="h6" className="border-bottom p-3 mb-0">
             <i className="bi bi-card-text me-2"> </i>
-            Hello! This is your Onboarding Checklist
+            <p className="fst-italic">This is your Onboarding Checklist</p>
           </CardTitle>
           <CardBody className="">
           { /* <TaskForm/>*/}
-            <Table bordered striped>
+            {/*<Table bordered striped>*/}
+              <Table striped bordered hover size="big">
               <thead>
-                <tr>
+                <tr className="table-dark">
                 <th>#</th>
                   <th>Task</th>
                   <th>Department</th>
