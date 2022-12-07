@@ -258,7 +258,7 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department", async
         const email = req.params['email'];
         const account_role = req.params['account_role'];
         const account_department = req.params['account_department'];
-        const results = await client.query("INSERT INTO employee (name, email, account_role,account_department) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"')"); 
+        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"')"); 
         console.log("insert successful");
     }
     catch(e)

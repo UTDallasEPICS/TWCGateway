@@ -23,7 +23,7 @@ const [startDate, setstartDate] = useState('');
 const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
 const handleSubmit = (e) => { 
-  //e.preventDefault(); 
+  e.preventDefault(); 
   //console.log(data);
   fetchDB();
   fetchDB2(); 
@@ -32,8 +32,9 @@ const handleSubmit = (e) => {
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
   const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
+  console.log(valuedept);
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept, {
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ "Basic Onboarding", {
       method: "POST",
     });
   }
@@ -48,8 +49,7 @@ const fetchDB2 = async() =>{
   try{
     const response = await fetch("http://localhost:5001/getEmployeedata/"+email);
     const data = await response.json();
-    
-    console.log(data.rows[0].accountid); 
+  
     
     delete data.fields; 
     delete data._parsers;
@@ -63,6 +63,7 @@ const fetchDB2 = async() =>{
       await fetch("http://localhost:5001/insertNewTaskGroup/" + data.rows[0].accountid +"/"+ startDate, {
         method: "POST",
       });
+      window.location.reload(false);
       alert("The new employee has been added"); 
     }
     catch(e)
