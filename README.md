@@ -2,14 +2,6 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Server Scripts
-
-In the server directory, you can run:
-
-### `npm run dev`
-
-should run the server.js file and connect to locolhost:5001
-
 ## Available Scripts
 
 In the project directory, you can run:
