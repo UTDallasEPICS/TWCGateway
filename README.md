@@ -6,7 +6,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the server directory, you can run:
 
-### 'npm run dev'
+### `npm run dev`
 
 should run the server.js file and connect to locolhost:5001
 
