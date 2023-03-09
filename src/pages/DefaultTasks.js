@@ -3,8 +3,32 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import checkMark from '../assets/images/logos/checkmark.svg';
 
+import { useState } from 'react'
+
+const INITIAL_STATE = [
+  { Task: 1, Department: 'Tommy', Deadline: 21, Confirm: 'coding', 'Confirmation Date': 'date', Employee: '', 'Member Assigned': ''},
+  { Task: 1, Department: 'Tommy', Deadline: 21, Confirm: 'coding', 'Confirmation Date': 'date', Employee: '', 'Member Assigned': ''},
+  { Task: 1, Department: 'Tommy', Deadline: 21, Confirm: 'coding', 'Confirmation Date': 'date', Employee: '', 'Member Assigned': ''},
+  { Task: 1, Department: 'Tommy', Deadline: 21, Confirm: 'coding', 'Confirmation Date': 'date', Employee: '', 'Member Assigned': ''},
+]
+
+const capitalize = (word) => {
+  return word[0].toUpperCase() + word.slice(1)
+}
+
 
 const DefaultTasks = () => {
+
+  const [tasks, setTasks] = useState(INITIAL_STATE)
+
+  // Function that renders the header
+  const renderHeader = () => {
+    return <tr>
+      {Object.keys(INITIAL_STATE[0]).map(key => <th>{capitalize(key)}</th>)}
+    </tr>
+  }
+
+
   return (
     <Row>
      
@@ -20,7 +44,14 @@ const DefaultTasks = () => {
           </CardTitle>
           <CardBody className="">
             <TaskForm/>
-            <Table bordered striped>
+
+            <Table>
+              {renderHeader()}
+              <tbody>
+              </tbody>
+
+            </Table>
+            {/* <Table bordered striped>
               <thead>
                 <tr>
                   <th>#</th>
@@ -416,7 +447,9 @@ const DefaultTasks = () => {
                   <td>Office Manager</td>
                 </tr>
               </tbody>
-            </Table>
+            </Table> */}
+
+
           </CardBody>
         </Card>
       </Col>

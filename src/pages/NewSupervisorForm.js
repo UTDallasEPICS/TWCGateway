@@ -22,6 +22,7 @@ const NewSupervisorForm = () => {
   const [valuesupervisordept, setsuperValuedept]= useState('');
   const [valuesupervisoroffice, setsuperValueoffice]= useState('');
   const [valueaccess, setaccesslevel]= useState('');
+  const [valueemployee, setvalueEmployee]= useState('');
   const [posted, isposted] = useState('');
 
   const handleSubmit = (e) => {
@@ -74,69 +75,28 @@ const NewSupervisorForm = () => {
           <CardBody>
             <Form >
               <Row>
-                <Col xs="6">
-                  <FormGroup>
-                    <Label htmlFor="EmployeeFirstName">First Name</Label>
-                    <Input
-                      required
-                      id="employeeFirstName"
-                      name="FirstName"
-                      placeholder=""
-                      type="text"
-                      value = {supervisorfirstname}
-                      onChange = {(e) => setsuperFname(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col xs="6">
-                <FormGroup>
-                  <Label htmlFor="EmployeeLastName">Last Name</Label>
-                  <Input
-                     required
-                     id="employeeLastName"
-                     name="LastName"
-                     placeholder=""
-                     type="text"
-                     value = {supervisorlastname}
-                     onChange = {(e) => setsuperLname(e.target.value)}
-                  />
-                </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-              <Col xs="6">
-              <FormGroup>
-                <Label htmlFor="exampleEmail">Email</Label>
-                <Input
-                  required
-                  id="exampleEmail"
-                  name="email"
-                  placeholder=""
-                  type="email"
-                  value = {supervisoremail}
-                  onChange = {(e) => setsuperEmail(e.target.value)}
-                />
-              </FormGroup>
-              </Col>
-              <Col xs="6">
-              <FormGroup>
-                <Label htmlFor="jobTitle">Job Title</Label>
-                <Input
-                  id="jobTitle"
-                  name="jobTitle"
-                  placeholder=""
-                  type="text"
-                  value = {jobsupervisorTitle}
-                  onChange = {(e) => setsuperjobTitle(e.target.value)}
-                />
-              </FormGroup>
-              </Col>
-              </Row>
 
+                <Col xs>
+              <FormGroup>
+                <Label htmlFor="selectEmployee">Select Employee</Label>
+                  <Input  required type="select"  name= "Employee" value = {valueemployee}
+                  onChange = {(e) => setaccesslevel(e.target.value)}>
+                    {/* QUERY HERE TO PUT EMPLOYEES WHO ARE NOT SUPERVISORS HERE  */}
+                    <option>Employee 1</option>
+                    <option>Employee 2</option>
+                    <option>Employee 3</option>
+                    <option>Employee 4</option>
+                  </Input>
+              </FormGroup>
+                 
+
+              </Col>
+              </Row>
               <Row>
               <Col xs="6">
+
               <FormGroup>
-                <Label htmlFor="selectacess">Acess Level</Label>
+                <Label htmlFor="selectaccess">Access Level</Label>
                   <Input  required type="select"  name= "Department" value = {valueaccess}
                   onChange = {(e) => setaccesslevel(e.target.value)}>
 
@@ -146,6 +106,7 @@ const NewSupervisorForm = () => {
               </FormGroup>
               </Col>
               <Col xs="6">
+
               <FormGroup>
                 <Label htmlFor="selectDepartment">Department</Label>
                   <Input  required type="select"  name= "Department" value = {valuesupervisordept}
