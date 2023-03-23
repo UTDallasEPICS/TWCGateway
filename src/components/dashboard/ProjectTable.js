@@ -1,6 +1,40 @@
 import { Card, CardBody, CardTitle, CardSubtitle, Table } from "reactstrap";
 import trash from '../../assets/images/logos/trash.svg';
 
+// const { Client } =  require("pg")
+
+// const client = new Client({
+//   user: "postgres",
+//   password: "biggums",
+//   host: "localhost",
+//   port: "5432",
+//   database: "postgres"
+// })
+
+
+// // connect to database
+// connect();
+// async function connect() {
+//     try {
+//         await client.connect();
+//         console.log(`connected`);
+//         const res = await client.query('SELECT * FROM public.employee');
+//         const resTask = await client.query("SELECT * FROM public.task_list");
+//     } catch(e){
+//         console.error(`connection failed ${e}`);
+//     }
+// }
+// app.get("/displayEmployeedata/:id", async (req, res) => {
+//   try{
+//       const {id} = req.params;
+//       const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
+//       res.json(results); 
+//   }catch(e){
+//       console.error(`query failed ${e}`);
+//       console.log(e.stack);
+//       res.send("there was an error");
+//   }
+// });
 
 const tableData = [
   {

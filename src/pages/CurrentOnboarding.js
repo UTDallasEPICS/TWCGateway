@@ -54,9 +54,12 @@ const CurrentOnboarding = () => {
   
     
     const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+depName);
-    
+
+    const response3 = await fetch("http://localhost:5001/Employee");
+
     const data = await response.json();
     const data2 = await response2.json();
+    const data3 = await response3.json();
 
     if(sup){
       setDb(data);
@@ -74,7 +77,7 @@ const CurrentOnboarding = () => {
     var taskList = taskFillerForMultipleEmployees(dataBase, dataBase.rowCount/numTasks);
 
 
-    var elements = displayFillerMultipleEmployees(taskList);
+    var elements = displayFillerMultipleEmployees(taskList, dataBase);
   }
  /*
   else if (typeof dataBase.rowCount !== "undefined" && !sup){
@@ -169,8 +172,16 @@ function taskFillerForSingleEmployee(results, empNum){
       task.number = results.rows[i].task_num;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
-      task.deadline = String(results.rows[i].deadline);
-      task.confirmationDate = String(results.rows[i].confirm_date);
+      const d = new Date(results.rows[i].deadline);
+      task.deadline = String(d.toDateString());
+      //BELOW HERE change the null date to not Dec. 1969 or wtv
+      const dConfirm = new Date(results.rows[i].confirm_date);
+      if (! results.rows[i].confirm_date) {
+        task.confirmationDate = results.rows[i].confirm_data;
+      }
+      else{
+        task.confirmationDate = String(dConfirm.toDateString())
+      }
       task.employee = String(results.rows[i].employee_name);
       task.member_assigned = String(results.rows[i].member_assigned);
       task.assigned_employee_id = results.rows[i].assigned_employee_id;
@@ -212,17 +223,19 @@ function taskFillerForMultipleEmployees(results, numEmployee){
   }
 }
 
-function displayFillerMultipleEmployees(employeeTasks){
+function displayFillerMultipleEmployees(employeeTasks, results){
   try{
     // call display filler single employee for every employee
     var numEmployee = employeeTasks.length;
     var elements = Array(numEmployee).fill(<tr>hello</tr>);
     for(var i = 0; i < numEmployee; i++){
+      //MY CODE BELOW HERE
+      const Emp_name = getTaskOwnerName(employeeTasks[i][0].assigned_employee_id);
       elements[i] = <Col lg="12">
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
-        Employee ID {employeeTasks[i][0].assigned_employee_id}
+        EMPLOYEE {employeeTasks[i][0].assigned_employee_id}
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>

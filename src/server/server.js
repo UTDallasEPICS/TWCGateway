@@ -14,14 +14,24 @@ const corsOptions ={
 }
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
-
+//TASK
 const client = new Client({
-    user: "team",
-    password: "epic",
-    host: "localhost",
-    port: "5432",
-    database: "postgres"
+    user: "postgres",       //Use this
+    password: "biggums",    //pgAdmin password
+    host: "localhost",      //Use this
+    port: "5432",           //Default only change if you changed the port number on set up
+    database: "postgres"    //Try this first, change if not wokring to a database name you have setup in PGAdmin or text me
 })
+
+// client.connect();
+// client.query('Select * from public.employee', (err, res)=>{
+//         if(!err){
+//             console.log(res.rows);
+//         } else {
+//             console.log(err.message);
+//         }
+//         client.end;
+// })
 
 var email = 'bad@yahoo.com';
 var userName = '';
@@ -96,6 +106,15 @@ async function connect() {
         console.error(`connection failed ${e}`);
     }
 }
+//Paste Here!!!
+client.query('Select * from public.task_list where task_id = 115', (err, res)=>{
+        if(!err){
+            console.log(res.rows);
+        } else {
+            console.log(err.message);
+        }
+       
+})
 
 // works with test database
 app.get("/signIn", async (req, res) => {

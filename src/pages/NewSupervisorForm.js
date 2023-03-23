@@ -43,7 +43,7 @@ const NewSupervisorForm = () => {
 
 
   }
-  
+  //NewEmployeeForm Line 37 works but this one doesn't
   const fetchDB = async() =>{ 
     const name = supervisorfirstname + " " + supervisorlastname; 
     const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}

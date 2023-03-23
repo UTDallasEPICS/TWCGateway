@@ -146,7 +146,7 @@ function taskFillerForSingleEmployee(results, empNum){
   try{
     let taskList = [];
     console.log(results.rows[0]);
-    for(var i = empNum*38; i < (empNum+1)*38; i++){
+    for(var i = empNum*38; i < (empNum+1)*38; i++){       //this is hard coded and need to be dynamically included with the department##########################
       task.number = results.rows[i].task_num;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
