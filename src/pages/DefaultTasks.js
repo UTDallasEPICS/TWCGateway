@@ -5,20 +5,42 @@ import checkMark from '../assets/images/logos/checkmark.svg';
 
 import { useState } from 'react'
 
-// LINK BACKEND RIGHT HERE
-const INITIAL_STATE = [
-  { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
-  { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
-  { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'Office Manager'}
-]
-
-// prob will remove
-// const capitalize = (word) => {
-//   return word[0].toUpperCase() + word.slice(1)
-// }
 
 
-const DefaultTasks = () => {
+
+const DefaultTasks = function () {
+  //const [theArray, setTheArray] = useState(INITIAL_STATE);
+  
+
+
+  // LINK BACKEND RIGHT HERE
+  const INITIAL_STATE = [
+    { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
+    { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
+    { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'Office Manager'}
+  ]
+
+
+  DefaultTasks.addNewItem = function (input)  {
+    
+    const num = INITIAL_STATE.length + 1;
+    const task = input;
+    const department ='Basic Onboarding';
+    const deadline =  'Now';
+    const confirm = <button><img src={checkMark} alt =""/></button>;
+    const date = 'NA';
+    const employee = 'NA';
+    const assigned = 'COO'
+    //const NEW_STATE =  [this.INITIAL_STATE, {num, task, department, deadline, confirm, date, employee, assigned}] 
+    //this.INITIAL_STATE = NEW_STATE;
+
+   // setTheArray(INITIAL_STATE => [...INITIAL_STATE, {num, task, department, deadline, confirm, date, employee, assigned}]);
+
+  
+  
+
+    console.log(INITIAL_STATE.length);
+  }
 
   const [tasks] = useState(INITIAL_STATE)
 
@@ -38,21 +60,10 @@ const DefaultTasks = () => {
     })
   }
 
-  // Function that renders the header can probably remove though
-  // const renderHeader = () => {
-  //   return <tr>
-
-  //     {Object.keys(INITIAL_STATE[0]).map(key => <th>{capitalize(key)}</th>)}
-  //   </tr>
-  // }
-
-
   return (
     <Row>
-     
-      
       {/* --------------------------------------------------------------------------------*/}
-      {/* table-3*/}
+      {/* table-3                                                                         */}
       {/* --------------------------------------------------------------------------------*/}
       <Col lg="12">
         <Card>
