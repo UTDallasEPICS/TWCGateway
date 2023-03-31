@@ -1,10 +1,52 @@
-import ProjectTables from "../components/dashboard/ProjectTable";
+//import ProjectTables from "../components/dashboard/ProjectTable";
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import checkMark from '../assets/images/logos/checkmark.svg';
 
+import { useState } from 'react'
+
+// LINK BACKEND RIGHT HERE
+const INITIAL_STATE = [
+  { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
+  { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
+  { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'Office Manager'}
+]
+
+// prob will remove
+// const capitalize = (word) => {
+//   return word[0].toUpperCase() + word.slice(1)
+// }
+
 
 const DefaultTasks = () => {
+
+  const [tasks] = useState(INITIAL_STATE)
+
+  const renderUsers = () => {
+    return tasks.map(({ num, task, department, deadline, confirm, date, employee, assigned }) => {
+      return <tr key={task} >
+
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{num}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{task}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{department}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{deadline}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{confirm}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{date}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{employee}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{assigned}</td>
+    </tr>
+    })
+  }
+
+  // Function that renders the header can probably remove though
+  // const renderHeader = () => {
+  //   return <tr>
+
+  //     {Object.keys(INITIAL_STATE[0]).map(key => <th>{capitalize(key)}</th>)}
+  //   </tr>
+  // }
+
+
   return (
     <Row>
      
@@ -20,7 +62,26 @@ const DefaultTasks = () => {
           </CardTitle>
           <CardBody className="">
             <TaskForm/>
-            <Table bordered striped>
+
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Task</th>
+                  <th>Department</th>
+                  <th>Deadline</th>
+                  <th>Confirm</th>
+                  <th>Confirmation Date</th>
+                  <th>Employee</th>
+                  <th>Member Assigned</th>
+                </tr>
+              </thead>
+              <tbody>
+                {renderUsers()}
+              </tbody>
+
+            </Table>
+            {/* <Table bordered striped>
               <thead>
                 <tr>
                   <th>#</th>
@@ -416,7 +477,9 @@ const DefaultTasks = () => {
                   <td>Office Manager</td>
                 </tr>
               </tbody>
-            </Table>
+            </Table> */}
+
+
           </CardBody>
         </Card>
       </Col>

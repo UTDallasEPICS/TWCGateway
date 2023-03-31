@@ -22,6 +22,7 @@ const [jobTitle, setjobTitle] = useState('');
 const [startDate, setstartDate] = useState('');
 const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
+const [valuestaff, setValuestaff]= useState('');
 const handleSubmit = (e) => { 
   e.preventDefault(); 
   //console.log(data);
@@ -197,7 +198,9 @@ return (
 
             <FormGroup>
               <Label htmlFor="selectStaff">Assign Onboarding Staff</Label>
-              <Input  required id="selectStaff" multiple name="selectStaff" type="select">
+              <Input  required id="selectStaff" name="selectStaff" type="select" value={valuestaff}
+                onChange = {(e) => setValuestaff(e.target.value)}>
+                {/* NEED QUERY HERE FOR STAFF MEMBERS */}
                 <option>Staff member</option>
                 <option>Staff member</option>
                 <option>Staff member</option>

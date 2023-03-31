@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import {
   Card,
   Row,
@@ -22,6 +23,7 @@ const NewSupervisorForm = () => {
   const [valuesupervisordept, setsuperValuedept]= useState('');
   const [valuesupervisoroffice, setsuperValueoffice]= useState('');
   const [valueaccess, setaccesslevel]= useState('');
+  const [valueemployee, setvalueEmployee]= useState('');
   const [posted, isposted] = useState('');
 
   const handleSubmit = (e) => {
@@ -48,7 +50,7 @@ const NewSupervisorForm = () => {
     const name = supervisorfirstname + " " + supervisorlastname; 
     const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
     try{
-      await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
+      const response = await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
         method: "POST"
       });
       
@@ -59,7 +61,20 @@ const NewSupervisorForm = () => {
       console.log("there was an error"); 
     }
   };
-
+  const fetchEmployees = async() =>{ 
+    const results = await fetch("http://localhost:5001/EmployeeNewHire");
+    const data = await results.json();
+    const employeeNewHireNames = [];
+    for(let i = 0; i < data.rowCount; i++){
+      employeeNewHireNames[i] = data.rows[i].name
+    }
+    //console.log(employeeNewHireNames)
+    return employeeNewHireNames;
+  };
+  //let newHireArray = [];//fetchEmployees().then((result) => {newHireArray = result;console.log(newHireArray)})
+  //                 .catch((error) => {console.log(error);});
+  // console.log("HERE WORKING\n")
+  // console.log(newHireArray)
   return (
     <Row>
       <Col>
@@ -74,69 +89,46 @@ const NewSupervisorForm = () => {
           <CardBody>
             <Form >
               <Row>
-                <Col xs="6">
-                  <FormGroup>
-                    <Label htmlFor="EmployeeFirstName">First Name</Label>
-                    <Input
-                      required
-                      id="employeeFirstName"
-                      name="FirstName"
-                      placeholder=""
-                      type="text"
-                      value = {supervisorfirstname}
-                      onChange = {(e) => setsuperFname(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col xs="6">
-                <FormGroup>
-                  <Label htmlFor="EmployeeLastName">Last Name</Label>
-                  <Input
-                     required
-                     id="employeeLastName"
-                     name="LastName"
-                     placeholder=""
-                     type="text"
-                     value = {supervisorlastname}
-                     onChange = {(e) => setsuperLname(e.target.value)}
-                  />
-                </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-              <Col xs="6">
+                <Col xs>
               <FormGroup>
-                <Label htmlFor="exampleEmail">Email</Label>
-                <Input
-                  required
-                  id="exampleEmail"
-                  name="email"
-                  placeholder=""
-                  type="email"
-                  value = {supervisoremail}
-                  onChange = {(e) => setsuperEmail(e.target.value)}
-                />
+                <Label htmlFor="selectEmployee">Select Employee</Label>
+                  <Input  id="EmpList" required type="select"  name= "Employee" value = {valueemployee}
+                  onChange = {(e) => setaccesslevel(e.target.value)}>
+                    
+          
+                    
+                    {/* {fetchEmployees().then((result) => {document.getElementById("EmpList").innerHTML = result[0]})//console.log(newHireArray)})
+                    .catch((error) => {console.log(error);})
+                    } */}
+                    {$(document).jQuery(function(){
+                    
+                    {fetchEmployees().then((result) => 
+                    {
+                      var select = document.getElementById("EmpList");
+                      var newOption = document.createElement('option');
+                    for(let i = 0; i < result.length; i++){
+                      console.log(result[i])
+                      console.log(select)
+                      newOption.text = result[i];
+                      newOption.value = result[i];
+                      select.appendChild(newOption);}})//console.log(newHireArray)})
+                    .catch((error) => {console.log(error);})
+                    }})}
+                  
+                    <option>Employee 2</option>
+                    <option>Employee 3</option>
+                    <option>Employee 4</option>
+                  </Input>
               </FormGroup>
-              </Col>
-              <Col xs="6">
-              <FormGroup>
-                <Label htmlFor="jobTitle">Job Title</Label>
-                <Input
-                  id="jobTitle"
-                  name="jobTitle"
-                  placeholder=""
-                  type="text"
-                  value = {jobsupervisorTitle}
-                  onChange = {(e) => setsuperjobTitle(e.target.value)}
-                />
-              </FormGroup>
-              </Col>
-              </Row>
+                 
 
+              </Col>
+              </Row>
               <Row>
               <Col xs="6">
+
               <FormGroup>
-                <Label htmlFor="selectacess">Acess Level</Label>
+                <Label htmlFor="selectaccess">Access Level</Label>
                   <Input  required type="select"  name= "Department" value = {valueaccess}
                   onChange = {(e) => setaccesslevel(e.target.value)}>
 
@@ -146,6 +138,7 @@ const NewSupervisorForm = () => {
               </FormGroup>
               </Col>
               <Col xs="6">
+
               <FormGroup>
                 <Label htmlFor="selectDepartment">Department</Label>
                   <Input  required type="select"  name= "Department" value = {valuesupervisordept}
