@@ -12,7 +12,7 @@ import {
   Input,
 } from "reactstrap";
 import { useState, setState} from "react";
-
+import ReactDOM from "react-dom";
 
 
 const NewSupervisorForm = () => {
@@ -25,6 +25,7 @@ const NewSupervisorForm = () => {
   const [valueaccess, setaccesslevel]= useState('');
   const [valueemployee, setvalueEmployee]= useState('');
   const [posted, isposted] = useState('');
+  const [employeeNewHireNames, setNHArr] = useState([]);
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
@@ -69,6 +70,8 @@ const NewSupervisorForm = () => {
       employeeNewHireNames[i] = data.rows[i].name
     }
     //console.log(employeeNewHireNames)
+    //setNHArr( employeeNewHireNames => [...employeeNewHireNames, `${employeeNewHireNames.length}`]);
+
     return employeeNewHireNames;
   };
   //let newHireArray = [];//fetchEmployees().then((result) => {newHireArray = result;console.log(newHireArray)})
@@ -100,7 +103,6 @@ const NewSupervisorForm = () => {
                     {/* {fetchEmployees().then((result) => {document.getElementById("EmpList").innerHTML = result[0]})//console.log(newHireArray)})
                     .catch((error) => {console.log(error);})
                     } */}
-                    {$(document).jQuery(function(){
                     
                     {fetchEmployees().then((result) => 
                     {
@@ -110,10 +112,10 @@ const NewSupervisorForm = () => {
                       console.log(result[i])
                       console.log(select)
                       newOption.text = result[i];
-                      newOption.value = result[i];
+                      newOption.value = {employeeNewHireNames};
                       select.appendChild(newOption);}})//console.log(newHireArray)})
                     .catch((error) => {console.log(error);})
-                    }})}
+                    }
                   
                     <option>Employee 2</option>
                     <option>Employee 3</option>
