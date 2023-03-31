@@ -16,8 +16,8 @@ const corsOptions ={
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 const client = new Client({
-    user: "team",
-    password: "epic",
+    user: "postgres",
+    password: "biggums",
     host: "localhost",
     port: "5432",
     database: "postgres"
@@ -141,6 +141,19 @@ app.get("/Employee", async (req, res) => {
 });
 
 
+// respond with "hello world" when a GET request is made to the homepage
+app.get("/EmployeeNewHire", async (req, res) => {
+    try{
+        const results = await client.query("select * from public.employee WHERE account_role = \'NewHire\'");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+
 
 app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
     try{
@@ -240,6 +253,19 @@ app.get("/getEmployeeName/:id", async (req, res) => {
     try{
     const {id} = req.params;
     const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
+    console.log(results.rows[0].name);
+    res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+app.get("/getEmployeeName/", async (req, res) => {
+    try{
+    const {id} = req.params;
+    const results = await client.query("SELECT * FROM public.employee");
     console.log(results.rows[0].name);
     res.json(results); 
     }catch(e){

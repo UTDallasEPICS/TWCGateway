@@ -1,3 +1,4 @@
+import $ from 'jquery'
 import {
   Card,
   Row,
@@ -49,7 +50,7 @@ const NewSupervisorForm = () => {
     const name = supervisorfirstname + " " + supervisorlastname; 
     const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
     try{
-      await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
+      const response = await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
         method: "POST"
       });
       
@@ -60,7 +61,20 @@ const NewSupervisorForm = () => {
       console.log("there was an error"); 
     }
   };
-
+  const fetchEmployees = async() =>{ 
+    const results = await fetch("http://localhost:5001/EmployeeNewHire");
+    const data = await results.json();
+    const employeeNewHireNames = [];
+    for(let i = 0; i < data.rowCount; i++){
+      employeeNewHireNames[i] = data.rows[i].name
+    }
+    //console.log(employeeNewHireNames)
+    return employeeNewHireNames;
+  };
+  //let newHireArray = [];//fetchEmployees().then((result) => {newHireArray = result;console.log(newHireArray)})
+  //                 .catch((error) => {console.log(error);});
+  // console.log("HERE WORKING\n")
+  // console.log(newHireArray)
   return (
     <Row>
       <Col>
@@ -75,14 +89,32 @@ const NewSupervisorForm = () => {
           <CardBody>
             <Form >
               <Row>
-
                 <Col xs>
               <FormGroup>
                 <Label htmlFor="selectEmployee">Select Employee</Label>
-                  <Input  required type="select"  name= "Employee" value = {valueemployee}
+                  <Input  id="EmpList" required type="select"  name= "Employee" value = {valueemployee}
                   onChange = {(e) => setaccesslevel(e.target.value)}>
-                    {/* QUERY HERE TO PUT EMPLOYEES WHO ARE NOT SUPERVISORS HERE  */}
-                    <option>Employee 1</option>
+                    
+          
+                    
+                    {/* {fetchEmployees().then((result) => {document.getElementById("EmpList").innerHTML = result[0]})//console.log(newHireArray)})
+                    .catch((error) => {console.log(error);})
+                    } */}
+                    {$(document).jQuery(function(){
+                    
+                    {fetchEmployees().then((result) => 
+                    {
+                      var select = document.getElementById("EmpList");
+                      var newOption = document.createElement('option');
+                    for(let i = 0; i < result.length; i++){
+                      console.log(result[i])
+                      console.log(select)
+                      newOption.text = result[i];
+                      newOption.value = result[i];
+                      select.appendChild(newOption);}})//console.log(newHireArray)})
+                    .catch((error) => {console.log(error);})
+                    }})}
+                  
                     <option>Employee 2</option>
                     <option>Employee 3</option>
                     <option>Employee 4</option>
