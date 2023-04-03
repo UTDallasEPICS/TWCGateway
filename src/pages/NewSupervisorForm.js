@@ -61,6 +61,8 @@ const NewSupervisorForm = () => {
       console.log("there was an error"); 
     }
   };
+
+  
   const fetchEmployees = async() =>{ 
     const results = await fetch("http://localhost:5001/EmployeeNewHire");
     const data = await results.json();
