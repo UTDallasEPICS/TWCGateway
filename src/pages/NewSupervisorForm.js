@@ -62,18 +62,22 @@ const NewSupervisorForm = () => {
       console.log("there was an error"); 
     }
   };
+
+  
   const fetchEmployees = async() =>{ 
     const results = await fetch("http://localhost:5001/EmployeeNewHire");
     const data = await results.json();
-    const employeeNewHireNames = [];
+    const NewHireNames = [];
     for(let i = 0; i < data.rowCount; i++){
-      employeeNewHireNames[i] = data.rows[i].name
+      NewHireNames[i] = data.rows[i].name;
     }
     //console.log(employeeNewHireNames)
     //setNHArr( employeeNewHireNames => [...employeeNewHireNames, `${employeeNewHireNames.length}`]);
-
-    return employeeNewHireNames;
+    setNHArr(NewHireNames);
+    
+    //return NewHireNames;
   };
+  //const arrHolder = fetchEmployees().then((result) => console.log(result));
   //let newHireArray = [];//fetchEmployees().then((result) => {newHireArray = result;console.log(newHireArray)})
   //                 .catch((error) => {console.log(error);});
   // console.log("HERE WORKING\n")
@@ -94,32 +98,41 @@ const NewSupervisorForm = () => {
               <Row>
                 <Col xs>
               <FormGroup>
-                <Label htmlFor="selectEmployee">Select Employee</Label>
-                  <Input  id="EmpList" required type="select"  name= "Employee" value = {valueemployee}
-                  onChange = {(e) => setaccesslevel(e.target.value)}>
-                    
-          
-                    
-                    {/* {fetchEmployees().then((result) => {document.getElementById("EmpList").innerHTML = result[0]})//console.log(newHireArray)})
-                    .catch((error) => {console.log(error);})
-                    } */}
-                    
-                    {fetchEmployees().then((result) => 
+              {/* {fetchEmployees().then((result) => 
                     {
                       var select = document.getElementById("EmpList");
                       var newOption = document.createElement('option');
                     for(let i = 0; i < result.length; i++){
-                      console.log(result[i])
+                      //console.log(result[i])
                       console.log(select)
+                      
+                      //console.log(employeeNewHireNames.name)
                       newOption.text = result[i];
                       newOption.value = {employeeNewHireNames};
-                      select.appendChild(newOption);}})//console.log(newHireArray)})
-                    .catch((error) => {console.log(error);})
-                    }
-                  
-                    <option>Employee 2</option>
-                    <option>Employee 3</option>
-                    <option>Employee 4</option>
+                      select.appendChild(newOption);
+                    }})//console.log(newHireArray)})
+                    .catch((error) => {console.log(error);})[1]
+                    }    */}
+                <Label htmlFor="selectEmployee">Select Employee</Label>
+                  <Input id="EmpList"   required type="select"  name= "Employee" value = {valueaccess}
+                  onChange = {(e) => setaccesslevel(e.target.value)} onLoad={fetchEmployees()}>
+                    
+          
+                    
+                    {/* {fetchEmployees().then((result) => {
+                      var select = document.getElementById("EmpList");
+                      var newOption = document.createElement('option');
+                      for(let i = 0; i < result.length; i++){
+                        console.log(select)
+                        newOption.value = {employeeNewHireNames};
+                        select.add(newOption);
+                      }})//console.log(newHireArray)})
+                    .catch((error) => {console.log(error);})[0]
+                    } */}
+                    <option>Select</option>
+                    <option value ={String(employeeNewHireNames[0])}>{employeeNewHireNames[0]}</option>
+                    <option value ={String(employeeNewHireNames[1])}>{employeeNewHireNames[1]}</option>
+                    
                   </Input>
               </FormGroup>
                  

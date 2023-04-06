@@ -235,7 +235,8 @@ function displayFillerMultipleEmployees(employeeTasks, results){
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
-        EMPLOYEE {employeeTasks[i][0].assigned_employee_id}
+        {/* WHERE THE NAMES ARE DISPLAYED*/}
+        {String(employeeTasks[i][0].assigned_employee_id)}
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>
