@@ -160,7 +160,7 @@ app.get("/Employee", async (req, res) => {
 });
 
 
-// respond with "hello world" when a GET request is made to the homepage
+// Use this as a template to make your own queries
 app.get("/EmployeeNewHire", async (req, res) => {
     try{
         const results = await client.query("select * from public.employee WHERE account_role = \'NewHire\'");

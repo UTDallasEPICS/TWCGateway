@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import {
   Card,
   Row,
@@ -11,8 +10,8 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { useState, setState} from "react";
-import ReactDOM from "react-dom";
+//have to import useEffect here
+import { useState, useEffect} from "react";
 
 
 const NewSupervisorForm = () => {
@@ -25,7 +24,14 @@ const NewSupervisorForm = () => {
   const [valueaccess, setaccesslevel]= useState('');
   const [valueemployee, setvalueEmployee]= useState('');
   const [posted, isposted] = useState('');
-  const [employeeNewHireNames, setNHArr] = useState([]);
+  const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
+
+  //use this to fun the function once when the page loads
+  useEffect(()=> {
+
+    fetchEmployees()
+    // set data to the state
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
@@ -63,25 +69,20 @@ const NewSupervisorForm = () => {
     }
   };
 
-  
+  //function name to be called later
   const fetchEmployees = async() =>{ 
     const results = await fetch("http://localhost:5001/EmployeeNewHire");
     const data = await results.json();
-    const NewHireNames = [];
-    for(let i = 0; i < data.rowCount; i++){
-      NewHireNames[i] = data.rows[i].name;
-    }
-    //console.log(employeeNewHireNames)
-    //setNHArr( employeeNewHireNames => [...employeeNewHireNames, `${employeeNewHireNames.length}`]);
-    setNHArr(NewHireNames);
+
+    console.log("data", data)
+    //fill the array with data gotten from our database call
+    const nameArr = data?.rows?.map(item => item.name);
+    //This globally sets the array
+    setNewHire(nameArr)
     
-    //return NewHireNames;
   };
-  //const arrHolder = fetchEmployees().then((result) => console.log(result));
-  //let newHireArray = [];//fetchEmployees().then((result) => {newHireArray = result;console.log(newHireArray)})
-  //                 .catch((error) => {console.log(error);});
-  // console.log("HERE WORKING\n")
-  // console.log(newHireArray)
+
+  //console.log("employeeNewHireNames: ", employeeNewHireNames)
   return (
     <Row>
       <Col>
@@ -98,40 +99,15 @@ const NewSupervisorForm = () => {
               <Row>
                 <Col xs>
               <FormGroup>
-              {/* {fetchEmployees().then((result) => 
-                    {
-                      var select = document.getElementById("EmpList");
-                      var newOption = document.createElement('option');
-                    for(let i = 0; i < result.length; i++){
-                      //console.log(result[i])
-                      console.log(select)
-                      
-                      //console.log(employeeNewHireNames.name)
-                      newOption.text = result[i];
-                      newOption.value = {employeeNewHireNames};
-                      select.appendChild(newOption);
-                    }})//console.log(newHireArray)})
-                    .catch((error) => {console.log(error);})[1]
-                    }    */}
+
                 <Label htmlFor="selectEmployee">Select Employee</Label>
                   <Input id="EmpList"   required type="select"  name= "Employee" value = {valueaccess}
-                  onChange = {(e) => setaccesslevel(e.target.value)} onLoad={fetchEmployees()}>
+                  onChange = {(e) => setaccesslevel(e.target.value)} >
                     
-          
-                    
-                    {/* {fetchEmployees().then((result) => {
-                      var select = document.getElementById("EmpList");
-                      var newOption = document.createElement('option');
-                      for(let i = 0; i < result.length; i++){
-                        console.log(select)
-                        newOption.value = {employeeNewHireNames};
-                        select.add(newOption);
-                      }})//console.log(newHireArray)})
-                    .catch((error) => {console.log(error);})[0]
-                    } */}
-                    <option>Select</option>
-                    <option value ={String(employeeNewHireNames[0])}>{employeeNewHireNames[0]}</option>
-                    <option value ={String(employeeNewHireNames[1])}>{employeeNewHireNames[1]}</option>
+                    {/*AMAL this line means when the 'Select' button is pressed it runs the function */}
+                    <option onClick={()=> fetchEmployees()}>Select</option>
+                    {/* This is the array     this turns every name into a button that you can press on */}
+                    {employeeNewHireNames && employeeNewHireNames.map((item => <option >{item}</option>))}
                     
                   </Input>
               </FormGroup>
