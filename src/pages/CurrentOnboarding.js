@@ -4,12 +4,13 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-
+//Chage hardcoded here
 const accountID = 16;
 const depName = "Basic Onboarding";
 var numEmployee = 4;
 var numTasks = 38;
 var sup = false;
+
 
 class Task{
   constructor(number, description, department,
@@ -43,6 +44,8 @@ var task ={
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([]);
+  const [employeeDisplayName, setEmpName] = useState("");
+
 
   useEffect( () => {
     fetchDB();
@@ -133,7 +136,7 @@ async function getTaskOwnerName(emp_id){
     const results = await fetch ("http://localhost:5001/getEmployeeName/"+emp_id);
     const name = await results.rows[0].name;
     console.log(name);
-    return name;
+    setEmpName(name);
   }catch(e){
     console.log("there was an error in getTaskOwnerName");
     console.log(e);
@@ -236,7 +239,7 @@ function displayFillerMultipleEmployees(employeeTasks, results){
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
         {/* WHERE THE NAMES ARE DISPLAYED*/}
-        {String(employeeTasks[i][0].assigned_employee_id)}
+        {String(employeeDisplayName)}
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>
