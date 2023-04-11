@@ -256,6 +256,18 @@ app.get("/displayEmployeedata/:id", async (req, res) => {
     }
 });
 
+app.get("/getEmployeeEmail/:gmail", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const results = await client.query("SELECT * FROM public.employee WHERE email = $1", [gmail]);
+        res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
 app.get("/getEmployeedata/:email", async (req, res) => {
     try{
         const {email} = req.params;

@@ -44,7 +44,7 @@ var task ={
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([]);
-  const [employeeDisplayName, setEmpName] = useState("");
+  //const [employeeDisplayName, setEmpName] = useState("");
 
 
   useEffect( () => {
@@ -136,7 +136,7 @@ async function getTaskOwnerName(emp_id){
     const results = await fetch ("http://localhost:5001/getEmployeeName/"+emp_id);
     const name = await results.rows[0].name;
     console.log(name);
-    setEmpName(name);
+    //setEmpName(name);
   }catch(e){
     console.log("there was an error in getTaskOwnerName");
     console.log(e);
@@ -239,7 +239,7 @@ function displayFillerMultipleEmployees(employeeTasks, results){
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
         {/* WHERE THE NAMES ARE DISPLAYED*/}
-        {String(employeeDisplayName)}
+        Employee Name
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>

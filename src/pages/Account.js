@@ -8,7 +8,6 @@ import {
 } from "reactstrap";
 import {useState, useEffect} from 'react';
 
-const accountID = 16;
 
  
 class Task{
