@@ -9,22 +9,23 @@ const navigation = [
 
   },
 
-  {
-    className:"p-3",
-    title: "New Employee",
-    href: "/supervisor/NewEmployeeForm",
+  // {
+  //   className:"p-3",
+  //   title: "New Employee",
+  //   href: "/supervisor/NewEmployeeForm",
 
-  },
+  // },
   {
     title: "Current Onboarding",
     href: "/supervisor/OnBoardingSV",
 
-  },
-  {
-    title: "Default Tasks",
-    href: "/supervisor/DefaultTasks",
+  }
+  //,
+  // {
+  //   title: "Default Tasks",
+  //   href: "/supervisor/DefaultTasks",
 
-  },
+  // },
 
 
 ];
