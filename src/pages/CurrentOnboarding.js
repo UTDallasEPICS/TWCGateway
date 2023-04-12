@@ -1,6 +1,6 @@
 import ProjectTables from "../components/dashboard/ProjectTable";
 import checkMark from '../assets/images/logos/checkmark.svg';
-import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
+import { Row, Col, Table, Card, CardTitle, CardBody, CardSubtitle, CardHeader } from "reactstrap";
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
 import {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -44,11 +44,12 @@ var task ={
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([]);
-  //const [employeeDisplayName, setEmpName] = useState("");
+  const [employeeDisplayName, setEmpName] = useState([]);
 
 
   useEffect( () => {
     fetchDB();
+    //getTaskOwnerName();
   }, [])
 
   const fetchDB = async () => {
@@ -73,76 +74,22 @@ const CurrentOnboarding = () => {
   }
 
 
-
-  var elements = [];
-  if(typeof dataBase.rowCount !== "undefined"){
-    console.log(dataBase.rowCount/numTasks);
-    var taskList = taskFillerForMultipleEmployees(dataBase, dataBase.rowCount/numTasks);
-
-
-    var elements = displayFillerMultipleEmployees(taskList, dataBase);
+  async function getTaskOwnerName(emp_id){
+  
+    try{
+      console.log(emp_id);
+      const results = await fetch ("http://localhost:5001/getEmployeeName/"+emp_id);
+      const name = await results.name;
+      console.log(name);
+      setEmpName(employeeDisplayName => [...employeeDisplayName, name]);
+    }catch(e){
+      console.log("error id: " + emp_id);
+      console.log("there was an error in getTaskOwnerName");
+      console.log(e);
+      return e;
+    }
   }
- /*
-  else if (typeof dataBase.rowCount !== "undefined" && !sup){
-    var taskList = taskFillerForSingleEmployee()
-  }
-*/
 
-  return (
-    <Row>
-     
-      <Col lg="12">
-        <ProjectTables />
-      </Col>
-      {/* --------------------------------------------------------------------------------*/}
-      {/* table-3*/}
-      {/* --------------------------------------------------------------------------------*/}
-     
-                {elements}
-
-    </Row>
-  );
-};
-
-
-
-async function confirm(emp_name, emp_num, task_num){
-  try{
-    console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
-
-    var date = new Date();
-    
-    var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
-
-    const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
-
-
-    const fin = await axios.put(url);
-
-    window.location.reload();    
-
-    console.log(date);
-    console.log("I have confirmed task " + task_num);
-  }catch(e){
-    console.log("there was an error");
-    console.log(e);
-    return e;
-  }
-};
-
-async function getTaskOwnerName(emp_id){
-  try{
-    console.log("try get name");
-    const results = await fetch ("http://localhost:5001/getEmployeeName/"+emp_id);
-    const name = await results.rows[0].name;
-    console.log(name);
-    //setEmpName(name);
-  }catch(e){
-    console.log("there was an error in getTaskOwnerName");
-    console.log(e);
-    return e;
-  }
-}
 
 function displayFillerSingleEmployee(taskList, emp_num){
   try{
@@ -153,7 +100,7 @@ function displayFillerSingleEmployee(taskList, emp_num){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button type ="button" onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
+                  <td><button type ="button" /*onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}*/><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -185,7 +132,12 @@ function taskFillerForSingleEmployee(results, empNum){
       else{
         task.confirmationDate = String(dConfirm.toDateString())
       }
-      task.employee = String(results.rows[i].employee_name);
+      if(!results.rows[i].employee_name){
+        task.employee = results.rows[i].employee_name
+      }
+      else{
+        task.employee = String(results.rows[i].employee_name);
+      }
       task.member_assigned = String(results.rows[i].member_assigned);
       task.assigned_employee_id = results.rows[i].assigned_employee_id;
       task.task_num = results.rows[i].task_num;
@@ -208,6 +160,7 @@ function taskFillerForSingleEmployee(results, empNum){
 
 function taskFillerForMultipleEmployees(results, numEmployee){
   try{
+    
     // call taskFiller for single employee for every employee in 
     var employeeTasks = [];
     var tempList = [];
@@ -233,13 +186,13 @@ function displayFillerMultipleEmployees(employeeTasks, results){
     var elements = Array(numEmployee).fill(<tr>hello</tr>);
     for(var i = 0; i < numEmployee; i++){
       //MY CODE BELOW HERE
-      const Emp_name = getTaskOwnerName(employeeTasks[i][0].assigned_employee_id);
+      //const Emp_name = getTaskOwnerName(employeeTasks[i][0].assigned_employee_id);
       elements[i] = <Col lg="12">
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
         {/* WHERE THE NAMES ARE DISPLAYED*/}
-        Employee Name
+        Employee Name{String(employeeDisplayName) /*&& employeeDisplayName.map((item => <CardSubtitle>{item}</CardSubtitle>))*/ }
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>
@@ -269,5 +222,41 @@ function displayFillerMultipleEmployees(employeeTasks, results){
     console.log(e);
   }
 }
+
+
+  var elements = [];
+  if(typeof dataBase.rowCount !== "undefined"){
+    console.log(dataBase.rowCount/numTasks);
+    var taskList = taskFillerForMultipleEmployees(dataBase, dataBase.rowCount/numTasks);
+
+
+    var elements = displayFillerMultipleEmployees(taskList, dataBase);
+  }
+
+
+ /*
+  else if (typeof dataBase.rowCount !== "undefined" && !sup){
+    var taskList = taskFillerForSingleEmployee()
+  }
+*/
+
+  return (
+    <Row>
+     
+      <Col lg="12">
+        <ProjectTables />
+      </Col>
+      {/* --------------------------------------------------------------------------------*/}
+      {/* table-3*/}
+      {/* --------------------------------------------------------------------------------*/}
+     
+                {elements}
+
+    </Row>
+  );
+};
+
+
+
 
 export default CurrentOnboarding;
