@@ -1,6 +1,6 @@
 import ProjectTables from "../components/dashboard/ProjectTable";
 import checkMark from '../assets/images/logos/checkmark.svg';
-import { Row, Col, Table, Card, CardTitle, CardBody, CardSubtitle, CardHeader } from "reactstrap";
+import { Row, Col, Table, Card, CardTitle, CardBody, CardSubtitle, CardHeader, CardText } from "reactstrap";
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
 import {useState, useEffect} from 'react';
 import axios from 'axios';
@@ -49,7 +49,7 @@ const CurrentOnboarding = () => {
 
   useEffect( () => {
     fetchDB();
-    //getTaskOwnerName();
+    getTaskOwnerName();
   }, [])
 
   const fetchDB = async () => {
@@ -78,10 +78,10 @@ const CurrentOnboarding = () => {
   
     try{
       console.log(emp_id);
-      const results = await fetch ("http://localhost:5001/getEmployeeName/"+emp_id);
+      const results = await fetch ("http://localhost:5001/getEmployeeName/");
       const name = await results.name;
       console.log(name);
-      setEmpName(employeeDisplayName => [...employeeDisplayName, name]);
+      setEmpName(arr => [...employeeDisplayName, name]);
     }catch(e){
       console.log("error id: " + emp_id);
       console.log("there was an error in getTaskOwnerName");
@@ -90,6 +90,29 @@ const CurrentOnboarding = () => {
     }
   }
 
+  async function confirm(emp_name, emp_num, task_num){
+    try{
+      console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
+  
+      var date = new Date();
+      
+      var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
+  
+      const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
+  
+  
+      const fin = await axios.put(url);
+  
+      window.location.reload();    
+  
+      console.log(date);
+      console.log("I have confirmed task " + task_num);
+    }catch(e){
+      console.log("there was an error");
+      console.log(e);
+      return e;
+    }
+  };
 
 function displayFillerSingleEmployee(taskList, emp_num){
   try{
@@ -100,7 +123,7 @@ function displayFillerSingleEmployee(taskList, emp_num){
                   <td>{taskList[i].description}</td>
                   <td>{taskList[i].department}</td>
                   <td>{taskList[i].deadline}</td>
-                  <td><button type ="button" /*onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}*/><img src={checkMark} alt =""/></button></td>
+                  <td><button type ="button" onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
                   <td>{taskList[i].confirmationDate}</td>
                   <td>{taskList[i].employee}</td>
                   <td>{taskList[i].member_assigned}</td>
@@ -191,8 +214,8 @@ function displayFillerMultipleEmployees(employeeTasks, results){
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
-        {/* WHERE THE NAMES ARE DISPLAYED*/}
-        Employee Name{String(employeeDisplayName) /*&& employeeDisplayName.map((item => <CardSubtitle>{item}</CardSubtitle>))*/ }
+        {/* WHERE THE NAMES ARE DISPLAYED*/console.log(employeeDisplayName)}
+        Employee Name{employeeDisplayName && employeeDisplayName.map((item => <CardSubtitle key="{i}">{item}</CardSubtitle>)) }
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>
