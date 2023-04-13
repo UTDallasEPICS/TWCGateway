@@ -4,10 +4,11 @@ import { Row, Col, Table, Card, CardTitle, CardBody, CardSubtitle, CardHeader, C
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
 import {useState, useEffect} from 'react';
 import axios from 'axios';
-//Chage hardcoded here
+//Change hardcoded here
 const accountID = 16;
 const depName = "Basic Onboarding";
 var numEmployee = 4;
+//HARDCODED here change below
 var numTasks = 38;
 var sup = false;
 
@@ -44,12 +45,12 @@ var task ={
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([]);
-  const [employeeDisplayName, setEmpName] = useState([]);
+  const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
 
 
   useEffect( () => {
     fetchDB();
-    getTaskOwnerName();
+    fetchEmployees();
   }, [])
 
   const fetchDB = async () => {
@@ -74,177 +75,18 @@ const CurrentOnboarding = () => {
   }
 
 
-  async function getTaskOwnerName(emp_id){
+    //function name to be called later
+    const fetchEmployees = async() =>{ 
+      const results = await fetch("http://localhost:5001/EmployeeNewHire");
+      const data = await results.json();
   
-    try{
-      console.log(emp_id);
-      const results = await fetch ("http://localhost:5001/getEmployeeName/");
-      const name = await results.name;
-      console.log(name);
-      setEmpName(arr => [...employeeDisplayName, name]);
-    }catch(e){
-      console.log("error id: " + emp_id);
-      console.log("there was an error in getTaskOwnerName");
-      console.log(e);
-      return e;
-    }
-  }
-
-  async function confirm(emp_name, emp_num, task_num){
-    try{
-      console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
-  
-      var date = new Date();
+      console.log("data", data)
+      //fill the array with data gotten from our database call
+      const nameArr = data?.rows?.map(item => [item.name, item.accountid]);
+      //This globally sets the array
+      setNewHire(nameArr)
       
-      var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
-  
-      const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
-  
-  
-      const fin = await axios.put(url);
-  
-      window.location.reload();    
-  
-      console.log(date);
-      console.log("I have confirmed task " + task_num);
-    }catch(e){
-      console.log("there was an error");
-      console.log(e);
-      return e;
-    }
-  };
-
-function displayFillerSingleEmployee(taskList, emp_num){
-  try{
-    var elements = Array(taskList.length).fill(<tr>hello</tr>);
-    for(let i = 0; i < elements.length; i++){
-          elements[i]=<tr>
-                  <th scope="row">{i + 1}</th>
-                  <td>{taskList[i].description}</td>
-                  <td>{taskList[i].department}</td>
-                  <td>{taskList[i].deadline}</td>
-                  <td><button type ="button" onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
-                  <td>{taskList[i].confirmationDate}</td>
-                  <td>{taskList[i].employee}</td>
-                  <td>{taskList[i].member_assigned}</td>
-                  </tr>;
-    }
-    return elements;
-  }catch(e){
-    console.log("there was an error");
-    console.log(e);
-    return e;
-  }
-};
-
-function taskFillerForSingleEmployee(results, empNum){
-  try{
-    let taskList = [];
-    //console.log(results.rows[0]);
-    for(var i = empNum*numTasks; i < (empNum+1)*numTasks; i++){
-      task.number = results.rows[i].task_num;
-      task.description = String(results.rows[i].task_description);
-      task.department = String(results.rows[i].department_name);
-      const d = new Date(results.rows[i].deadline);
-      task.deadline = String(d.toDateString());
-      //BELOW HERE change the null date to not Dec. 1969 or wtv
-      const dConfirm = new Date(results.rows[i].confirm_date);
-      if (! results.rows[i].confirm_date) {
-        task.confirmationDate = results.rows[i].confirm_data;
-      }
-      else{
-        task.confirmationDate = String(dConfirm.toDateString())
-      }
-      if(!results.rows[i].employee_name){
-        task.employee = results.rows[i].employee_name
-      }
-      else{
-        task.employee = String(results.rows[i].employee_name);
-      }
-      task.member_assigned = String(results.rows[i].member_assigned);
-      task.assigned_employee_id = results.rows[i].assigned_employee_id;
-      task.task_num = results.rows[i].task_num;
-      const testTask = new Task(task.number, 
-         task.description,
-         task.department, 
-         task.deadline, 
-         task.confirmationDate,
-         task.employee, 
-         task.member_assigned, 
-         task.assigned_employee_id, 
-         task.task_num);
-      taskList.push(testTask);    
-    }
-    return taskList;
-  }catch(e){
-    console.log(e);
-  }
-}
-
-function taskFillerForMultipleEmployees(results, numEmployee){
-  try{
-    
-    // call taskFiller for single employee for every employee in 
-    var employeeTasks = [];
-    var tempList = [];
-    //console.log("taskfiller multiple test: " + results);
-    for(var i = 0; i < numEmployee; i++){
-   
-      tempList = taskFillerForSingleEmployee(results, i);
-      employeeTasks.push(tempList);
-
-    }
-
-    return employeeTasks
-  }
-  catch(e){
-    console.log(e);
-  }
-}
-
-function displayFillerMultipleEmployees(employeeTasks, results){
-  try{
-    // call display filler single employee for every employee
-    var numEmployee = employeeTasks.length;
-    var elements = Array(numEmployee).fill(<tr>hello</tr>);
-    for(var i = 0; i < numEmployee; i++){
-      //MY CODE BELOW HERE
-      //const Emp_name = getTaskOwnerName(employeeTasks[i][0].assigned_employee_id);
-      elements[i] = <Col lg="12">
-        <Card>
-      <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-      <i className="bi bi-card-text me-2"> </i>
-        {/* WHERE THE NAMES ARE DISPLAYED*/console.log(employeeDisplayName)}
-        Employee Name{employeeDisplayName && employeeDisplayName.map((item => <CardSubtitle key="{i}">{item}</CardSubtitle>)) }
-      </CardTitle>
-      <CardBody className="">
-        <Table bordered striped>
-          <thead>
-            <tr>
-            <th>#</th>
-              <th>Task</th>
-              <th>Department</th>
-              <th>Deadline</th>
-              <th>Confirm</th>
-              <th>Confirmation Date</th>
-              <th>Employee</th>
-              <th>Member Assigned</th>
-            </tr>
-          </thead>
-          <tbody>
-            {displayFillerSingleEmployee(employeeTasks[i], i+1)}
-          </tbody>
-        </Table>
-      </CardBody>
-    </Card>
-    </Col>
-    }
-    return elements;
-  }
-  catch(e){
-    console.log(e);
-  }
-}
+    };
 
 
   var elements = [];
@@ -253,7 +95,7 @@ function displayFillerMultipleEmployees(employeeTasks, results){
     var taskList = taskFillerForMultipleEmployees(dataBase, dataBase.rowCount/numTasks);
 
 
-    var elements = displayFillerMultipleEmployees(taskList, dataBase);
+    var elements = displayFillerMultipleEmployees(taskList, employeeNewHireNames);
   }
 
 
@@ -278,6 +120,182 @@ function displayFillerMultipleEmployees(employeeTasks, results){
     </Row>
   );
 };
+
+
+
+async function confirm(emp_name, emp_num, task_num){
+  try{
+    console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
+
+    var date = new Date();
+    
+    var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
+
+    const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
+
+
+    const fin = await axios.put(url);
+
+    window.location.reload();    
+
+    console.log(date);
+    console.log("I have confirmed task " + task_num);
+  }catch(e){
+    console.log("there was an error");
+    console.log(e);
+    return e;
+  }
+};
+
+
+async function getTaskOwnerName(emp_id){
+  try{
+    console.log(emp_id);
+    const results = await fetch ("http://localhost:5001/getEmployeeName/");
+    const name = await results.name;
+    //console.log(name);
+    return name;
+  }catch(e){
+    console.log("error id: " + emp_id);
+    console.log("there was an error in getTaskOwnerName");
+    console.log(e);
+    return e;
+  }
+}
+
+
+function displayFillerSingleEmployee(taskList, emp_num){
+try{
+  var elements = Array(taskList.length).fill(<tr>hello</tr>);
+  for(let i = 0; i < elements.length; i++){
+        elements[i]=<tr>
+                <th scope="row">{i + 1}</th>
+                <td>{taskList[i].description}</td>
+                <td>{taskList[i].department}</td>
+                <td>{taskList[i].deadline}</td>
+                <td><button type ="button" onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
+                <td>{taskList[i].confirmationDate}</td>
+                <td>{taskList[i].employee}</td>
+                <td>{taskList[i].member_assigned}</td>
+                </tr>;
+  }
+  return elements;
+}catch(e){
+  console.log("there was an error");
+  console.log(e);
+  return e;
+}
+};
+
+function taskFillerForSingleEmployee(results, empNum){
+try{
+  let taskList = [];
+  //console.log(results.rows[0]);
+  for(var i = empNum*numTasks; i < (empNum+1)*numTasks; i++){
+    task.number = results.rows[i].task_num;
+    task.description = String(results.rows[i].task_description);
+    task.department = String(results.rows[i].department_name);
+    const d = new Date(results.rows[i].deadline);
+    task.deadline = String(d.toDateString());
+    //BELOW HERE change the null date to not Dec. 1969 or wtv
+    const dConfirm = new Date(results.rows[i].confirm_date);
+    if (! results.rows[i].confirm_date) {
+      task.confirmationDate = results.rows[i].confirm_data;
+    }
+    else{
+      task.confirmationDate = String(dConfirm.toDateString())
+    }
+    if(!results.rows[i].employee_name){
+      task.employee = results.rows[i].employee_name
+    }
+    else{
+      task.employee = String(results.rows[i].employee_name);
+    }
+    task.member_assigned = String(results.rows[i].member_assigned);
+    task.assigned_employee_id = results.rows[i].assigned_employee_id;
+    task.task_num = results.rows[i].task_num;
+    const testTask = new Task(task.number, 
+       task.description,
+       task.department, 
+       task.deadline, 
+       task.confirmationDate,
+       task.employee, 
+       task.member_assigned, 
+       task.assigned_employee_id, 
+       task.task_num);
+    taskList.push(testTask);    
+  }
+  return taskList;
+}catch(e){
+  console.log(e);
+}
+}
+
+function taskFillerForMultipleEmployees(results, numEmployee){
+try{
+  
+  // call taskFiller for single employee for every employee in 
+  var employeeTasks = [];
+  var tempList = [];
+  //console.log("taskfiller multiple test: " + results);
+  for(var i = 0; i < numEmployee; i++){
+ 
+    tempList = taskFillerForSingleEmployee(results, i);
+    employeeTasks.push(tempList);
+
+  }
+
+  return employeeTasks
+}
+catch(e){
+  console.log(e);
+}
+}
+
+function displayFillerMultipleEmployees(employeeTasks, nameArray){
+try{
+  // call display filler single employee for every employee
+  var numEmployee = employeeTasks.length;
+  var elements = Array(numEmployee).fill(<tr>hello</tr>);
+  for(var i = 0; i < numEmployee; i++){
+    //MY CODE BELOW HERE
+    const Emp_name = getTaskOwnerName(employeeTasks[i][0].assigned_employee_id);
+    elements[i] = <Col lg="12">
+      <Card>
+    <CardTitle tag="h6" className="border-bottom p-3 mb-0">
+    <i className="bi bi-card-text me-2"> </i>
+      {/* WHERE THE NAMES ARE DISPLAYED. This complex function means search the array for the touple (Name, id) where the id matches and return name*/console.log(nameArray)}
+      {nameArray.find(el => el[1] == employeeTasks[i][0].assigned_employee_id)[0]}
+      {/* Employee Name{employeeDisplayName && employeeDisplayName.map((item => <CardSubtitle key="{i}">{item}</CardSubtitle>)) } */}
+    </CardTitle>
+    <CardBody className="">
+      <Table bordered striped>
+        <thead>
+          <tr>
+          <th>#</th>
+            <th>Task</th>
+            <th>Department</th>
+            <th>Deadline</th>
+            <th>Confirm</th>
+            <th>Confirmation Date</th>
+            <th>Employee</th>
+            <th>Member Assigned</th>
+          </tr>
+        </thead>
+        <tbody>
+          {displayFillerSingleEmployee(employeeTasks[i], i+1)}
+        </tbody>
+      </Table>
+    </CardBody>
+  </Card>
+  </Col>
+  }
+  return elements;
+}
+catch(e){
+  console.log(e);
+}
+}
 
 
 

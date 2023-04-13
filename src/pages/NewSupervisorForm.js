@@ -26,7 +26,7 @@ const NewSupervisorForm = () => {
   const [posted, isposted] = useState('');
   const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
 
-  //use this to fun the function once when the page loads
+  //use this to run the function once when the page loads
   useEffect(()=> {
 
     fetchEmployees()
