@@ -16,11 +16,11 @@ const corsOptions ={
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 const client = new Client({
-    user: "team",
-    password: "epic",
+    user: "shawnreddy",
+    password: "gt3rs",
     host: "localhost",
     port: "5432",
-    database: "postgres"
+    database: "WarrenCenter"
 })
 
 var email = 'bad@yahoo.com';
@@ -194,6 +194,19 @@ app.put("/confirmTask/:date/:emp_name/:task_num/:emp_num", async (req, res) => {
         console.error(`query failed ${e}`);
         console.log(e.stack);
         res.send("there was an error" + e.stack);
+    }
+});
+
+
+app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const results = await client.query("SELECT accountid FROM public.employee WHERE email = $1", [email]);
+        res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
     }
 });
 
