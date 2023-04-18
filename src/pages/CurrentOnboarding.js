@@ -7,7 +7,6 @@ import axios from 'axios';
 //Change hardcoded here
 const accountID = 16;
 const depName = "Basic Onboarding";
-var numEmployee = 4;
 //HARDCODED here change below
 var numTasks = 38;
 var sup = false;
