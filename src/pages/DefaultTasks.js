@@ -1,6 +1,6 @@
 //import ProjectTables from "../components/dashboard/ProjectTable";
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-import TaskForm from "./TaskForm";
+import TaskForm from "../components/TaskForm";
 import checkMark from '../assets/images/logos/checkmark.svg';
 
 import { useState } from 'react'
