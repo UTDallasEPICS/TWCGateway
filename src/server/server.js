@@ -230,6 +230,19 @@ app.put("/confirmTask/:date/:emp_name/:task_num/:emp_num", async (req, res) => {
 });
 
 
+app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const results = await client.query("SELECT accountid FROM public.employee WHERE email = $1", [email]);
+        res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
 app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {

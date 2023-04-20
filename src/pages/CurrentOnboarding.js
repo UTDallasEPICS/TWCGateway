@@ -2,9 +2,15 @@ import ProjectTables from "../components/dashboard/ProjectTable";
 import checkMark from '../assets/images/logos/checkmark.svg';
 import { Row, Col, Table, Card, CardTitle, CardBody, CardSubtitle, CardHeader, CardText } from "reactstrap";
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
-import {useState, useEffect} from 'react';
-import axios from 'axios';
-//Change hardcoded here
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useUserStore } from "../globalState";
+
+//import { useAuth0 } from "@auth0/auth0-react";
+
+//import React from "react";
+//import { Auth0provider } from "@auth0/auth0-react";
+
 const accountID = 16;
 const depName = "Basic Onboarding";
 //HARDCODED here change below
@@ -12,42 +18,52 @@ var numTasks = 38;
 var sup = false;
 
 
-class Task{
-  constructor(number, description, department,
-     deadline, confirmationDate, employee, member_assigned, assigned_employee_id, task_num){
-      this.number = number;
-      this.description = description;
-      this.department = department;
-      this.deadline = deadline;
-      this.confirmationDate = confirmationDate;
-      this.employee = employee;
-      this.member_assigned = member_assigned;
-      this.assigned_employee_id = assigned_employee_id;
-      this.task_num = task_num;
-     }
-}; 
 
-var task ={
-  number: 0,
-  description: 'hi',
-  department: 'hi',
-  deadline: 'hi',
-  confirmationDate: 'hi',
-  employee: 'hi',
-  member_assigned: 'hi',
-  assigned_employee_id: 0,
-  task_num: 0
+class Task {
+  constructor(
+    number,
+    description,
+    department,
+    deadline,
+    confirmationDate,
+    employee,
+    member_assigned,
+    assigned_employee_id,
+    task_num
+  ) {
+    this.number = number;
+    this.description = description;
+    this.department = department;
+    this.deadline = deadline;
+    this.confirmationDate = confirmationDate;
+    this.employee = employee;
+    this.member_assigned = member_assigned;
+    this.assigned_employee_id = assigned_employee_id;
+    this.task_num = task_num;
+  }
 };
 
-
+var task = {
+  number: 0,
+  description: "hi",
+  department: "hi",
+  deadline: "hi",
+  confirmationDate: "hi",
+  employee: "hi",
+  member_assigned: "hi",
+  assigned_employee_id: 0,
+  task_num: 0,
+};
 
 const CurrentOnboarding = () => {
-
   const [dataBase, setDb] = useState([]);
   const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
 
+  const { user } = useUserStore();
 
-  useEffect( () => {
+  //console.log("***** user", user);
+
+  useEffect(() => {
     fetchDB();
     fetchEmployees();
   }, [])
@@ -65,10 +81,9 @@ const CurrentOnboarding = () => {
     const data2 = await response2.json();
     const data3 = await response3.json();
 
-    if(sup){
+    if (sup) {
       setDb(data);
-    }
-    else{
+    } else {
       setDb(data2);
     }
   }
@@ -106,40 +121,50 @@ const CurrentOnboarding = () => {
 
   return (
     <Row>
-     
       <Col lg="12">
         <ProjectTables />
       </Col>
       {/* --------------------------------------------------------------------------------*/}
       {/* table-3*/}
       {/* --------------------------------------------------------------------------------*/}
-     
-                {elements}
 
+      {elements}
     </Row>
   );
 };
 
-
-
-async function confirm(emp_name, emp_num, task_num){
-  try{
-    console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
+async function confirm(emp_name, emp_num, task_num) {
+  try {
+    console.log(
+      "trying to confirm task " + task_num + " to employee id " + emp_num
+    );
 
     var date = new Date();
-    
-    var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
 
-    const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
+    var date =
+      date.getUTCFullYear() +
+      "-" +
+      (date.getUTCMonth() + 1) +
+      "-" +
+      date.getUTCDate();
 
+    const url =
+      "http://localhost:5001/confirmTask/" +
+      date +
+      "/" +
+      emp_name +
+      "/" +
+      task_num +
+      "/" +
+      emp_num;
 
     const fin = await axios.put(url);
 
-    window.location.reload();    
+    window.location.reload();
 
     console.log(date);
     console.log("I have confirmed task " + task_num);
-  }catch(e){
+  } catch (e) {
     console.log("there was an error");
     console.log(e);
     return e;
