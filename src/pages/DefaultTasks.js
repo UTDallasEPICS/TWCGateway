@@ -207,15 +207,17 @@ const DefaultTasks = function () {
 
     //function name to be called later
   const fetchTasks = async() =>{ 
+
     const results = await fetch("http://localhost:5001/DefaultTaskList");
     const data = await results.json();
   
     console.log("data", data)
+    console.log(data.rows[1].task_description)
     //fill the array with data gotten from our database call
-    const taskArr = data?.rows?.map(item => item.name);
+    const taskArr = data?.rows?.map(item => [item.task_description, item.department_name, item.member_assigned, item.deadline]);
     //This globally sets the array
-    setTaskArr(taskArr)
-    console.log(defTaskArray)
+    //setTaskArr([...defTaskArray, taskArr])
+    console.log(taskArr)
   };
 
     //function name to be called later

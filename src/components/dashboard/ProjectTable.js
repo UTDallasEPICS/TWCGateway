@@ -36,7 +36,23 @@ import trash from '../../assets/images/logos/trash.svg';
 //   }
 // });
 
-const tableData = [
+const tableData = [];
+
+for(let i = 0; i < 4; i++){
+  const name1 = 'Hi Amal'
+
+  tableData[i] =  {
+    
+    name: name1,
+    email: "example@gmail.com",
+    department: "Example",
+    status: "pending",
+    weeks: "35",
+    
+  }
+}
+
+/*const tableData = [
   {
     
     name: "Example Name",
@@ -83,7 +99,7 @@ const tableData = [
     
   },
 ];
-
+*/
 const departmentTables = () => {
   return (
     <div>
