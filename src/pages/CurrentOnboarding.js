@@ -4,6 +4,8 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 //import TaskForm from "../components/TaskForm"; only use if planning to create new tasks in the display
 import {useState, useEffect} from 'react';
 import axios from 'axios';
+import Aos from "aos";
+import "aos/dist/aos.css";
 
 const accountID = 16;
 const depName = "Basic Onboarding";

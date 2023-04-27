@@ -3,7 +3,7 @@
 
 
 .navbar {
-  background-color: #f5f5f5 !important;
+  background-color: #ffffff !important;
   padding: 5px ;
   display: flex;
   align-items: center;
@@ -18,7 +18,7 @@
 }
 
 .navbar h1 {
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 }
 
 .sections{
@@ -34,18 +34,18 @@
 .navbar a {
   margin: left;
   text-decoration: none;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   padding: 6px;
-  text-align: rigth;
+  text-align: right;
 }
 .navbar a:hover {
-  background-color: rgb(127,63,152);
+  background-color: #b732eb;
 }
 
 html,
 body {
   height: 100%;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
 }
 
 .signin-body {
@@ -100,7 +100,7 @@ body {
 .footer{
   margin-top: 1rem;
   padding: 1rem;
-  background-color: rgb(235, 195, 64);
+  background-color: rgb(183, 50, 235);
   position: fixed;
   bottom: 0;
   left: 0;
@@ -109,8 +109,8 @@ body {
 
 .p-3
 {
-  color: rgb(253,226,75);
-  background-color: rgb(127,63,152);
+  color: rgb(183, 50, 235);
+  background-color: #ffffffff;
   height: 100%;
   font-family: system-ui;
   
@@ -118,7 +118,7 @@ body {
 
 .sidenav-bg 
 {
-  color: rgb(253,226,75);
+  color: rgb(183, 50, 235);
 }
 
 

@@ -66,7 +66,7 @@ const SuperSidebar = () => {
                 }
               >
 
-                <span className="ms-3 d-inline-block" style={{color: "#fde24b"}}>{navi.title}</span>
+                <span className="ms-3 d-inline-block" style={{color: "#b732eb"}}>{navi.title}</span>
               </Link>
             </NavItem>
           ))}

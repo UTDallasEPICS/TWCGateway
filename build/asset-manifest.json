@@ -1,16 +1,17 @@
 {
   "files": {
-    "main.css": "/static/css/main.29db86bc.css",
-    "main.js": "/static/js/main.ced27f82.js",
-    "static/js/787.ce603eda.chunk.js": "/static/js/787.ce603eda.chunk.js",
+    "main.css": "/static/css/main.edd88295.css",
+    "main.js": "/static/js/main.3f6ba98b.js",
+    "static/media/profilepic.png": "/static/media/profilepic.06c5c6797f33dc40e387.png",
     "static/media/The-Warren-Center-logo.png": "/static/media/The-Warren-Center-logo.73e9d8fce51503cba37f.png",
     "index.html": "/index.html",
-    "main.29db86bc.css.map": "/static/css/main.29db86bc.css.map",
-    "main.ced27f82.js.map": "/static/js/main.ced27f82.js.map",
-    "787.ce603eda.chunk.js.map": "/static/js/787.ce603eda.chunk.js.map"
+    "static/media/checkmark.svg": "/static/media/checkmark.460633877ccb3cbc67ef5d921bf61250.svg",
+    "static/media/trash.svg": "/static/media/trash.43abd16f54731d4913dce221c9e37631.svg",
+    "main.edd88295.css.map": "/static/css/main.edd88295.css.map",
+    "main.3f6ba98b.js.map": "/static/js/main.3f6ba98b.js.map"
   },
   "entrypoints": [
-    "static/css/main.29db86bc.css",
-    "static/js/main.ced27f82.js"
+    "static/css/main.edd88295.css",
+    "static/js/main.3f6ba98b.js"
   ]
 }

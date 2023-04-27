@@ -16,8 +16,8 @@ const corsOptions ={
 app.use(cors(corsOptions)) // Use this after the variable declaration
 
 const client = new Client({
-    user: "team",
-    password: "epic",
+    user: "postgres",
+    password: "Teegarden2023!",
     host: "localhost",
     port: "5432",
     database: "postgres"

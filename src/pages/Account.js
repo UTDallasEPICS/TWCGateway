@@ -83,7 +83,7 @@ const  Account = () => {
           </CardTitle>
           <CardBody>
             <Row>
-            <Col  style={{ color: "rgb(99,100,102)", fontFamily: 'Times', borderSpacing: 100}}>
+            <Col  style={{ color: "b732eb)", fontFamily: 'Times', borderSpacing: 100}}>
                 <h5 style ={{height: 50}}>
                 <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16" style={{padding: "10px"}}>
                     <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
