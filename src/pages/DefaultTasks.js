@@ -7,30 +7,17 @@ import { useState } from 'react'
 
 const DefaultTasks = function () {
   // LINK BACKEND RIGHT HERE
-  const INITIAL_STATE = [
-    { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
-    { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
-    { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'Office Manager'}
-  ]
+  
 
-
-  const addNewItem = function (input)  {
-    const num = INITIAL_STATE.length + 1;
-    const task = input;
-    const department ='Basic Onboarding';
-    const deadline =  'Now';
-    const confirm = <button><img src={checkMark} alt =""/></button>;
-    const date = 'NA';
-    const employee = 'NA';
-    const assigned = 'COO'
-    //const NEW_STATE =  [this.INITIAL_STATE, {num, task, department, deadline, confirm, date, employee, assigned}] 
-    //this.INITIAL_STATE = NEW_STATE;
-
-    setTasks(INITIAL_STATE => [...INITIAL_STATE, {num, task, department, deadline, confirm, date, employee, assigned}]);
-    console.log(INITIAL_STATE.length);
-  }
 
   const [tasks, setTasks] = useState(INITIAL_STATE)
+  this.state = {
+    const INITIAL_STATE = [
+      { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
+      { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
+      { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'Office Manager'}
+    ]
+  }
 
   const renderUsers = () => {
     return tasks.map(({ num, task, department, deadline, confirm, date, employee, assigned }) => {

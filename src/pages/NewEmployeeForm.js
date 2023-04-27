@@ -18,11 +18,11 @@ const NewEmployeeForm = () =>  {
 const [firstname, setFname] = useState('');
 const [lastname, setLname] = useState('');
 const [email, setEmail] = useState('');
-const [jobTitle, setjobTitle] = useState('');
+//const [jobTitle, setjobTitle] = useState('');
 const [startDate, setstartDate] = useState('');
 const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
-const [valuestaff, setValuestaff]= useState('');
+//const [valuestaff, setValuestaff]= useState('');
 const handleSubmit = (e) => { 
   e.preventDefault(); 
   //console.log(data);
@@ -32,7 +32,7 @@ const handleSubmit = (e) => {
 
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
-  const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
+  // const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
   console.log(valuedept);
   try{
     await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ "Basic Onboarding", {
@@ -127,8 +127,9 @@ return (
               </FormGroup>
               </Col>
             </Row>
+            
             <Row>
-            <Col xs="6">
+            
             <FormGroup>
               <Label htmlFor="exampleEmail">Email</Label>
               <Input
@@ -140,9 +141,10 @@ return (
                 value = {email}
                 onChange = {(e) => setEmail(e.target.value)}
               />
+
             </FormGroup>
-            </Col>
-            <Col xs="6">
+
+            {/* <Col xs="6">
             <FormGroup>
               <Label htmlFor="jobTitle">Job Title</Label>
               <Input
@@ -154,8 +156,9 @@ return (
                 onChange = {(e) => setjobTitle(e.target.value)}
               />
             </FormGroup>
-            </Col>
+            </Col> */}
             </Row>
+            
 
             <FormGroup>
               <Label htmlFor="startdate">Start Date</Label>
@@ -196,18 +199,18 @@ return (
               </Input>
             </FormGroup>
 
-            <FormGroup>
+            {/* <FormGroup>
               <Label htmlFor="selectStaff">Assign Onboarding Staff</Label>
               <Input  required id="selectStaff" name="selectStaff" type="select" value={valuestaff}
                 onChange = {(e) => setValuestaff(e.target.value)}>
-                {/* NEED QUERY HERE FOR STAFF MEMBERS */}
+                NEED QUERY HERE FOR STAFF MEMBERS 
                 <option>Staff member</option>
                 <option>Staff member</option>
                 <option>Staff member</option>
                 <option>Staff member</option>
                 <option>Staff member</option>
               </Input>
-            </FormGroup>
+            </FormGroup> */}
             {/*
             <FormGroup>
               <Label htmlFor="exampleText">Comments</Label>

@@ -3,8 +3,9 @@ import DefaultTasks from "../pages/DefaultTasks";
 import {useRef} from 'react';
 //import { useAuth0 } from "@auth0/auth0-react";    
 
-const TaskForm = () => {
+export default function TaskForm() {
     const inputRef = useRef(null);
+    //const [value, setValue] = useState("");
 
     // const handleSubmit = (e) => {
     
@@ -16,14 +17,15 @@ const TaskForm = () => {
     //     DefaultTasksaddNewItem(inputRef.current.value);
     // }
 
-    const handleSubmit = () => {
+    const handleSubmit = (event) => {
     
 
         console.log('Form submitted');    
         console.log(inputRef.current.value);
         
         DefaultTasks.addNewItem(inputRef.current.value);
-    }
+        //input = inputRef.current.value;
+    };
 
     return (
         
@@ -48,5 +50,4 @@ const TaskForm = () => {
     );
 }
 
-export default TaskForm;
 
