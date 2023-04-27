@@ -161,7 +161,7 @@ const DefaultTasks = function () {
 
 
   DefaultTasks.addNewItem = function (input)  {
-    
+    console.log(input)
     const num = INITIAL_STATE.length + 1;
     const task = input;
     const department ='Basic Onboarding';
@@ -182,6 +182,12 @@ const DefaultTasks = function () {
   }
 
   const [tasks] = useState(INITIAL_STATE)
+  const [defTaskArray, setTaskArr] = useState([]);  //have to declare global variable  and the function to change it here
+  useEffect(()=> {
+
+    fetchTasks()
+    // set data to the state
+  }, [])
 
   const renderUsers = () => {
     return tasks.map(({ num, task, department, deadline, assigned }) => {
@@ -198,6 +204,19 @@ const DefaultTasks = function () {
     </tr>
     })
   }
+
+    //function name to be called later
+  const fetchTasks = async() =>{ 
+    const results = await fetch("http://localhost:5001/DefaultTaskList");
+    const data = await results.json();
+  
+    console.log("data", data)
+    //fill the array with data gotten from our database call
+    const taskArr = data?.rows?.map(item => item.name);
+    //This globally sets the array
+    setTaskArr(taskArr)
+    console.log(defTaskArray)
+  };
 
     //function name to be called later
     // const fetchEmployees = async() =>{ 

@@ -172,6 +172,19 @@ app.get("/EmployeeNewHire", async (req, res) => {
     }
 });
 
+// Use this as a template to make your own queries
+app.get("/DefaultTaskList", async (req, res) => {
+    try{
+        const results = await client.query("select task_description, department_name, deadline, member_assigned  from public.task_list WHERE department_name = \'Basic Onboarding\'");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+
 
 
 app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
