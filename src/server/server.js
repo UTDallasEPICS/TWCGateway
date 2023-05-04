@@ -249,6 +249,18 @@ app.get("/getEmployeeName/:id", async (req, res) => {
     }
 });
 
+app.get("/DefaultTasks/", async (req, res) => {
+    try{
+    const results = await client.query("SELECT * FROM public.default_tasks");
+    console.log(results.rows[0].name);
+    res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
 
 app.post("/insertEmployee/:name/:email/:account_role/:account_department", async (req, res) => {
 

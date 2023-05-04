@@ -3,33 +3,51 @@ import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import checkMark from '../assets/images/logos/checkmark.svg';
 
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
+const INITIAL_STATE = [];
 
 const DefaultTasks = function () {
-  // LINK BACKEND RIGHT HERE
   
+  // LINK BACKEND RIGHT HERE
+  // const INITIAL_STATE = [
+  //   { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', assigned: 'COO'},
+  //   { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding',  assigned: 'COO'},
+  //   { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', assigned: 'Office Manager'}
+  // ] 
 
+  // const [tasks, setTasks] = useState(INITIAL_STATE)
 
-  const [tasks, setTasks] = useState(INITIAL_STATE)
-  this.state = {
-    const INITIAL_STATE = [
-      { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
-      { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'COO'},
-      { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', confirm: <button><img src={checkMark} alt =""/></button>, 'date': 'NA', employee: 'NA', assigned: 'Office Manager'}
-    ]
+  const [dataBase, setDb] = useState([]);
+
+  useEffect( () => {
+    fetchDB();
+  }, [])
+
+  const fetchDB = async () => {
+    const response = await fetch("http://localhost:5001/DefaultTasks/");
+    const data = await response.json();
+    setDb(data);
   }
 
+  
+
+  console.log(dataBase.rows[0]);
+  console.log(dataBase.rows[1]);
+  for (let i=0; i<dataBase.length; i++){
+    INITIAL_STATE[i] = dataBase.rows[i];
+  }
+
+  const [tasks, setTasks] = useState(INITIAL_STATE)
+
   const renderUsers = () => {
-    return tasks.map(({ num, task, department, deadline, confirm, date, employee, assigned }) => {
+    ///return tasks.map(({ num, task, department, deadline, confirm, date, employee, assigned }) => {
+      return tasks.map(({ num, task, department, deadline, member_assigned }) => {
       return <tr key={task} >
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{num}</td>
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{task}</td>
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{department}</td>
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{deadline}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{confirm}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{date}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{employee}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{assigned}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{member_assigned}</td>
     </tr>
     })
   }
@@ -54,9 +72,6 @@ const DefaultTasks = function () {
                   <th>Task</th>
                   <th>Department</th>
                   <th>Deadline</th>
-                  <th>Confirm</th>
-                  <th>Confirmation Date</th>
-                  <th>Employee</th>
                   <th>Member Assigned</th>
                 </tr>
               </thead>
