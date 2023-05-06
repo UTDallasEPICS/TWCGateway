@@ -60,6 +60,7 @@ const CurrentOnboarding = () => {
   const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
 
   const { user } = useUserStore();
+  
 
   //console.log("***** user", user);
 
@@ -122,7 +123,7 @@ const CurrentOnboarding = () => {
   return (
     <Row>
       <Col lg="12">
-        <ProjectTables />
+        <ProjectTables/>
       </Col>
       {/* --------------------------------------------------------------------------------*/}
       {/* table-3*/}

@@ -172,6 +172,17 @@ app.get("/EmployeeNewHire", async (req, res) => {
     }
 });
 
+
+app.get("/CurrentStatus", async (req, res) => {
+    try{
+        const results = await client.query("select e.name, Count(confirm_date), MAX(task_num) from public.task_list as t INNER JOIN public.employee as e ON t.assigned_employee_id = e.accountid WHERE account_role = 'NewHire' GROUP BY assigned_employee_id, e.name ORDER BY assigned_employee_id ASC");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
 // Use this as a template to make your own queries
 app.get("/DefaultTaskList", async (req, res) => {
     try{
