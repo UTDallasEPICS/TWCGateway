@@ -2,236 +2,58 @@
 import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 import TaskForm from "../components/TaskForm";
 import checkMark from '../assets/images/logos/checkmark.svg';
-import axios from 'axios';
-import { useState, useEffect } from 'react'
+import { useState, useEffect} from 'react'
 
-// class Task{
-//   constructor(number, description, department,
-//      deadline, confirmationDate, employee, member_assigned, assigned_employee_id, task_num){
-//       this.number = number;
-//       this.description = description;
-//       this.department = department;
-//       this.deadline = deadline;
-//       this.confirmationDate = confirmationDate;
-//       this.employee = employee;
-//       this.member_assigned = member_assigned;
-//       this.assigned_employee_id = assigned_employee_id;
-//       this.task_num = task_num;
-//      }
-// }; 
-
-
-// const [dataBase, setDb] = useState([]);
-
-//   useEffect( () => {
-//     fetchDB();
-//   }, [])
-//   const accountID = 16;
-//   const fetchDB = async () => {
-    
-//     const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
-  
-    
-//     const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+"Basic Onboarding");
-
-//     const response3 = await fetch("http://localhost:5001/Employee");
-
-//     const data = await response.json();
-//     const data2 = await response2.json();
-//     const data3 = await response3.json();
-
-//     if(sup){
-//       setDb(data);
-//     }
-//     else{
-//       setDb(data2);
-//     }
-//   }
-
-// async function confirm(emp_name, emp_num, task_num){
-//   try{
-//     console.log("trying to confirm task " + task_num + " to employee id " + emp_num);
-
-//     var date = new Date();
-    
-//     var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
-
-//     const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
-
-
-//     const fin = await axios.put(url);
-
-//     window.location.reload();    
-
-//     console.log(date);
-//     console.log("I have confirmed task " + task_num);
-//   }catch(e){
-//     console.log("there was an error");
-//     console.log(e);
-//     return e;
-//   }
-// };
-
-
-// var elements = [];
-//   if(typeof dataBase.rowCount !== "undefined"){
-//     console.log(dataBase.rowCount/numTasks);
-//     var taskList = taskFillerForSingleEmployee(dataBase, dataBase.rowCount/numTasks);
-
-
-//     var elements = displayFillerSingleEmployee(taskList, dataBase);
-//   }
-
-
-//   function taskFillerForSingleEmployee(results, empNum){
-//     try{
-//       let taskList = [];
-//       //console.log(results.rows[0]);
-//       for(var i = empNum*numTasks; i < (empNum+1)*numTasks; i++){
-//         task.number = results.rows[i].task_num;
-//         task.description = String(results.rows[i].task_description);
-//         task.department = String(results.rows[i].department_name);
-//         const d = new Date(results.rows[i].deadline);
-//         task.deadline = String(d.toDateString());
-//         //BELOW HERE change the null date to not Dec. 1969 or wtv
-//         const dConfirm = new Date(results.rows[i].confirm_date);
-//         if (! results.rows[i].confirm_date) {
-//           task.confirmationDate = results.rows[i].confirm_data;
-//         }
-//         else{
-//           task.confirmationDate = String(dConfirm.toDateString())
-//         }
-//         task.employee = String(results.rows[i].employee_name);
-//         task.member_assigned = String(results.rows[i].member_assigned);
-//         task.assigned_employee_id = results.rows[i].assigned_employee_id;
-//         task.task_num = results.rows[i].task_num;
-//         const testTask = new Task(task.number, 
-//            task.description,
-//            task.department, 
-//            task.deadline, 
-//            task.confirmationDate,
-//            task.employee, 
-//            task.member_assigned, 
-//            task.assigned_employee_id, 
-//            task.task_num);
-//         taskList.push(testTask);    
-//       }
-//       return taskList;
-//     }catch(e){
-//       console.log(e);
-//     }
-//   }
-
-
-//   function displayFillerSingleEmployee(taskList, emp_num){
-//     try{
-//       var elements = Array(taskList.length).fill(<tr>hello</tr>);
-//       for(let i = 0; i < elements.length; i++){
-//             elements[i]=<tr>
-//                     <th scope="row">{i + 1}</th>
-//                     <td>{taskList[i].description}</td>
-//                     <td>{taskList[i].department}</td>
-//                     <td>{taskList[i].deadline}</td>
-//                     <td><button type ="button" onClick={() => confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button></td>
-//                     <td>{taskList[i].confirmationDate}</td>
-//                     <td>{taskList[i].employee}</td>
-//                     <td>{taskList[i].member_assigned}</td>
-//                     </tr>;
-//       }
-//       return elements;
-//     }catch(e){
-//       console.log("there was an error");
-//       console.log(e);
-//       return e;
-//     }
-//   };
-
+const INITIAL_STATE = [];
 
 const DefaultTasks = function () {
-  //const [theArray, setTheArray] = useState(INITIAL_STATE);
-  
-
-
+  console.log('DEFAULTTASKS')
   // LINK BACKEND RIGHT HERE
-  const INITIAL_STATE = [
-    { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', assigned: 'COO'},
-    { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding', deadline: '10 business days before start', assigned: 'COO'},
-    { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', assigned: 'Office Manager'}
-  ]
+  // const INITIAL_STATE = [
+  //   { num: 1, task: 'Generates Written Offer letter for CEO to sign.', department: 'Basic Onboarding', deadline: '2+ weeks before hire', assigned: 'COO'},
+  //   { num: 2, task: 'Sends candidate welcome email (offer letter, I-9 and first day paperwork).	', department: 'Basic Onboarding',  assigned: 'COO'},
+  //   { num: 3, task: 'Submits New User Creation Form to Mednetworx.' ,department: 'Basic Onboarding', deadline: '10 business days before start', assigned: 'Office Manager'}
+  // ] 
 
+  // const [tasks, setTasks] = useState(INITIAL_STATE)
 
-  DefaultTasks.addNewItem = function (input)  {
-    console.log(input)
-    const num = INITIAL_STATE.length + 1;
-    const task = input;
-    const department ='Basic Onboarding';
-    const deadline =  'Now';
-    // const confirm = <button type ="button" onClick={() =>  confirm("Gabriel",taskList[i].assigned_employee_id,taskList[i].task_num)}><img src={checkMark} alt =""/></button>;
-    // const date = 'NA';
-    // const employee = 'NA';
-    const assigned = 'COO'
-    //const NEW_STATE =  [this.INITIAL_STATE, {num, task, department, deadline, confirm, date, employee, assigned}] 
-    //this.INITIAL_STATE = NEW_STATE;
+  const [dataBase, setDb] = useState([]);
 
-   // setTheArray(INITIAL_STATE => [...INITIAL_STATE, {num, task, department, deadline, confirm, date, employee, assigned}]);
-
-  
-  
-
-    console.log(INITIAL_STATE.length);
-  }
-
-  const [tasks] = useState(INITIAL_STATE)
-  const [defTaskArray, setTaskArr] = useState([]);  //have to declare global variable  and the function to change it here
-  useEffect(()=> {
-
-    fetchTasks()
-    // set data to the state
+  useEffect( () => {
+    console.log("IN USE EFFECT")
+    fetchDB();
   }, [])
 
-  const renderUsers = () => {
-    return tasks.map(({ num, task, department, deadline, assigned }) => {
-      return <tr key={task} >
+  const fetchDB = async () => {
+    console.log('Start')
+    const response = await fetch("http://localhost:5001/DefaultTasks");
+    const data = await response.json();
+    console.log('We here', data);
+    setDb(data);
+  }
 
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{num}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{task}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{department}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{deadline}</td>
-        {/* <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{confirm}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{date}</td>
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{employee}</td> */}
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{assigned}</td>
+  
+
+  console.log('######', dataBase);
+  console.log('l', dataBase.length);
+  for (let i=0; i<dataBase.length; i++){
+    INITIAL_STATE[i] = dataBase[i];
+  }
+
+  const [tasks, setTasks] = useState(INITIAL_STATE)
+
+  const renderUsers = () => {
+    ///return tasks.map(({ num, task, department, deadline, confirm, date, employee, assigned }) => {
+      return tasks.map((item) => {
+      return <tr key={item.task_id} >
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.task_id}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.task_description}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.department}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.deadline}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.member_assigned}</td>
     </tr>
     })
   }
-
-    //function name to be called later
-  const fetchTasks = async() =>{ 
-
-    const results = await fetch("http://localhost:5001/DefaultTaskList");
-    const data = await results.json();
-  
-    console.log("data", data)
-    console.log(data.rows[1].task_description)
-    //fill the array with data gotten from our database call
-    const taskArr = data?.rows?.map(item => [item.task_description, item.department_name, item.member_assigned, item.deadline]);
-    //This globally sets the array
-    //setTaskArr([...defTaskArray, taskArr])
-    console.log(taskArr)
-  };
-
-    //function name to be called later
-    // const fetchEmployees = async() =>{ 
-    //   const results = await fetch("http://localhost:5001/EmployeeNewHire");
-    //   const data = await results.json();
-  
-    //   console.log("data", data)
-    //   //fill the array with data gotten from our database call
-    //   const nameArr = data?.rows?.map(item => item.name);
-    //   //This globally sets the array
-    //   setNewHire(nameArr)
-      
-    // }
 
   return (
     <Row>
