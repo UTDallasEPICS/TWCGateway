@@ -6,14 +6,14 @@ import { useUserStore } from "../globalState";
 // const personsID = await fetch("/getAccountIDBasedOnEmail/" + emailFound)
 // const accountID = personsID;
 
-const accountID = 4;
+const accountID = 11;
 
 class Task {
-  constructor(name, email, accountid, account_role, account_department) {
+  constructor(name, email, accountid, job_title, account_department) {
     this.name = name;
     this.email = email;
     this.accountid = accountid;
-    this.account_role = account_role;
+    this.job_title = job_title;
     this.account_department = account_department;
   }
 }
@@ -22,7 +22,7 @@ var task = {
   name: "",
   email: "",
   accountid: 0,
-  account_role: "",
+  job_title: "",
   account_department: "",
 };
 
@@ -32,13 +32,13 @@ function taskFillerVersion2(results) {
     task.name = String(results.rows[0].name);
     task.email = String(results.rows[0].email);
     task.accountid = String(results.rows[0].accountid);
-    task.account_role = String(results.rows[0].account_role);
+    task.job_title = String(results.rows[0].job_title);
     task.account_department = String(results.rows[0].account_department);
     const testTask = new Task(
       task.name,
       task.email,
       task.accountid,
-      task.account_role,
+      task.job_title,
       task.account_department
     );
     taskList.push(testTask);
@@ -139,7 +139,7 @@ const Account = () => {
                   >
                     <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm-9 8c0 1 1 1 1 1h5v-1a1.9 1.9 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4Zm7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-2Zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1Z" />
                   </svg>
-                  {"\t Job Title:"} {task.account_role}
+                  {"\t Job Title:"} {task.job_title}
                 </h5>
                 <h5 style={{ height: 50 }}>
                   <svg

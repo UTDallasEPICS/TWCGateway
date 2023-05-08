@@ -136,12 +136,10 @@ const NewSupervisorForm = () => {
                   onChange = {(e) => setsuperValuedept(e.target.value)}>
 
 
-                      <option >Department 1</option>
-                      <option>Department 2</option>
-                      <option>Department 3</option>
-                      <option>Department 4</option>
-                      <option>Department 5</option>
-                      <option>Department 5</option>
+                      <option >Basic Onboarding</option>
+                      <option>Billing</option>
+                      <option>Clinic</option>
+                      <option>ECI</option>
                 </Input>
               </FormGroup>
               </Col>

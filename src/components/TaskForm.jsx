@@ -59,13 +59,13 @@ const TaskForm = () => {
                         <input type="text" className="form-control" id="inlineFormInput"
                                     placeholder="Member assigned" ref = {memberInputRef}/>
                     </div>
-                    <div className="col-sm-2">
+                    <div className="col-sm-1">
                         <input className="form-control" type="number" 
                             placeholder="0"
                             ref = {inputRef}
                             />
                     </div>
-                    <div className="col-sm-2">
+                    <div className="col-sm-1">
                         <input type="radio" id="days" name = 'deadline' ref = {inputRef} value="days"/>
                         <label for="days">days</label><br/>
                         <input type="radio" id="weeks" name = 'deadline' ref = {inputRef} value="weeks"/>
@@ -73,11 +73,15 @@ const TaskForm = () => {
                         <input type="radio" id="months" name = 'deadline' ref = {inputRef} value="months"/>
                         <label for="months">months</label><br/>
                     </div>
-                    <div className="col-sm-2">
-                        <input type="radio" id="before" name = 'deadlineTime' ref = {inputRef} value="before"/>
+                    <div className="col-sm">
+                        <input type="radio" id="beforeHire" name = 'deadlineTime' ref = {inputRef} value="before hire"/>
                         <label for="days">before hire</label><br/>
-                        <input type="radio" id="after" name = 'deadlineTime' ref = {inputRef} value="after"/>
+                        <input type="radio" id="afterHire" name = 'deadlineTime' ref = {inputRef} value="after hire"/>
                         <label for="weeks">after hire</label><br/>
+                        <input type="radio" id="beforeStart" name = 'deadlineTime' ref = {inputRef} value="before start"/>
+                        <label for="days">before start</label><br/>
+                        <input type="radio" id="afterStart" name = 'deadlineTime' ref = {inputRef} value="after start"/>
+                        <label for="weeks">after start</label><br/>
                     </div>
                 </div>
                 <div class="col-md-2 mb-3">

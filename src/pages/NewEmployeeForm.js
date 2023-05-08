@@ -35,7 +35,7 @@ const fetchDB = async() =>{
   const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
   console.log(valuedept);
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ "Basic Onboarding", {
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle, {
       method: "POST",
     });
   }
@@ -169,19 +169,17 @@ return (
                 onChange = {(e) => setstartDate(e.target.value)}
               />
             </FormGroup>
-
+            
             <FormGroup>
               <Label htmlFor="selectDepartment">Department</Label>
                 <Input  required type="select"  name= "Department" value = {valuedept}
                 onChange = {(e) => setValuedept(e.target.value)}>
 
-
-                    <option>Basic Onboarding</option>
-                    <option>Department 2</option>
-                    <option>Department 3</option>
-                    <option>Department 4</option>
-                    <option>Department 5</option>
-                    <option>Department 5</option>
+                      {/* Could be dynamic, don't leave these hardcoded if you dont need to */}
+                      <option >Basic Onboarding</option>
+                      <option>Billing</option>
+                      <option>Clinic</option>
+                      <option>ECI</option>
               </Input>
             </FormGroup>
 
@@ -193,19 +191,6 @@ return (
                 <option>Central</option>
                 <option>East</option>
                 <option>West</option>
-              </Input>
-            </FormGroup>
-
-            <FormGroup>
-              <Label htmlFor="selectStaff">Assign Onboarding Staff</Label>
-              <Input  required id="selectStaff" name="selectStaff" type="select" value={valuestaff}
-                onChange = {(e) => setValuestaff(e.target.value)}>
-                {/* NEED QUERY HERE FOR STAFF MEMBERS */}
-                <option>Staff member</option>
-                <option>Staff member</option>
-                <option>Staff member</option>
-                <option>Staff member</option>
-                <option>Staff member</option>
               </Input>
             </FormGroup>
             {/*

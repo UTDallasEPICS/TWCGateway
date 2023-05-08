@@ -266,6 +266,17 @@ app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
     }
 });
 
+app.get("/DefaultTasks", async (req, res) => {
+    try{
+    const results = await client.query("SELECT * FROM public.default_tasks");
+    //console.log(results);
+    res.json(results.rows); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
 
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
@@ -344,7 +355,7 @@ app.get("/getEmployeeName/", async (req, res) => {
 });
 
 
-app.post("/insertEmployee/:name/:email/:account_role/:account_department", async (req, res) => {
+app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_title", async (req, res) => {
 
     try
     {
@@ -352,7 +363,8 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department", async
         const email = req.params['email'];
         const account_role = req.params['account_role'];
         const account_department = req.params['account_department'];
-        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"')"); 
+        const job_title = req.params['job_title'];
+        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"')"); 
         console.log("insert successful");
     }
     catch(e)
