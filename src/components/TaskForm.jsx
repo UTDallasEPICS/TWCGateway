@@ -1,4 +1,10 @@
 import React from "react";
+import {
+    Form,
+    FormGroup,
+    Label,
+    Input,
+  } from "reactstrap";
 import DefaultTasks from "../pages/DefaultTasks";
 import {useRef} from 'react';
 //import { useAuth0 } from "@auth0/auth0-react";
@@ -38,29 +44,46 @@ const TaskForm = () => {
     return (
         
             <form onSubmit= {handleSubmit}>
-                <div className="form-row">  
+                <div className="form-row">
                     <div className="col-md-6 mb-3">
                         <input className="form-control" type="text" 
                             placeholder="Create a new task"
                             ref = {inputRef}
                             />
                     </div>
-                    <div className="col-md-2 mb-3">
-                        <input type="date" className="form-control" id="inlineFormInput"
-                                    placeholder="Deadline" ref = {dateInputRef}/>
-                    </div>
-                    <div className="col-md  -8">
-                        <input type="text" className="form-control" id="inlineFormInput"
-                                    placeholder="Member assigned" ref = {memberInputRef}/>
-                    </div>
-                    <div className="col-md-8 mb-3">
+                    <div className="col-md-6 mb-3">
                         <input type="text" className="form-control" id="inlineFormInput"
                                     placeholder="Department" ref = {departmentInputRef}/>
                     </div>
-                    
-                    <div class="col-md-2 mb-3">
-                        <button type="submit" className="form-control btn btn-primary ">Submit</button>
+                    <div className="col-md-4">
+                        <input type="text" className="form-control" id="inlineFormInput"
+                                    placeholder="Member assigned" ref = {memberInputRef}/>
                     </div>
+                    <div className="col-sm-2">
+                        <input className="form-control" type="number" 
+                            placeholder="0"
+                            ref = {inputRef}
+                            />
+                    </div>
+                    <div className="col-sm-2">
+                        <input type="radio" id="days" name = 'deadline' ref = {inputRef} value="days"/>
+                        <label for="days">days</label><br/>
+                        <input type="radio" id="weeks" name = 'deadline' ref = {inputRef} value="weeks"/>
+                        <label for="weeks">weeks</label><br/>
+                        <input type="radio" id="months" name = 'deadline' ref = {inputRef} value="months"/>
+                        <label for="months">months</label><br/>
+                    </div>
+                    <div className="col-sm-2">
+                        <input type="radio" id="before" name = 'deadlineTime' ref = {inputRef} value="before"/>
+                        <label for="days">before hire</label><br/>
+                        <input type="radio" id="after" name = 'deadlineTime' ref = {inputRef} value="after"/>
+                        <label for="weeks">after hire</label><br/>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <button type="submit" className="form-control btn btn-primary ">Submit</button>
+                </div>
+                <div className="form-row">
                 </div>
             </form>
         
