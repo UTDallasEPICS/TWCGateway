@@ -150,9 +150,21 @@ function taskFillerForSingleEmployee(results, empNum){
       task.number = results.rows[i].task_num;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
-      task.deadline = String(results.rows[i].deadline);
-      task.confirmationDate = String(results.rows[i].confirm_date);
-      task.employee = String(results.rows[i].employee_name);
+      const d = new Date(results.rows[i].deadline);
+      task.deadline = String(d.toDateString());
+      const dConfirm = new Date(results.rows[i].confirm_date);
+      if (! results.rows[i].confirm_date) {
+        task.confirmationDate = results.rows[i].confirm_data;
+      }
+      else{
+        task.confirmationDate = String(dConfirm.toDateString())
+      }
+      if(!results.rows[i].employee_name){
+        task.employee = results.rows[i].employee_name
+      }
+      else{
+        task.employee = String(results.rows[i].employee_name);
+      }
       task.member_assigned = String(results.rows[i].member_assigned);
       task.assigned_employee_id = results.rows[i].assigned_employee_id;
       task.task_num = results.rows[i].task_num;
