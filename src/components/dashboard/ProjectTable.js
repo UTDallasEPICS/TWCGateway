@@ -94,6 +94,28 @@ import axios from 'axios';
   },
 ];
 */
+async function remove(emp_name, emp_email) {
+  try {
+    console.log(
+      "trying to remove employee " + emp_name + " whos email is " + emp_email
+    );
+
+    const url =
+      "http://localhost:5001/removeOnboarding/"+emp_name+'/'+emp_email;
+
+    console.log('earl: ', url)
+    const fin = await fetch(url, {method: 'DELETE'});
+
+    window.location.reload();
+
+    console.log("I have confirmed remove " + emp_name);
+  } catch (e) {
+    console.log("there was an error");
+    console.log(e);
+    return e;
+  }
+};
+
 const ProjectTable = () => {
   const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
   const [employeeNewHireStatus, setStatusArray] = useState([]);  //have to declare global variable  and the function to change it here
@@ -161,7 +183,7 @@ const tableData = [];
     // console.log('TEMP1: ',temp)
     //let temp = String(employeeNewHireStatus[i][1] +'/'+ employeeNewHireStatus[i][2])
     let temp = String(employeeNewHireStatus[i])
-     console.log('TEMP2: ',temp)
+    console.log('TEMP2: ',temp)
     tableData[i] =  {
       
       name: employeeNewHireNames[i][0],
@@ -241,7 +263,7 @@ const tableData = [];
                   </td>
 
                   <td>
-                  <button><img src={trash}alt =""/></button>
+                  <button onClick={() => remove(tdata.name,tdata.email)}><img src={trash}alt =""/></button>
                   </td>
                 </tr>
               ))}

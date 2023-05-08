@@ -253,6 +253,24 @@ app.put("/confirmTask/:date/:emp_name/:task_num/:emp_num", async (req, res) => {
     }
 });
 
+app.delete("/removeOnboarding/:emp_name/:emp_email", async (req, res) => {
+    try{
+        const emp_name = req.params['emp_name'];
+        const emp_email = req.params['emp_email'];
+        console.log('made here with name= ', emp_name)
+        console.log('made here with email= ', emp_email)
+        const results = await client.query("DELETE FROM public.employee WHERE name = $1 OR email = $2", [emp_name, emp_email]);
+        console.log('returning')
+        res.json(results);
+        console.log("update successful");
+
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error" + e.stack);
+    }
+});
+
 
 app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
     try{
