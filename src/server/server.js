@@ -373,7 +373,7 @@ app.get("/getEmployeeName/", async (req, res) => {
 });
 
 
-app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_title", async (req, res) => {
+app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_title/:startDate", async (req, res) => {
 
     try
     {
@@ -382,7 +382,8 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_ti
         const account_role = req.params['account_role'];
         const account_department = req.params['account_department'];
         const job_title = req.params['job_title'];
-        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"')"); 
+        const start_date = req.params['startDate'];
+        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title, start_date) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"', '"+start_date+"')"); 
         console.log("insert successful");
     }
     catch(e)

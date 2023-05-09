@@ -32,10 +32,10 @@ const handleSubmit = (e) => {
 
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
-  const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
+  const data = {name, email, jobTitle, startDate, valuedept, valueoffice, startDate}
   console.log(valuedept);
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle, {
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
       method: "POST",
     });
   }
