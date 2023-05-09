@@ -176,6 +176,7 @@ return (
                 onChange = {(e) => setValuedept(e.target.value)}>
 
                       {/* Could be dynamic, don't leave these hardcoded if you dont need to */}
+                      <option >Select Department</option>
                       <option >Basic Onboarding</option>
                       <option>Billing</option>
                       <option>Clinic</option>
