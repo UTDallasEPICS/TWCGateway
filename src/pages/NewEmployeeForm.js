@@ -35,7 +35,7 @@ const fetchDB = async() =>{
   const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
   console.log(valuedept);
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ "Basic Onboarding", {
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ "Basic Onboarding" +"/"+jobTitle, {
       method: "POST",
     });
   }

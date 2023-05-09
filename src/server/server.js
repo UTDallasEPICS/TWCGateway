@@ -362,6 +362,27 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department", async
         res.send("there was an error" + e.stack);
     }
 
+});
+
+app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_title", async (req, res) => {
+
+    try
+    {
+        const name = req.params['name'];
+        const email = req.params['email'];
+        const account_role = req.params['account_role'];
+        const job_title = req.params['job_title'];
+        const account_department = req.params['account_department'];
+        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"')"); 
+        console.log("insert successful");
+    }
+    catch(e)
+    {
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error" + e.stack);
+    }
+
 }); 
 
 // works for test database
