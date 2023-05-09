@@ -41,9 +41,12 @@ var task ={
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([]);
+  const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
+
 
   useEffect( () => {
     fetchDB();
+    fetchEmployees();
   }, [])
 
   const fetchDB = async () => {
@@ -64,6 +67,19 @@ const CurrentOnboarding = () => {
     }
   }
 
+      //function name to be called later
+    const fetchEmployees = async() =>{ 
+      const results = await fetch("http://localhost:5001/EmployeeNewHire");
+      const data = await results.json();
+    
+      console.log("data", data)
+        //fill the array with data gotten from our database call
+      const nameArr = data?.rows?.map(item => [item.name, item.accountid]);
+        //This globally sets the array
+      setNewHire(nameArr)
+        
+    };
+
 
 //const taskList = taskFillerForSingleEmployee(dataBase, 0);
 //const elements = displayFillerSingleEmployee(taskList);
@@ -73,7 +89,7 @@ const CurrentOnboarding = () => {
     var taskList = taskFillerForMultipleEmployees(dataBase, (dataBase.rowCount)/38);
 
 
-    var elements = displayFillerMultipleEmployees(taskList);
+    var elements = displayFillerMultipleEmployees(taskList, employeeNewHireNames);
   }
  /*
   else if (typeof dataBase.rowCount !== "undefined" && !sup){
@@ -205,7 +221,7 @@ function taskFillerForMultipleEmployees(results, numEmployee){
   }
 }
 
-function displayFillerMultipleEmployees(employeeTasks){
+function displayFillerMultipleEmployees(employeeTasks, nameArray){
   try{
     // call display filler single employee for every employee
     var numEmployee = employeeTasks.length;
@@ -215,7 +231,7 @@ function displayFillerMultipleEmployees(employeeTasks){
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
-        Employee ID {employeeTasks[i][0].assigned_employee_id}
+        {nameArray.find(el => el[1] == employeeTasks[i][0].assigned_employee_id)[0]}
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>
