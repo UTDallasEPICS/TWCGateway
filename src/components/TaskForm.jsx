@@ -91,17 +91,17 @@ const TaskForm = () => {
                     </div>
                     <div className="col-sm-1">
                         <input type="radio" id="days" name = 'deadline' ref = {timeRef} value="days"/>
-                        <label for="days">days</label><br/>
+                        <label for="days">Days</label><br/>
                         <input type="radio" id="weeks" name = 'deadline' ref = {timeRef} value="weeks"/>
-                        <label for="weeks">weeks</label><br/>
+                        <label for="weeks">Weeks</label><br/>
                         <input type="radio" id="months" name = 'deadline' ref = {timeRef} value="months"/>
-                        <label for="months">months</label><br/>
+                        <label for="months">Months</label><br/>
                     </div>
                     <div className="col-sm">
                         <input type="radio" id="beforeStart" name = 'deadlineTime' ref = {befAfterRef} value="before start"/>
-                        <label for="days">before start</label><br/>
+                        <label for="days">Before start</label><br/>
                         <input type="radio" id="afterStart" name = 'deadlineTime' ref = {befAfterRef} value="after start"/>
-                        <label for="weeks">after start</label><br/>
+                        <label for="weeks">After start</label><br/>
                     </div>
                 </div>
                 <div class="mb-3">

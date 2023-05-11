@@ -441,17 +441,17 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
             const befAft = timeVals[2];
             let frameAmount = 0;
 
-            if(befAft == 'before'){
+            if(befAft == 'Before'){
                 before = true;
             }
             switch(timeFrame){
-                case 'days':
+                case 'Days':
                     frameAmount = 1;
                     break;
-                case 'weeks':
+                case 'Weeks':
                     frameAmount = 7;
                     break;
-                case 'months':
+                case 'Months':
                     frameAmount = 30;
                     break;
                 default:
