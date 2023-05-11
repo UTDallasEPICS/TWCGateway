@@ -14,7 +14,7 @@ import { useUserStore } from "../globalState";
 const accountID = 16;
 const depName = "Basic Onboarding";
 //HARDCODED here change below
-var numTasks = 38;
+//var numTasks = 38;
 var sup = false;
 
 
@@ -58,6 +58,7 @@ var task = {
 const CurrentOnboarding = () => {
   const [dataBase, setDb] = useState([]);
   const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
+  const [numTasksToDisplay, setTasksArray] = useState([]);  //have to declare global variable  and the function to change it here
 
   const { user } = useUserStore();
   
@@ -71,17 +72,32 @@ const CurrentOnboarding = () => {
 
   const fetchDB = async () => {
     
-    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
-  
-    
+    //below: important to properly display
+    const numTaskResponse = await fetch("http://localhost:5001/getTaskCounts");
+    const numTaskResults = await numTaskResponse.json();
+    const taskArr = numTaskResults?.rows?.map(item => [item.assigned_employee_id, item.count]);
+    setTasksArray(taskArr);
+
+    // let tempArr = [];
+    // let data = undefined;
+    // for(let i = 0; i < taskArr.length; i++){
+    //   console.log("IN DATA");
+    //   let response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+parseInt(numTaskResults.rows[i].assigned_employee_id));
+    //   data = await response.json();
+    //   console.log("DATA: ", i, ": ", data);
+    //   const dataArr = data?.rows?.map(item => [item]);
+    //   tempArr.push(dataArr);
+    // }
+
+    let response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+ accountID);//+parseInt(numTaskResults.rows[i].assigned_employee_id));
+    let data = await response.json();
+    //probably dont need below 4 lines, double check response 2.
     const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+depName);
-
     const response3 = await fetch("http://localhost:5001/Employee");
-
-    const data = await response.json();
     const data2 = await response2.json();
     const data3 = await response3.json();
-
+    // console.log("TEMPARRY====: ", tempArr)
+    // const finalArr = tempArr;
     if (sup) {
       setDb(data);
     } else {
@@ -100,14 +116,13 @@ const CurrentOnboarding = () => {
       const nameArr = data?.rows?.map(item => [item.name, item.accountid]);
       //This globally sets the array
       setNewHire(nameArr)
-      
     };
 
 
   var elements = [];
-  if(typeof dataBase.rowCount !== "undefined"){
-    console.log(dataBase.rowCount/numTasks);
-    var taskList = taskFillerForMultipleEmployees(dataBase, dataBase.rowCount/numTasks);
+  if(typeof numTasksToDisplay.length !== "undefined"){
+    console.log(numTasksToDisplay.length);
+    var taskList = taskFillerForMultipleEmployees(dataBase, numTasksToDisplay);
 
 
     var elements = displayFillerMultipleEmployees(taskList, employeeNewHireNames);
@@ -212,7 +227,7 @@ try{
 }
 };
 
-function taskFillerForSingleEmployee(results, empNum){
+function taskFillerForSingleEmployee(results, empNum, numTasks){
 try{
   let taskList = [];
   //console.log(results.rows[0]);
@@ -256,16 +271,27 @@ try{
 }
 }
 
-function taskFillerForMultipleEmployees(results, numEmployee){
+function taskFillerForMultipleEmployees(results, numTasksArray){
 try{
   
   // call taskFiller for single employee for every employee in 
   var employeeTasks = [];
   var tempList = [];
+  var numEmployee = numTasksArray.length
+  var employeesTasks = []
+
+  // for(let i = 0; i < results.rowCount; i++){
+  //   console.log("IDNUMBERAHHHH: ",numTasksArray[i][0])
+  //   if(results.rows[i].assigned_employee_id == numTasksArray[i][0]){
+  //     console.log("in here")
+  //     employeesTasks.push(results.rows[i]);
+  //   }
+  // }
+
   //console.log("taskfiller multiple test: " + results);
   for(var i = 0; i < numEmployee; i++){
- 
-    tempList = taskFillerForSingleEmployee(results, i);
+    //console.log("Employee RESULST: ", employeesTasks)
+    tempList = taskFillerForSingleEmployee(results, i, parseInt(numTasksArray[i][1]));
     employeeTasks.push(tempList);
 
   }

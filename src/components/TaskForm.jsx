@@ -6,7 +6,7 @@ import {
     Input,
   } from "reactstrap";
 import DefaultTasks from "../pages/DefaultTasks";
-import {useRef} from 'react';
+import {useRef, useState} from 'react';
 //import { useAuth0 } from "@auth0/auth0-react";
 
 // import {useState} from 'react'
@@ -15,7 +15,10 @@ const TaskForm = () => {
     const inputRef = useRef(null);
     const dateInputRef = useRef(null);
     const memberInputRef = useRef(null);
-    const departmentInputRef = useRef(null);
+    const [departmentInputRef, setdepartment] = useState('');
+    const timeValRef = useRef(null);
+    const timeRef = useRef(null);
+    const befAfterRef = useRef(null);
     // const [output, setOutput] = useState("");
 
     // const handleSubmit = (e) => {
@@ -28,18 +31,34 @@ const TaskForm = () => {
     //     DefaultTasksaddNewItem(inputRef.current.value);
     // }
 
-    const handleSubmit = (event) => {
-    
-
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        window.location.reload(false);
         console.log('Form submitted');    
         console.log(inputRef.current.value);
-        console.log(dateInputRef.current.value);
+        console.log(departmentInputRef);
         console.log(memberInputRef.current.value);
-        console.log(departmentInputRef.current.value);
-        event.preventDefault()
-        let holder = [inputRef.current.value, dateInputRef.current.value, memberInputRef.current.value, departmentInputRef.current.value]
-        DefaultTasks.addNewItem(holder);
+        console.log(timeValRef.current.value);
+        console.log(timeRef.current.value);
+        console.log(befAfterRef.current.value);
+        let holder = [inputRef.current.value, departmentInputRef, memberInputRef.current.value, timeValRef.current.value, timeRef.current.value, befAfterRef.current.value]
+        fetchTaskDb(holder);
+        //DefaultTasks.addNewItem(holder);
     }
+
+    const fetchTaskDb = async(holder) =>{ 
+        console.log(holder);
+        try{
+          await fetch("http://localhost:5001/insertTask/" + holder[0] +"/"+ holder[1] +"/"+ holder[2] +"/"+ holder[3] +"/"+ holder[4] +"/"+ holder[5], {
+            method: "POST",
+          });
+        }
+        catch(e)
+        {
+          console.log(e); 
+          console.log("there was an error"); 
+        }
+      };
 
     return (
         
@@ -51,10 +70,15 @@ const TaskForm = () => {
                             ref = {inputRef}
                             />
                     </div>
-                    <div className="col-md-6 mb-3">
-                        <input type="text" className="form-control" id="inlineFormInput"
-                                    placeholder="Department" ref = {departmentInputRef}/>
-                    </div>
+                    <Label className="col-md-6 mb-3">
+                        <Input required type="select" className="form-control" id="inlineFormInput"
+                                    placeholder="Department" onChange = {(e) => setdepartment(e.target.value)}>
+                                    <option>Select Department</option>
+                                    <option>Basic Onboarding</option>
+                                    <option>Billing</option>
+                                    <option>E.C.I</option>
+                        </Input>
+                    </Label>
                     <div className="col-md-4">
                         <input type="text" className="form-control" id="inlineFormInput"
                                     placeholder="Member assigned" ref = {memberInputRef}/>
@@ -62,29 +86,25 @@ const TaskForm = () => {
                     <div className="col-sm-1">
                         <input className="form-control" type="number" 
                             placeholder="0"
-                            ref = {inputRef}
+                            ref = {timeValRef}
                             />
                     </div>
                     <div className="col-sm-1">
-                        <input type="radio" id="days" name = 'deadline' ref = {inputRef} value="days"/>
+                        <input type="radio" id="days" name = 'deadline' ref = {timeRef} value="days"/>
                         <label for="days">days</label><br/>
-                        <input type="radio" id="weeks" name = 'deadline' ref = {inputRef} value="weeks"/>
+                        <input type="radio" id="weeks" name = 'deadline' ref = {timeRef} value="weeks"/>
                         <label for="weeks">weeks</label><br/>
-                        <input type="radio" id="months" name = 'deadline' ref = {inputRef} value="months"/>
+                        <input type="radio" id="months" name = 'deadline' ref = {timeRef} value="months"/>
                         <label for="months">months</label><br/>
                     </div>
                     <div className="col-sm">
-                        <input type="radio" id="beforeHire" name = 'deadlineTime' ref = {inputRef} value="before hire"/>
-                        <label for="days">before hire</label><br/>
-                        <input type="radio" id="afterHire" name = 'deadlineTime' ref = {inputRef} value="after hire"/>
-                        <label for="weeks">after hire</label><br/>
-                        <input type="radio" id="beforeStart" name = 'deadlineTime' ref = {inputRef} value="before start"/>
+                        <input type="radio" id="beforeStart" name = 'deadlineTime' ref = {befAfterRef} value="before start"/>
                         <label for="days">before start</label><br/>
-                        <input type="radio" id="afterStart" name = 'deadlineTime' ref = {inputRef} value="after start"/>
+                        <input type="radio" id="afterStart" name = 'deadlineTime' ref = {befAfterRef} value="after start"/>
                         <label for="weeks">after start</label><br/>
                     </div>
                 </div>
-                <div class="col-md-2 mb-3">
+                <div class="mb-3">
                     <button type="submit" className="form-control btn btn-primary ">Submit</button>
                 </div>
                 <div className="form-row">

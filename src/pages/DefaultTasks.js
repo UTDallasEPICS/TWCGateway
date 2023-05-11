@@ -6,7 +6,7 @@ import { useState, useEffect} from 'react'
 
 const INITIAL_STATE = [];
 
-const DefaultTasks = function () {
+const DefaultTasks = function (e) {
   console.log('DEFAULTTASKS')
   // LINK BACKEND RIGHT HERE
   // const INITIAL_STATE = [
@@ -19,9 +19,15 @@ const DefaultTasks = function () {
 
   const [dataBase, setDb] = useState([]);
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    // Handle form submission here
+  }
+
   useEffect( () => {
     console.log("IN USE EFFECT")
     fetchDB();
+    
   }, [])
 
   const fetchDB = async () => {
@@ -41,18 +47,20 @@ const DefaultTasks = function () {
   }
 
   const [tasks, setTasks] = useState(INITIAL_STATE)
-
-  const renderUsers = () => {
+  
+  const renderUsers = (e) => {
     ///return tasks.map(({ num, task, department, deadline, confirm, date, employee, assigned }) => {
+      let i = 1;
       return tasks.map((item) => {
       return <tr key={item.task_id} >
-        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.task_id}</td>
+        <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{i++}</td> {/* Could change i to task id but the sequence in the database is huge rn so i'm using this in its place*/} 
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.task_description}</td>
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.department}</td>
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.deadline}</td>
         <td style={{ padding: '20px', border: '1px solid gainsboro' }}>{item.member_assigned}</td>
     </tr>
     })
+    
   }
 
   return (

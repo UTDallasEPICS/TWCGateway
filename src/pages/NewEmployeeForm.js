@@ -27,12 +27,12 @@ const handleSubmit = (e) => {
   e.preventDefault(); 
   //console.log(data);
   fetchDB();
-  fetchDB2(); 
+  fetchDB2();
 };
 
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
-  const data = {name, email, jobTitle, startDate, valuedept, valueoffice, startDate}
+  const data = {name, email, jobTitle, valuedept, valueoffice, startDate}
   console.log(valuedept);
   try{
     await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
@@ -46,7 +46,7 @@ const fetchDB = async() =>{
   }
 };
 
-const fetchDB2 = async() =>{ 
+const fetchDB2 = async(event) =>{ 
   try{
     const response = await fetch("http://localhost:5001/getEmployeedata/"+email);
     const data = await response.json();
