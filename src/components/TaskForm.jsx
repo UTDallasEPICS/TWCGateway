@@ -31,9 +31,9 @@ const TaskForm = () => {
     //     DefaultTasksaddNewItem(inputRef.current.value);
     // }
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        window.location.reload(false);
+    const handleSubmit = () => {
+        //e.preventDefault();
+        //window.location.reload(false);
         console.log('Form submitted');    
         console.log(inputRef.current.value);
         console.log(departmentInputRef);
@@ -90,12 +90,12 @@ const TaskForm = () => {
                             />
                     </div>
                     <div className="col-sm-1">
-                        <input type="radio" id="days" name = 'deadline' ref = {timeRef} value="days"/>
-                        <label for="days">Days</label><br/>
-                        <input type="radio" id="weeks" name = 'deadline' ref = {timeRef} value="weeks"/>
-                        <label for="weeks">Weeks</label><br/>
-                        <input type="radio" id="months" name = 'deadline' ref = {timeRef} value="months"/>
-                        <label for="months">Months</label><br/>
+                        <input type="radio" id="Days" name = 'deadline' ref = {timeRef} value="Days"/>
+                        <label for="Days">Days</label><br/>
+                        <input type="radio" id="Weeks" name = 'deadline' ref = {timeRef} value="Weeks"/>
+                        <label for="Weeks">Weeks</label><br/>
+                        <input type="radio" id="Months" name = 'deadline' ref = {timeRef} value="Months"/>
+                        <label for="Months">Months</label><br/>
                     </div>
                     <div className="col-sm">
                         <input type="radio" id="beforeStart" name = 'deadlineTime' ref = {befAfterRef} value="before start"/>

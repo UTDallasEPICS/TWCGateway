@@ -440,7 +440,8 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
             const timeFrame = timeVals[1];
             const befAft = timeVals[2];
             let frameAmount = 0;
-
+            console.log(timeFrame)
+            console.log(timeVals)
             if(befAft == 'Before'){
                 before = true;
             }
@@ -472,9 +473,9 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
             editDate = editDate.getUTCFullYear() +"-"+ (editDate.getUTCMonth()+1) +"-"+ editDate.getUTCDate();
             console.log(timeVals);
             console.log(editDate);
-
-            await client.query("INSERT INTO public.task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id)"+
-                                "VALUES ('"+results.rows[i].task_description+"', '"+results.rows[i].department+"', '"+editDate+"', '"+results.rows[i].member_assigned+"', "+id+")");
+            let numHolder = i + 1;
+            await client.query("INSERT INTO public.task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id, task_num)"+
+                                "VALUES ('"+results.rows[i].task_description+"', '"+results.rows[i].department+"', '"+editDate+"', '"+results.rows[i].member_assigned+"', '"+id+"', '"+numHolder+"')");
 
         }
         // const oneBeforeDate = new Date(req.params['date']);
