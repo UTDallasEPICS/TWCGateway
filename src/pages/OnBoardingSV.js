@@ -41,9 +41,12 @@ var task ={
 const CurrentOnboarding = () => {
 
   const [dataBase, setDb] = useState([]);
+  const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
+
 
   useEffect( () => {
     fetchDB();
+    fetchEmployees();
   }, [])
 
   const fetchDB = async () => {
@@ -64,6 +67,19 @@ const CurrentOnboarding = () => {
     }
   }
 
+      //function name to be called later
+    const fetchEmployees = async() =>{ 
+      const results = await fetch("http://localhost:5001/EmployeeNewHire");
+      const data = await results.json();
+    
+      console.log("data", data)
+        //fill the array with data gotten from our database call
+      const nameArr = data?.rows?.map(item => [item.name, item.accountid]);
+        //This globally sets the array
+      setNewHire(nameArr)
+        
+    };
+
 
 //const taskList = taskFillerForSingleEmployee(dataBase, 0);
 //const elements = displayFillerSingleEmployee(taskList);
@@ -73,7 +89,7 @@ const CurrentOnboarding = () => {
     var taskList = taskFillerForMultipleEmployees(dataBase, (dataBase.rowCount)/38);
 
 
-    var elements = displayFillerMultipleEmployees(taskList);
+    var elements = displayFillerMultipleEmployees(taskList, employeeNewHireNames);
   }
  /*
   else if (typeof dataBase.rowCount !== "undefined" && !sup){
@@ -146,13 +162,25 @@ function taskFillerForSingleEmployee(results, empNum){
   try{
     let taskList = [];
     console.log(results.rows[0]);
-    for(var i = empNum*38; i < (empNum+1)*38; i++){
+    for(var i = empNum*38; i < (empNum+1)*38; i++){       //this is hard coded and need to be dynamically included with the department##########################
       task.number = results.rows[i].task_num;
       task.description = String(results.rows[i].task_description);
       task.department = String(results.rows[i].department_name);
-      task.deadline = String(results.rows[i].deadline);
-      task.confirmationDate = String(results.rows[i].confirm_date);
-      task.employee = String(results.rows[i].employee_name);
+      const d = new Date(results.rows[i].deadline);
+      task.deadline = String(d.toDateString());
+      const dConfirm = new Date(results.rows[i].confirm_date);
+      if (! results.rows[i].confirm_date) {
+        task.confirmationDate = results.rows[i].confirm_data;
+      }
+      else{
+        task.confirmationDate = String(dConfirm.toDateString())
+      }
+      if(!results.rows[i].employee_name){
+        task.employee = results.rows[i].employee_name
+      }
+      else{
+        task.employee = String(results.rows[i].employee_name);
+      }
       task.member_assigned = String(results.rows[i].member_assigned);
       task.assigned_employee_id = results.rows[i].assigned_employee_id;
       task.task_num = results.rows[i].task_num;
@@ -193,7 +221,7 @@ function taskFillerForMultipleEmployees(results, numEmployee){
   }
 }
 
-function displayFillerMultipleEmployees(employeeTasks){
+function displayFillerMultipleEmployees(employeeTasks, nameArray){
   try{
     // call display filler single employee for every employee
     var numEmployee = employeeTasks.length;
@@ -203,7 +231,7 @@ function displayFillerMultipleEmployees(employeeTasks){
         <Card>
       <CardTitle tag="h6" className="border-bottom p-3 mb-0">
       <i className="bi bi-card-text me-2"> </i>
-        Employee ID {employeeTasks[i][0].assigned_employee_id}
+        {nameArray.find(el => el[1] == employeeTasks[i][0].assigned_employee_id)[0]}
       </CardTitle>
       <CardBody className="">
         <Table bordered striped>

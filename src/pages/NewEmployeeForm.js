@@ -22,19 +22,20 @@ const [jobTitle, setjobTitle] = useState('');
 const [startDate, setstartDate] = useState('');
 const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
+const [valuestaff, setValuestaff]= useState('');
 const handleSubmit = (e) => { 
   e.preventDefault(); 
   //console.log(data);
   fetchDB();
-  fetchDB2(); 
+  fetchDB2();
 };
 
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
-  const data = {name, email, jobTitle, startDate, valuedept, valueoffice}
+  const data = {name, email, jobTitle, valuedept, valueoffice, startDate}
   console.log(valuedept);
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ "Basic Onboarding", {
+    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
       method: "POST",
     });
   }
@@ -45,7 +46,7 @@ const fetchDB = async() =>{
   }
 };
 
-const fetchDB2 = async() =>{ 
+const fetchDB2 = async(event) =>{ 
   try{
     const response = await fetch("http://localhost:5001/getEmployeedata/"+email);
     const data = await response.json();
@@ -168,19 +169,18 @@ return (
                 onChange = {(e) => setstartDate(e.target.value)}
               />
             </FormGroup>
-
+            
             <FormGroup>
               <Label htmlFor="selectDepartment">Department</Label>
                 <Input  required type="select"  name= "Department" value = {valuedept}
                 onChange = {(e) => setValuedept(e.target.value)}>
 
-
-                    <option>Basic Onboarding</option>
-                    <option>Department 2</option>
-                    <option>Department 3</option>
-                    <option>Department 4</option>
-                    <option>Department 5</option>
-                    <option>Department 5</option>
+                      {/* Could be dynamic, don't leave these hardcoded if you dont need to */}
+                      <option >Select Department</option>
+                      <option >Basic Onboarding</option>
+                      <option>Billing</option>
+                      <option>Clinic</option>
+                      <option>ECI</option>
               </Input>
             </FormGroup>
 
@@ -192,17 +192,6 @@ return (
                 <option>Central</option>
                 <option>East</option>
                 <option>West</option>
-              </Input>
-            </FormGroup>
-
-            <FormGroup>
-              <Label htmlFor="selectStaff">Assign Onboarding Staff</Label>
-              <Input  required id="selectStaff" multiple name="selectStaff" type="select">
-                <option>Staff member</option>
-                <option>Staff member</option>
-                <option>Staff member</option>
-                <option>Staff member</option>
-                <option>Staff member</option>
               </Input>
             </FormGroup>
             {/*

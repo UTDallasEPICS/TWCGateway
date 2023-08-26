@@ -10,8 +10,8 @@ import {
   Label,
   Input,
 } from "reactstrap";
-import { useState, setState} from "react";
-
+//have to import useEffect here
+import { useState, useEffect} from "react";
 
 
 const NewSupervisorForm = () => {
@@ -22,7 +22,16 @@ const NewSupervisorForm = () => {
   const [valuesupervisordept, setsuperValuedept]= useState('');
   const [valuesupervisoroffice, setsuperValueoffice]= useState('');
   const [valueaccess, setaccesslevel]= useState('');
+  const [valueemployee, setvalueEmployee]= useState('');
   const [posted, isposted] = useState('');
+  const [employeeNewHireNames, setNewHire] = useState([]);  //have to declare global variable  and the function to change it here
+
+  //use this to run the function once when the page loads
+  useEffect(()=> {
+
+    fetchEmployees()
+    // set data to the state
+  }, [])
 
   const handleSubmit = (e) => {
     e.preventDefault(); 
@@ -43,12 +52,12 @@ const NewSupervisorForm = () => {
 
 
   }
-  
+  //NewEmployeeForm Line 37 works but this one doesn't
   const fetchDB = async() =>{ 
     const name = supervisorfirstname + " " + supervisorlastname; 
     const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
     try{
-      await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
+      const response = await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
         method: "POST"
       });
       
@@ -60,6 +69,20 @@ const NewSupervisorForm = () => {
     }
   };
 
+  //function name to be called later
+  const fetchEmployees = async() =>{ 
+    const results = await fetch("http://localhost:5001/EmployeeNewHire");
+    const data = await results.json();
+
+    console.log("data", data)
+    //fill the array with data gotten from our database call
+    const nameArr = data?.rows?.map(item => item.name);
+    //This globally sets the array
+    setNewHire(nameArr)
+    
+  };
+
+  //console.log("employeeNewHireNames: ", employeeNewHireNames)
   return (
     <Row>
       <Col>
@@ -74,69 +97,29 @@ const NewSupervisorForm = () => {
           <CardBody>
             <Form >
               <Row>
-                <Col xs="6">
-                  <FormGroup>
-                    <Label htmlFor="EmployeeFirstName">First Name</Label>
-                    <Input
-                      required
-                      id="employeeFirstName"
-                      name="FirstName"
-                      placeholder=""
-                      type="text"
-                      value = {supervisorfirstname}
-                      onChange = {(e) => setsuperFname(e.target.value)}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col xs="6">
-                <FormGroup>
-                  <Label htmlFor="EmployeeLastName">Last Name</Label>
-                  <Input
-                     required
-                     id="employeeLastName"
-                     name="LastName"
-                     placeholder=""
-                     type="text"
-                     value = {supervisorlastname}
-                     onChange = {(e) => setsuperLname(e.target.value)}
-                  />
-                </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-              <Col xs="6">
+                <Col xs>
               <FormGroup>
-                <Label htmlFor="exampleEmail">Email</Label>
-                <Input
-                  required
-                  id="exampleEmail"
-                  name="email"
-                  placeholder=""
-                  type="email"
-                  value = {supervisoremail}
-                  onChange = {(e) => setsuperEmail(e.target.value)}
-                />
-              </FormGroup>
-              </Col>
-              <Col xs="6">
-              <FormGroup>
-                <Label htmlFor="jobTitle">Job Title</Label>
-                <Input
-                  id="jobTitle"
-                  name="jobTitle"
-                  placeholder=""
-                  type="text"
-                  value = {jobsupervisorTitle}
-                  onChange = {(e) => setsuperjobTitle(e.target.value)}
-                />
-              </FormGroup>
-              </Col>
-              </Row>
 
+                <Label htmlFor="selectEmployee">Select Employee</Label>
+                  <Input id="EmpList"   required type="select"  name= "Employee" value = {valueaccess}
+                  onChange = {(e) => setaccesslevel(e.target.value)} >
+                    
+                    {/*AMAL this line means when the 'Select' button is pressed it runs the function */}
+                    <option onClick={()=> fetchEmployees()}>Select</option>
+                    {/* This is the array     this turns every name into a button that you can press on */}
+                    {employeeNewHireNames && employeeNewHireNames.map((item => <option >{item}</option>))}
+                    
+                  </Input>
+              </FormGroup>
+                 
+
+              </Col>
+              </Row>
               <Row>
               <Col xs="6">
+
               <FormGroup>
-                <Label htmlFor="selectacess">Acess Level</Label>
+                <Label htmlFor="selectaccess">Access Level</Label>
                   <Input  required type="select"  name= "Department" value = {valueaccess}
                   onChange = {(e) => setaccesslevel(e.target.value)}>
 
@@ -146,18 +129,17 @@ const NewSupervisorForm = () => {
               </FormGroup>
               </Col>
               <Col xs="6">
+
               <FormGroup>
                 <Label htmlFor="selectDepartment">Department</Label>
                   <Input  required type="select"  name= "Department" value = {valuesupervisordept}
                   onChange = {(e) => setsuperValuedept(e.target.value)}>
 
 
-                      <option >Department 1</option>
-                      <option>Department 2</option>
-                      <option>Department 3</option>
-                      <option>Department 4</option>
-                      <option>Department 5</option>
-                      <option>Department 5</option>
+                      <option >Basic Onboarding</option>
+                      <option>Billing</option>
+                      <option>Clinic</option>
+                      <option>ECI</option>
                 </Input>
               </FormGroup>
               </Col>

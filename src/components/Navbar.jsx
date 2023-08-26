@@ -1,6 +1,8 @@
 import logo from "./images/The-Warren-Center-logo.png"
 import { useAuth0 } from "@auth0/auth0-react";
 
+
+
 const Navbar = () => {
 
     const { logout } = useAuth0();

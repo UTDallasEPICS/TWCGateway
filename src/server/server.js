@@ -14,14 +14,24 @@ const corsOptions ={
 }
 
 app.use(cors(corsOptions)) // Use this after the variable declaration
-
+//TASK
 const client = new Client({
-    user: "team",
-    password: "epic",
-    host: "localhost",
-    port: "5432",
-    database: "postgres"
+    user: "postgres",       //Use this
+    password: "biggums",    //pgAdmin password
+    host: "localhost",      //Use this
+    port: "5432",           //Default only change if you changed the port number on set up
+    database: "postgres"    //Try this first, change if not wokring to a database name you have setup in PGAdmin or text me
 })
+
+// client.connect();
+// client.query('Select * from public.employee', (err, res)=>{
+//         if(!err){
+//             console.log(res.rows);
+//         } else {
+//             console.log(err.message);
+//         }
+//         client.end;
+// })
 
 var email = 'bad@yahoo.com';
 var userName = '';
@@ -96,6 +106,15 @@ async function connect() {
         console.error(`connection failed ${e}`);
     }
 }
+//Paste Here!!!
+client.query('Select * from public.task_list where task_id = 115', (err, res)=>{
+        if(!err){
+            console.log(res.rows);
+        } else {
+            console.log(err.message);
+        }
+       
+})
 
 // works with test database
 app.get("/signIn", async (req, res) => {
@@ -139,6 +158,43 @@ app.get("/Employee", async (req, res) => {
         res.send("there was an error");
     }
 });
+
+
+// Use this as a template to make your own queries
+app.get("/EmployeeNewHire", async (req, res) => {
+    try{
+        const results = await client.query("select * from public.employee WHERE account_role = \'NewHire\'");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+
+app.get("/CurrentStatus", async (req, res) => {
+    try{
+        const results = await client.query("select e.name, Count(confirm_date), MAX(task_num) from public.task_list as t INNER JOIN public.employee as e ON t.assigned_employee_id = e.accountid WHERE account_role = 'NewHire' GROUP BY assigned_employee_id, e.name ORDER BY assigned_employee_id ASC");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+// Use this as a template to make your own queries
+app.get("/DefaultTaskList", async (req, res) => {
+    try{
+        const results = await client.query("select Distinct(task_description), department_name, deadline, member_assigned  from public.task_list WHERE department_name = \'Basic Onboarding\'");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
 
 
 
@@ -197,6 +253,48 @@ app.put("/confirmTask/:date/:emp_name/:task_num/:emp_num", async (req, res) => {
     }
 });
 
+app.delete("/removeOnboarding/:emp_name/:emp_email", async (req, res) => {
+    try{
+        const emp_name = req.params['emp_name'];
+        const emp_email = req.params['emp_email'];
+        console.log('made here with name= ', emp_name)
+        console.log('made here with email= ', emp_email)
+        const results = await client.query("DELETE FROM public.employee WHERE name = $1 OR email = $2", [emp_name, emp_email]);
+        console.log('returning')
+        res.json(results);
+        console.log("update successful");
+
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error" + e.stack);
+    }
+});
+
+
+app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const results = await client.query("SELECT accountid FROM public.employee WHERE email = $1", [email]);
+        res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+app.get("/DefaultTasks", async (req, res) => {
+    try{
+    const results = await client.query("SELECT * FROM public.default_tasks");
+    //console.log(results);
+    res.json(results.rows); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
 
 // works with test database will put the values of a task into different variables
 // able to get all tasks based off the employee id for that task
@@ -216,6 +314,18 @@ app.get("/displayEmployeedata/:id", async (req, res) => {
     try{
         const {id} = req.params;
         const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
+        res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
+app.get("/getEmployeeEmail/:gmail", async (req, res) => {
+    try{
+        const {id} = req.params;
+        const results = await client.query("SELECT * FROM public.employee WHERE email = $1", [gmail]);
         res.json(results); 
     }catch(e){
         console.error(`query failed ${e}`);
@@ -249,16 +359,32 @@ app.get("/getEmployeeName/:id", async (req, res) => {
     }
 });
 
+app.get("/getEmployeeName/", async (req, res) => {
+    try{
+    const {id} = req.params;
+    const results = await client.query("SELECT * FROM public.employee");
+    console.log(results.rows[0].name);
+    res.json(results); 
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
 
-app.post("/insertEmployee/:name/:email/:account_role/:account_department", async (req, res) => {
 
+app.post("/insertTask/:task_description/:department/:member_assigned/:timeVal/:dayWeekMonth/:BeforeAfter/", async (req, res) => {
+    console.log("TRYING");
     try
     {
-        const name = req.params['name'];
-        const email = req.params['email'];
-        const account_role = req.params['account_role'];
-        const account_department = req.params['account_department'];
-        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"')"); 
+        const description = req.params['task_description'];
+        const department = req.params['department'];
+        const member_assigned = req.params['member_assigned'];
+        const timeVal = req.params['timeVal'];
+        const dayWeekMonth = req.params['dayWeekMonth'];
+        const BeforeAfter = req.params['BeforeAfter'];
+        const deadline = String(timeVal + ' ' +  dayWeekMonth + ' '+ BeforeAfter)
+        const results = await client.query("INSERT INTO public.default_tasks (task_description, department, deadline,member_assigned) VALUES  ('"+description+"', '"+department+"', '"+deadline+"', '"+member_assigned+"')"); 
         console.log("insert successful");
     }
     catch(e)
@@ -270,75 +396,149 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department", async
 
 }); 
 
+
+app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_title/:startDate", async (req, res) => {
+
+    try
+    {
+        const name = req.params['name'];
+        const email = req.params['email'];
+        const account_role = req.params['account_role'];
+        const account_department = req.params['account_department'];
+        const job_title = req.params['job_title'];
+        const start_date = req.params['startDate'];
+        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title, start_date) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"', '"+start_date+"')"); 
+        console.log("insert successful");
+    }
+    catch(e)
+    {
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error" + e.stack);
+    }
+
+}); 
+
+
 // works for test database
 app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
     try{
-        const results = await client.query("select * from public.employee");
+        const results = await client.query("select * from public.default_tasks ORDER BY task_id ASC");
+
         const id = req.params['id'];
         const firstCurrentDate = new Date(req.params['date']);
         const currentDate = firstCurrentDate.getUTCFullYear() +"-"+ (firstCurrentDate.getUTCMonth()+1) +"-"+ firstCurrentDate.getUTCDate();
+        console.log(currentDate)
+        console.log(results)
 
-        const oneBeforeDate = new Date(req.params['date']);
-        oneBeforeDate.setDate(firstCurrentDate.getDate() - 1);
-        const oneBefore = oneBeforeDate.getUTCFullYear() +"-"+ (oneBeforeDate.getUTCMonth()+1) +"-"+ oneBeforeDate.getUTCDate();
+        for(let i = 0; i < results.rowCount; i++){
+            let editDate = new Date(req.params['date']);
+            
+            let before = false;
+            const timeVals = results.rows[i].deadline.split(" ");
+            const digit = parseInt(timeVals[0]);
+            const timeFrame = timeVals[1];
+            const befAft = timeVals[2];
+            let frameAmount = 0;
+            console.log(timeFrame)
+            console.log(timeVals)
+            if(befAft == 'Before'){
+                before = true;
+            }
+            switch(timeFrame){
+                case 'Days':
+                    frameAmount = 1;
+                    break;
+                case 'Weeks':
+                    frameAmount = 7;
+                    break;
+                case 'Months':
+                    frameAmount = 30;
+                    break;
+                default:
+                    frameAmount = -1;
+            }
+            if(before){
+                if(frameAmount == 30)
+                    editDate.setMonth(firstCurrentDate.getMonth() - digit);
+                else
+                    editDate.setDate(firstCurrentDate.getDate() - (digit * frameAmount));
+            }
+            else{
+                if(frameAmount == 30)
+                    editDate.setMonth(firstCurrentDate.getMonth() + digit);
+                else
+                    editDate.setDate(firstCurrentDate.getDate() + (digit * frameAmount));
+            }
+            editDate = editDate.getUTCFullYear() +"-"+ (editDate.getUTCMonth()+1) +"-"+ editDate.getUTCDate();
+            console.log(timeVals);
+            console.log(editDate);
+            let numHolder = i + 1;
+            await client.query("INSERT INTO public.task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id, task_num)"+
+                                "VALUES ('"+results.rows[i].task_description+"', '"+results.rows[i].department+"', '"+editDate+"', '"+results.rows[i].member_assigned+"', '"+id+"', '"+numHolder+"')");
 
-        const fiveBeforeDate = new Date(req.params['date']);
-        fiveBeforeDate.setDate(firstCurrentDate.getDate() - 5);
-        const fiveBefore = fiveBeforeDate.getUTCFullYear() +"-"+ (fiveBeforeDate.getUTCMonth()+1) +"-"+ fiveBeforeDate.getUTCDate();
+        }
+        // const oneBeforeDate = new Date(req.params['date']);
+        // oneBeforeDate.setDate(firstCurrentDate.getDate() - 1);
+        // const oneBefore = oneBeforeDate.getUTCFullYear() +"-"+ (oneBeforeDate.getUTCMonth()+1) +"-"+ oneBeforeDate.getUTCDate();
 
-        const sevenBeforeDate = new Date(req.params['date']);
-        sevenBeforeDate.setDate(firstCurrentDate.getDate() - 7);
-        const sevenBefore = sevenBeforeDate.getUTCFullYear() +"-"+ (sevenBeforeDate.getUTCMonth()+1) +"-"+ sevenBeforeDate.getUTCDate();
+        // const fiveBeforeDate = new Date(req.params['date']);
+        // fiveBeforeDate.setDate(firstCurrentDate.getDate() - 5);
+        // const fiveBefore = fiveBeforeDate.getUTCFullYear() +"-"+ (fiveBeforeDate.getUTCMonth()+1) +"-"+ fiveBeforeDate.getUTCDate();
 
-        const tenBeforeDate = new Date(req.params['date']);
-        tenBeforeDate.setDate(firstCurrentDate.getDate() - 10);
-        const tenBefore = tenBeforeDate.getUTCFullYear() +"-"+ (tenBeforeDate.getUTCMonth()+1) +"-"+ tenBeforeDate.getUTCDate();
+        // const sevenBeforeDate = new Date(req.params['date']);
+        // sevenBeforeDate.setDate(firstCurrentDate.getDate() - 7);
+        // const sevenBefore = sevenBeforeDate.getUTCFullYear() +"-"+ (sevenBeforeDate.getUTCMonth()+1) +"-"+ sevenBeforeDate.getUTCDate();
 
-        const fourteenBeforeDate = new Date(req.params['date']);
-        fourteenBeforeDate.setDate(firstCurrentDate.getDate() - 14);
-        const fourteenBefore = fourteenBeforeDate.getUTCFullYear() +"-"+ (fourteenBeforeDate.getUTCMonth()+1) +"-"+ fourteenBeforeDate.getUTCDate();
+        // const tenBeforeDate = new Date(req.params['date']);
+        // tenBeforeDate.setDate(firstCurrentDate.getDate() - 10);
+        // const tenBefore = tenBeforeDate.getUTCFullYear() +"-"+ (tenBeforeDate.getUTCMonth()+1) +"-"+ tenBeforeDate.getUTCDate();
+
+        // const fourteenBeforeDate = new Date(req.params['date']);
+        // fourteenBeforeDate.setDate(firstCurrentDate.getDate() - 14);
+        // const fourteenBefore = fourteenBeforeDate.getUTCFullYear() +"-"+ (fourteenBeforeDate.getUTCMonth()+1) +"-"+ fourteenBeforeDate.getUTCDate();
       
     
-        await client.query("INSERT INTO public.task_list (task_description, department_name,"+
-        " deadline, member_assigned, assigned_employee_id) VALUES "
-        +"('Generates Written Offer letter for CEO to sign.', 'Basic Onboarding', '"+fourteenBefore+"', 'COO', "+id+"),"
-        +"('Sends candidate welcome email offer letter, (I-9 and first day paperwork).', 'Basic Onboarding', '"+tenBefore+"', 'COO', "+id+"),"
-        +"('Submits New User Creation Form to Mednetworx.', 'Basic Onboarding', '"+tenBefore+"', 'Office Manager', "+id+"),"
-        +"('Runs VeriFYI background check.', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager', "+id+"),"
-        +"('Verifies License.', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager', "+id+"),"
-        +"('Insider Announcement.', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager', "+id+"),"
-        +"('Request NPI/TPI, SS and DL from new hire', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager/Billing Director', "+id+"),"
-        +"('Receives IT Equipment/Checks for readiness', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
-        +"('Reviews Fingerprinting Results*', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
-        +"('Updates Organization Chart.', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
-        +"('Creates Keycard(s).', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
-        +"('Sets up Copy/Printer code.', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
-        +"('Sets up Orientation/Trainings with other departments.', 'Basic Onboarding', '"+sevenBefore+"', 'Department Manager', "+id+"),"
-        +"('Welcome Email with first day instructions.', 'Basic Onboarding', '"+fiveBefore+"', 'COO', "+id+"),"
-        +"('Identify Desk.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
-        +"('Submits New User Creation Form to Mednetworx.', 'Basic Onboarding', '"+tenBefore+"', 'Department Manager', "+id+"),"
-        +"('Mailboxes.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
-        +"('Welcome Sign.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
-        +"('TWC T-shirt.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
-        +"('Prepares Desk.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
-        +"('Collect HR documents: Drivers license and Auto Insurance, license, transcripts, CPR, direct deposit.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Schedule 30 minutes for Amy Spawn to meet new staff.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Favorites Form.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('E-Verify.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Issues IT equipment and logins.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Collects Asset/Equipment Agreement.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Order Business Cards.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Explains 401k.', 'Basic Onboarding', '"+currentDate+"', 'COO', "+id+"),"
-        +"('Issues Keycard.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Assign HIPAA and IT Security Courses.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Insperity portal introduction.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Add picture and information to check-in iPad', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Add employee information to Employee Information Sheet and Internal Phone List sheet', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Provide TWC t-shirt', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Complete Favorites form and save in Common Drive', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Complete Strengths Finder assessment', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Take picture in TWC shirt - save in Common Drive, print and put on poster', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
-        +"('Update Organizational chart', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+")");
+        // await client.query("INSERT INTO public.task_list (task_description, department_name,"+
+        // " deadline, member_assigned, assigned_employee_id) VALUES "
+        // +"('Generates Written Offer letter for CEO to sign.', 'Basic Onboarding', '"+fourteenBefore+"', 'COO', "+id+"),"
+        // +"('Sends candidate welcome email offer letter, (I-9 and first day paperwork).', 'Basic Onboarding', '"+tenBefore+"', 'COO', "+id+"),"
+        // +"('Submits New User Creation Form to Mednetworx.', 'Basic Onboarding', '"+tenBefore+"', 'Office Manager', "+id+"),"
+        // +"('Runs VeriFYI background check.', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager', "+id+"),"
+        // +"('Verifies License.', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager', "+id+"),"
+        // +"('Insider Announcement.', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager', "+id+"),"
+        // +"('Request NPI/TPI, SS and DL from new hire', 'Basic Onboarding', '"+sevenBefore+"', 'Office Manager/Billing Director', "+id+"),"
+        // +"('Receives IT Equipment/Checks for readiness', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
+        // +"('Reviews Fingerprinting Results*', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
+        // +"('Updates Organization Chart.', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
+        // +"('Creates Keycard(s).', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
+        // +"('Sets up Copy/Printer code.', 'Basic Onboarding', '"+oneBefore+"', 'Office Manager', "+id+"),"
+        // +"('Sets up Orientation/Trainings with other departments.', 'Basic Onboarding', '"+sevenBefore+"', 'Department Manager', "+id+"),"
+        // +"('Welcome Email with first day instructions.', 'Basic Onboarding', '"+fiveBefore+"', 'COO', "+id+"),"
+        // +"('Identify Desk.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
+        // +"('Submits New User Creation Form to Mednetworx.', 'Basic Onboarding', '"+tenBefore+"', 'Department Manager', "+id+"),"
+        // +"('Mailboxes.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
+        // +"('Welcome Sign.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
+        // +"('TWC T-shirt.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
+        // +"('Prepares Desk.', 'Basic Onboarding', '"+oneBefore+"', 'Department Manager', "+id+"),"
+        // +"('Collect HR documents: Drivers license and Auto Insurance, license, transcripts, CPR, direct deposit.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Schedule 30 minutes for Amy Spawn to meet new staff.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Favorites Form.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('E-Verify.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Issues IT equipment and logins.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Collects Asset/Equipment Agreement.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Order Business Cards.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Explains 401k.', 'Basic Onboarding', '"+currentDate+"', 'COO', "+id+"),"
+        // +"('Issues Keycard.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Assign HIPAA and IT Security Courses.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Insperity portal introduction.', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Add picture and information to check-in iPad', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Add employee information to Employee Information Sheet and Internal Phone List sheet', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Provide TWC t-shirt', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Complete Favorites form and save in Common Drive', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Complete Strengths Finder assessment', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Take picture in TWC shirt - save in Common Drive, print and put on poster', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+"),"
+        // +"('Update Organizational chart', 'Basic Onboarding', '"+currentDate+"', 'Office Manager', "+id+")");
         
         res.json(results);
         console.log("insert successful list")
@@ -361,6 +561,17 @@ app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
         res.send("there was an error");
     }
 });
+app.get("/getTaskCounts", async (req, res) => {
+    try{
+        const results = await client.query("SELECT assigned_employee_id, Count(*)  FROM public.task_list GROUP BY assigned_employee_id ORDER BY assigned_employee_id ASC");
+        res.json(results);
+    }catch(e){
+        console.error(`query failed ${e}`);
+        console.log(e.stack);
+        res.send("there was an error");
+    }
+});
+
 
 app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
     try{
