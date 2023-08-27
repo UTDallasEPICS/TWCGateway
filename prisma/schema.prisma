@@ -1,0 +1,32 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model employee {
+  name               String?     @db.VarChar(30)
+  password           String?     @db.VarChar(30)
+  email              String      @db.VarChar(30)
+  accountid          Int         @id(map: "accountID_pkey") @default(autoincrement())
+  account_role       String?     @db.VarChar(30)
+  account_department String?     @db.VarChar(60)
+  task_list          task_list[]
+}
+
+model task_list {
+  task_id              Int       @id @default(autoincrement())
+  task_description     String?   @default("no task description") @db.VarChar(125)
+  department_name      String    @default("Basic Onboarding") @db.VarChar(60)
+  deadline             DateTime  @db.Date
+  confirm_status       Boolean   @default(false)
+  confirm_date         DateTime? @db.Date
+  employee_name        String?   @db.VarChar(60)
+  member_assigned      String?   @db.VarChar(60)
+  assigned_employee_id Int?
+  task_num             Int       @default(autoincrement())
+  employee             employee? @relation(fields: [assigned_employee_id], references: [accountid], onDelete: NoAction, onUpdate: NoAction, map: "employee_foreign_key")
+}
