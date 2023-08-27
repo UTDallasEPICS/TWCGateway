@@ -7,6 +7,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// TODO: department should be a table with foregin key, 
+// rewrite queries to use prisma client
+// use auth0 instead of auith here - we can probably integrate into their existing g-suite
 model employee {
   name               String?     @db.VarChar(30)
   password           String?     @db.VarChar(30)
