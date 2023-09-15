@@ -1,10 +1,12 @@
 //import {taskFiller} from './Database/DatabaseFunctions.js';
 //import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
 
-
+const prisma = require("@prisma/client")
 const express = require('express')
 const { Client } =  require("pg")
 const app = express()
+
+//const client = new prisma.PrismaClient()
 
 const cors=require("cors");
 const corsOptions ={
@@ -17,21 +19,22 @@ app.use(cors(corsOptions)) // Use this after the variable declaration
 //TASK
 const client = new Client({
     user: "postgres",       //Use this
-    password: "biggums",    //pgAdmin password
+    password: "postgres",    //pgAdmin password [was biggums for some reason]
     host: "localhost",      //Use this
-    port: "5432",           //Default only change if you changed the port number on set up
+    port: "5002",           //Default only change if you changed the port number on set up
     database: "postgres"    //Try this first, change if not wokring to a database name you have setup in PGAdmin or text me
 })
 
-// client.connect();
-// client.query('Select * from public.employee', (err, res)=>{
-//         if(!err){
-//             console.log(res.rows);
-//         } else {
-//             console.log(err.message);
-//         }
-//         client.end;
-// })
+
+client.connect();
+client.query('Select * from public.employee', (err, res)=>{
+         if(!err){
+             console.log(res.rows);
+         } else {
+             console.log(err.message);
+         }
+         client.end;
+})
 
 var email = 'bad@yahoo.com';
 var userName = '';
@@ -59,7 +62,10 @@ var task ={
 
 async function signIn(req, res, account, email){
     try{
-        const results = await client.query("select * from public.employee where email = '"+email+"'")
+        const employee = await client.employee.find({where:{
+            email
+        }})
+        ////const results = await client.query("select * from public.employee where email = '"+email+"'")
         if(results.rowCount == 1){
             account.email = results.rows[0].email;
             account.accountID = results.rows[0].accountid;
@@ -95,31 +101,21 @@ async function signIn(req, res, account, email){
 };
 
 // connect to database
-connect();
-async function connect() {
-    try {
-        await client.connect();
-        console.log(`connected`);
-        const res = await client.query('SELECT * FROM public.employee');
-        const resTask = await client.query("SELECT * FROM public.task_list");
-    } catch(e){
-        console.error(`connection failed ${e}`);
-    }
-}
+
 //Paste Here!!!
-client.query('Select * from public.task_list where task_id = 115', (err, res)=>{
+/*client.query('Select * from public.task_list where task_id = 115', (err, res)=>{
         if(!err){
             console.log(res.rows);
         } else {
             console.log(err.message);
         }
        
-})
+})*/
 
 // works with test database
 app.get("/signIn", async (req, res) => {
     try{
-        const results = await client.query("select * from public.employee where email = '"+email+"'");
+        //const results = await client.query("select * from public.employee where email = '"+email+"'");
         res.json(results.rows[0].account_role + " " + results.rows[0].name);
         console.log(results.rows[0].name);
         userName = results.rows[0].name;
@@ -150,7 +146,7 @@ app.get("/signIn", async (req, res) => {
 // respond with "hello world" when a GET request is made to the homepage
 app.get("/Employee", async (req, res) => {
     try{
-        const results = await client.query("select * from public.employee");
+        //const results = await client.query("select * from public.employee");
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -163,7 +159,7 @@ app.get("/Employee", async (req, res) => {
 // Use this as a template to make your own queries
 app.get("/EmployeeNewHire", async (req, res) => {
     try{
-        const results = await client.query("select * from public.employee WHERE account_role = \'NewHire\'");
+        //const results = await client.query("select * from public.employee WHERE account_role = \'NewHire\'");
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -175,7 +171,7 @@ app.get("/EmployeeNewHire", async (req, res) => {
 
 app.get("/CurrentStatus", async (req, res) => {
     try{
-        const results = await client.query("select e.name, Count(confirm_date), MAX(task_num) from public.task_list as t INNER JOIN public.employee as e ON t.assigned_employee_id = e.accountid WHERE account_role = 'NewHire' GROUP BY assigned_employee_id, e.name ORDER BY assigned_employee_id ASC");
+        //const results = await client.query("select e.name, Count(confirm_date), MAX(task_num) from public.task_list as t INNER JOIN public.employee as e ON t.assigned_employee_id = e.accountid WHERE account_role = 'NewHire' GROUP BY assigned_employee_id, e.name ORDER BY assigned_employee_id ASC");
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -186,7 +182,7 @@ app.get("/CurrentStatus", async (req, res) => {
 // Use this as a template to make your own queries
 app.get("/DefaultTaskList", async (req, res) => {
     try{
-        const results = await client.query("select Distinct(task_description), department_name, deadline, member_assigned  from public.task_list WHERE department_name = \'Basic Onboarding\'");
+        //const results = await client.query("select Distinct(task_description), department_name, deadline, member_assigned  from public.task_list WHERE department_name = \'Basic Onboarding\'");
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -200,7 +196,7 @@ app.get("/DefaultTaskList", async (req, res) => {
 
 app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
     try{
-        const results = await client.query("select * from public.employee where email = '"+email+"'")
+        //const results = await client.query("select * from public.employee where email = '"+email+"'")
         if(results.rowCount == 1){
             account.email = results.rows[0].email;
             account.accountID = results.rows[0].accountid;
@@ -242,7 +238,7 @@ app.put("/confirmTask/:date/:emp_name/:task_num/:emp_num", async (req, res) => {
         const emp_name = req.params['emp_name'];
         const task_num = req.params['task_num'];
         const emp_num = req.params['emp_num'];
-        const results = await client.query("UPDATE public.task_list SET confirm_status = TRUE, confirm_date = '"+date+"', employee_name = '"+emp_name+"' WHERE task_num = "+task_num+" AND assigned_employee_id = "+emp_num);
+        //const results = await client.query("UPDATE public.task_list SET confirm_status = TRUE, confirm_date = '"+date+"', employee_name = '"+emp_name+"' WHERE task_num = "+task_num+" AND assigned_employee_id = "+emp_num);
         res.json(results);
         console.log("update successful");
 
@@ -259,7 +255,7 @@ app.delete("/removeOnboarding/:emp_name/:emp_email", async (req, res) => {
         const emp_email = req.params['emp_email'];
         console.log('made here with name= ', emp_name)
         console.log('made here with email= ', emp_email)
-        const results = await client.query("DELETE FROM public.employee WHERE name = $1 OR email = $2", [emp_name, emp_email]);
+        //const results = await client.query("DELETE FROM public.employee WHERE name = $1 OR email = $2", [emp_name, emp_email]);
         console.log('returning')
         res.json(results);
         console.log("update successful");
@@ -275,7 +271,7 @@ app.delete("/removeOnboarding/:emp_name/:emp_email", async (req, res) => {
 app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
     try{
         const {id} = req.params;
-        const results = await client.query("SELECT accountid FROM public.employee WHERE email = $1", [email]);
+        //const results = await client.query("SELECT accountid FROM public.employee WHERE email = $1", [email]);
         res.json(results); 
     }catch(e){
         console.error(`query failed ${e}`);
@@ -286,7 +282,7 @@ app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
 
 app.get("/DefaultTasks", async (req, res) => {
     try{
-    const results = await client.query("SELECT * FROM public.default_tasks");
+    //const results = await client.query("SELECT * FROM public.default_tasks");
     //console.log(results);
     res.json(results.rows); 
     }catch(e){
@@ -301,7 +297,7 @@ app.get("/DefaultTasks", async (req, res) => {
 app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
     try{
         const {id} = req.params;
-        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = $1 ORDER BY confirm_status", [id]);
+        //const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = $1 ORDER BY confirm_status", [id]);
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -313,7 +309,7 @@ app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
 app.get("/displayEmployeedata/:id", async (req, res) => {
     try{
         const {id} = req.params;
-        const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
+        //const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
         res.json(results); 
     }catch(e){
         console.error(`query failed ${e}`);
@@ -325,7 +321,7 @@ app.get("/displayEmployeedata/:id", async (req, res) => {
 app.get("/getEmployeeEmail/:gmail", async (req, res) => {
     try{
         const {id} = req.params;
-        const results = await client.query("SELECT * FROM public.employee WHERE email = $1", [gmail]);
+        //const results = await client.query("SELECT * FROM public.employee WHERE email = $1", [gmail]);
         res.json(results); 
     }catch(e){
         console.error(`query failed ${e}`);
@@ -337,7 +333,7 @@ app.get("/getEmployeeEmail/:gmail", async (req, res) => {
 app.get("/getEmployeedata/:email", async (req, res) => {
     try{
         const {email} = req.params;
-        const results = await client.query("SELECT * FROM public.employee WHERE email = $1", [email]);
+        //const results = await client.query("SELECT * FROM public.employee WHERE email = $1", [email]);
         res.json(results); 
     }catch(e){
         console.error(`query failed ${e}`);
@@ -349,7 +345,7 @@ app.get("/getEmployeedata/:email", async (req, res) => {
 app.get("/getEmployeeName/:id", async (req, res) => {
     try{
     const {id} = req.params;
-    const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
+    //const results = await client.query("SELECT * FROM public.employee WHERE accountid = $1", [id]);
     console.log(results.rows[0].name);
     res.json(results); 
     }catch(e){
@@ -362,7 +358,7 @@ app.get("/getEmployeeName/:id", async (req, res) => {
 app.get("/getEmployeeName/", async (req, res) => {
     try{
     const {id} = req.params;
-    const results = await client.query("SELECT * FROM public.employee");
+    //const results = await client.query("SELECT * FROM public.employee");
     console.log(results.rows[0].name);
     res.json(results); 
     }catch(e){
@@ -384,7 +380,7 @@ app.post("/insertTask/:task_description/:department/:member_assigned/:timeVal/:d
         const dayWeekMonth = req.params['dayWeekMonth'];
         const BeforeAfter = req.params['BeforeAfter'];
         const deadline = String(timeVal + ' ' +  dayWeekMonth + ' '+ BeforeAfter)
-        const results = await client.query("INSERT INTO public.default_tasks (task_description, department, deadline,member_assigned) VALUES  ('"+description+"', '"+department+"', '"+deadline+"', '"+member_assigned+"')"); 
+        //const results = await client.query("INSERT INTO public.default_tasks (task_description, department, deadline,member_assigned) VALUES  ('"+description+"', '"+department+"', '"+deadline+"', '"+member_assigned+"')"); 
         console.log("insert successful");
     }
     catch(e)
@@ -407,7 +403,7 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_ti
         const account_department = req.params['account_department'];
         const job_title = req.params['job_title'];
         const start_date = req.params['startDate'];
-        const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title, start_date) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"', '"+start_date+"')"); 
+        //const results = await client.query("INSERT INTO public.employee (name, email, account_role,account_department, job_title, start_date) VALUES  ('"+name+"', '"+email+"', '"+account_role+"', '"+account_department+"', '"+job_title+"', '"+start_date+"')"); 
         console.log("insert successful");
     }
     catch(e)
@@ -423,7 +419,7 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_ti
 // works for test database
 app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
     try{
-        const results = await client.query("select * from public.default_tasks ORDER BY task_id ASC");
+        //const results = await client.query("select * from public.default_tasks ORDER BY task_id ASC");
 
         const id = req.params['id'];
         const firstCurrentDate = new Date(req.params['date']);
@@ -474,8 +470,8 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
             console.log(timeVals);
             console.log(editDate);
             let numHolder = i + 1;
-            await client.query("INSERT INTO public.task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id, task_num)"+
-                                "VALUES ('"+results.rows[i].task_description+"', '"+results.rows[i].department+"', '"+editDate+"', '"+results.rows[i].member_assigned+"', '"+id+"', '"+numHolder+"')");
+            //await client.query("INSERT INTO public.task_list (task_description, department_name, deadline, member_assigned, assigned_employee_id, task_num)"+
+            //                    "VALUES ('"+results.rows[i].task_description+"', '"+results.rows[i].department+"', '"+editDate+"', '"+results.rows[i].member_assigned+"', '"+id+"', '"+numHolder+"')");
 
         }
         // const oneBeforeDate = new Date(req.params['date']);
@@ -499,7 +495,7 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
         // const fourteenBefore = fourteenBeforeDate.getUTCFullYear() +"-"+ (fourteenBeforeDate.getUTCMonth()+1) +"-"+ fourteenBeforeDate.getUTCDate();
       
     
-        // await client.query("INSERT INTO public.task_list (task_description, department_name,"+
+        //// await client.query("INSERT INTO public.task_list (task_description, department_name,"+
         // " deadline, member_assigned, assigned_employee_id) VALUES "
         // +"('Generates Written Offer letter for CEO to sign.', 'Basic Onboarding', '"+fourteenBefore+"', 'COO', "+id+"),"
         // +"('Sends candidate welcome email offer letter, (I-9 and first day paperwork).', 'Basic Onboarding', '"+tenBefore+"', 'COO', "+id+"),"
@@ -553,7 +549,7 @@ app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
 app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
     try{
         const {id} = req.params;
-        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = $1 ORDER BY task_num", [id]);
+        //const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = $1 ORDER BY task_num", [id]);
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -563,7 +559,7 @@ app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
 });
 app.get("/getTaskCounts", async (req, res) => {
     try{
-        const results = await client.query("SELECT assigned_employee_id, Count(*)  FROM public.task_list GROUP BY assigned_employee_id ORDER BY assigned_employee_id ASC");
+        //const results = await client.query("SELECT assigned_employee_id, Count(*)  FROM public.task_list GROUP BY assigned_employee_id ORDER BY assigned_employee_id ASC");
         res.json(results);
     }catch(e){
         console.error(`query failed ${e}`);
@@ -576,7 +572,7 @@ app.get("/getTaskCounts", async (req, res) => {
 app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
     try{
         const {dep} = req.params;
-        const results = await client.query("SELECT * FROM public.task_list WHERE department_name = '"+dep+"' ORDER BY assigned_employee_id, task_num");
+        //const results = await client.query("SELECT * FROM public.task_list WHERE department_name = '"+dep+"' ORDER BY assigned_employee_id, task_num");
         //console.log(results);
         res.json(results);
     }catch(e){
@@ -589,7 +585,7 @@ app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
 app.get("/displayemployeeindept/:dep", async (req, res) => {
     try{
         const {dep} = req.params;
-        const results = await client.query("SELECT * FROM public.employee WHERE (account_department = '"+dep+"' and account_role = 'NewHire')");
+        //const results = await client.query("SELECT * FROM public.employee WHERE (account_department = '"+dep+"' and account_role = 'NewHire')");
         console.log(results);
         res.json(results);
     }catch(e){
@@ -602,7 +598,7 @@ app.get("/displayemployeeindept/:dep", async (req, res) => {
 app.get("/displayFirstDayTaskGroup/:id", async (req, res) => {
     try{
         const id = req.params['id'];
-        const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = "+id+" AND deadline = (SELECT max(deadline) FROM public.task_list WHERE assigned_employee_id = "+id+") ORDER BY task_num;");
+        //const results = await client.query("SELECT * FROM public.task_list WHERE assigned_employee_id = "+id+" AND deadline = (SELECT max(deadline) FROM public.task_list WHERE assigned_employee_id = "+id+") ORDER BY task_num;");
         console.log(results);
         res.json(results);
     }catch(e){

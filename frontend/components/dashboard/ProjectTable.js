@@ -153,8 +153,9 @@ const fetchEmployees = async() =>{
   //fill the array with data gotten from our database call
   const nameArr = data?.rows?.map(item => [item.name, item.email, item.account_department]);
   //This globally sets the array
-  return nameArr;
   setNewHire(nameArr)
+  return nameArr;
+  
 
   // const status = await fetch("http://localhost:5001/CurrentStatus");
   // const statusData = await status.json();
@@ -170,8 +171,8 @@ const fetchStatus = async() =>{
   const statusData = await status.json();
   const statusArr = statusData?.rows?.map(item => String(item.count +'/'+ item.max));
   console.log('###############',statusArr)
-  return statusArr
   setStatusArray(statusArr)
+  return statusArr
     
 };
 
