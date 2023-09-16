@@ -197,7 +197,7 @@ INSERT INTO public.employee VALUES ('tom', 'real', 'tom@gmail.com', 3, 'NewHire'
 INSERT INTO public.employee VALUES ('Gabriel Bentley', 'test123', 'geb190000@utdallas.edu', 4, 'Supervisor', 'Basic Onboarding', NULL, NULL);
 INSERT INTO public.employee VALUES ('Garret Starbuck', 'mailFile', 'gabrieledward00@gmail.com', 5, 'NewHire', 'Basic Onboarding', NULL, NULL);
 INSERT INTO public.employee VALUES ('Frank Mallard', 'GreatFrank', 'Frank888@utdallas.edu', 6, 'NewHire', 'Basic Onboarding', NULL, NULL);
-INSERT INTO public.employee VALUES ('Tushar Manish', NULL, 'junk@gmail.com', 8, 'NewHire', 'Basic Onboarding', 'Boss Man', '1111-11-11');
+INSERT INTO public.employee VALUES ('Tushar Wani', NULL, 'junk@gmail.com', 8, 'NewHire', 'Basic Onboarding', 'Boss Man', '1111-11-11');
 INSERT INTO public.employee VALUES ('Aiden Escamilla', NULL, 'aiden.escamilla@gmail.com', 9, 'NewHire', 'Billing', 'sadad', '1111-11-11');
 
 

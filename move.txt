@@ -1,4 +1,0 @@
-frontend
-    everthing we don't delete goes here
-backend
-    src/server
