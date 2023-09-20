@@ -43,7 +43,7 @@ dist/
 .env.*.local
 
 # Ignore package-lock.json for npm
-package-lock.json
+#package-lock.json
 pnpm-lock.yaml
 
 # Ignore yarn.lock for Yarn
