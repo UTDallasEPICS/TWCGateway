@@ -10,6 +10,12 @@ services:
       - '5002:5432'
     volumes:
       - warren-db:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
 volumes:
   warren-db:
     driver: local
