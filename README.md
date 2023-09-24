@@ -83,12 +83,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 Not important for this commit
 
 ## Project Setup
-<style>
-  details > summary {
-    font-size: 1.2em;
-    font-weight: bold;
-  }
-</style>
+
 <details open>
 <summary>Prerequisites</summary>
 
