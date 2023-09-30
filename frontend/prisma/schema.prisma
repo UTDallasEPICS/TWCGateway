@@ -7,9 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// TODO: department should be a table with foregin key, 
-// rewrite queries to use prisma client
-// use auth0 instead of auith here - we can probably integrate into their existing g-suite
 model employee {
   name               String?     @db.VarChar(30)
   password           String?     @db.VarChar(30)
@@ -17,6 +14,8 @@ model employee {
   accountid          Int         @id(map: "accountID_pkey") @default(autoincrement())
   account_role       String?     @db.VarChar(30)
   account_department String?     @db.VarChar(60)
+  job_title          String?     @db.VarChar(30)
+  start_date         DateTime?   @db.Date
   task_list          task_list[]
 }
 
@@ -31,14 +30,24 @@ model task_list {
   member_assigned      String?   @db.VarChar(60)
   assigned_employee_id Int?
   task_num             Int       @default(autoincrement())
-  employee             employee? @relation(fields: [assigned_employee_id], references: [accountid], onDelete: NoAction, onUpdate: NoAction, map: "employee_foreign_key")
+  employee             employee? @relation(fields: [assigned_employee_id], references: [accountid], onDelete: Cascade, onUpdate: NoAction, map: "employee_foreign_key")
+}
+
+model default_tasks {
+  task_id          Int     @id @default(autoincrement())
+  task_description String  @default("no task description") @db.VarChar
+  department       String? @db.VarChar
+  deadline         String  @db.VarChar
+  member_assigned  String? @db.VarChar
 }
 
 // department table & usage in forms
-// dont need separate home, move all nav to be in the top or side, display based on role
+
+// UI display based on role
+// dont need separate home, move all nav to be in the top or side
 // fix task create/edit - include department
 // rework user add - email, role, info
-// authentication & permissions checking
+
 // API rework: CRUD for task, user, task_list in separate files, user file includes get taskLists, get supervisedThings
 
 // next semester: next migration, UI overhaul, microsoft 365 integration

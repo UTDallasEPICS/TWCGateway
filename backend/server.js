@@ -23,39 +23,39 @@ const client = new Client({
     database: "postgres"    //Try this first, change if not wokring to a database name you have setup in PGAdmin or text me
 })
 
-// client.connect();
-// client.query('Select * from public.employee', (err, res)=>{
-//         if(!err){
-//             console.log(res.rows);
-//         } else {
-//             console.log(err.message);
-//         }
-//         client.end;
-// })
+client.connect();
+client.query('Select * from public.employee', (err, res)=>{
+        if(!err){
+            console.log(res.rows);
+        } else {
+            console.log(err.message);
+        }
+        client.end;
+})
 
 var email = 'bad@yahoo.com';
-var userName = '';
+//var userName = '';
 var userRole = '';
-var taskID = 2;
+//var taskID = 2;
 
-var account = {
-    email: 'bad@yahoo.com',
-    accountID: -1,
-    userName: '',
-    userRole: '',
-    department: '',
-    password: ''
-};
+// var account = {
+//     email: 'bad@yahoo.com',
+//     accountID: -1,
+//     userName: '',
+//     userRole: '',
+//     department: '',
+//     password: ''
+// };
 
-var task ={
-    number: 0,
-    description: '',
-    department: '',
-    deadline: '',
-    confirmationDate: '',
-    employee: '',
-    member_assigned: ''
-};
+// var task ={
+//     number: 0,
+//     description: '',
+//     department: '',
+//     deadline: '',
+//     confirmationDate: '',
+//     employee: '',
+//     member_assigned: ''
+// };
 
 async function signIn(req, res, account, email){
     try{
@@ -95,26 +95,26 @@ async function signIn(req, res, account, email){
 };
 
 // connect to database
-connect();
-async function connect() {
-    try {
-        await client.connect();
-        console.log(`connected`);
-        const res = await client.query('SELECT * FROM public.employee');
-        const resTask = await client.query("SELECT * FROM public.task_list");
-    } catch(e){
-        console.error(`connection failed ${e}`);
-    }
-}
+// connect();
+// async function connect() {
+//     try {
+//         await client.connect();
+//         console.log(`connected`);
+//         const res = await client.query('SELECT * FROM public.employee');
+//         const resTask = await client.query("SELECT * FROM public.task_list");
+//     } catch(e){
+//         console.error(`connection failed ${e}`);
+//     }
+// }
 //Paste Here!!!
-client.query('Select * from public.task_list where task_id = 115', (err, res)=>{
-        if(!err){
-            console.log(res.rows);
-        } else {
-            console.log(err.message);
-        }
+// client.query('Select * from public.task_list where task_id = 115', (err, res)=>{
+//         if(!err){
+//             console.log(res.rows);
+//         } else {
+//             console.log(err.message);
+//         }
        
-})
+// })
 
 // works with test database
 app.get("/signIn", async (req, res) => {
@@ -148,6 +148,10 @@ app.get("/signIn", async (req, res) => {
 });
 
 // respond with "hello world" when a GET request is made to the homepage
+
+//app.get("/",  (req, res) => {res.send("hello world");});
+
+
 app.get("/Employee", async (req, res) => {
     try{
         const results = await client.query("select * from public.employee");
