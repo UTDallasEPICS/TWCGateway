@@ -51,10 +51,10 @@ const CurrentOnboarding = () => {
 
   const fetchDB = async () => {
     
-    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
+    const response = await fetch("http://localhost:5010/displayEmployeeTaskGroup/"+accountID);
   
     
-    const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+depName);
+    const response2 = await fetch("http://localhost:5010/displayDepartmentTaskGroups/"+depName);
     
     const data = await response.json();
     const data2 = await response2.json();
@@ -69,7 +69,7 @@ const CurrentOnboarding = () => {
 
       //function name to be called later
     const fetchEmployees = async() =>{ 
-      const results = await fetch("http://localhost:5001/EmployeeNewHire");
+      const results = await fetch("http://localhost:5010/EmployeeNewHire");
       const data = await results.json();
     
       console.log("data", data)
@@ -120,7 +120,7 @@ async function confirm(emp_name, emp_num, task_num){
     var date = new Date();
     var date = date.getUTCFullYear() +"-"+ (date.getUTCMonth()+1) +"-"+ date.getUTCDate();
 
-    const url = "http://localhost:5001/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
+    const url = "http://localhost:5010/confirmTask/"+date+"/"+emp_name+"/"+task_num+"/"+emp_num;
 
 
     const fin = await axios.put(url);

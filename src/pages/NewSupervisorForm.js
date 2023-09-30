@@ -57,7 +57,7 @@ const NewSupervisorForm = () => {
     const name = supervisorfirstname + " " + supervisorlastname; 
     const data = {supervisorfirstname, supervisorlastname, supervisoremail, jobsupervisorTitle, valuesupervisordept, valuesupervisoroffice, valueaccess}
     try{
-      const response = await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
+      const response = await fetch("http://localhost:5010/insertEmployee/" + name +"/"+ supervisoremail +"/"+ valueaccess +"/"+ valuesupervisordept, {
         method: "POST"
       });
       
@@ -71,7 +71,7 @@ const NewSupervisorForm = () => {
 
   //function name to be called later
   const fetchEmployees = async() =>{ 
-    const results = await fetch("http://localhost:5001/EmployeeNewHire");
+    const results = await fetch("http://localhost:5010/EmployeeNewHire");
     const data = await results.json();
 
     console.log("data", data)

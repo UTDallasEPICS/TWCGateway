@@ -73,7 +73,7 @@ const CurrentOnboarding = () => {
   const fetchDB = async () => {
     
     //below: important to properly display
-    const numTaskResponse = await fetch("http://localhost:5001/getTaskCounts");
+    const numTaskResponse = await fetch("http://localhost:5010/getTaskCounts");
     const numTaskResults = await numTaskResponse.json();
     const taskArr = numTaskResults?.rows?.map(item => [item.assigned_employee_id, item.count]);
     setTasksArray(taskArr);
@@ -82,18 +82,18 @@ const CurrentOnboarding = () => {
     // let data = undefined;
     // for(let i = 0; i < taskArr.length; i++){
     //   console.log("IN DATA");
-    //   let response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+parseInt(numTaskResults.rows[i].assigned_employee_id));
+    //   let response = await fetch("http://localhost:5010/displayEmployeeTaskGroup/"+parseInt(numTaskResults.rows[i].assigned_employee_id));
     //   data = await response.json();
     //   console.log("DATA: ", i, ": ", data);
     //   const dataArr = data?.rows?.map(item => [item]);
     //   tempArr.push(dataArr);
     // }
 
-    let response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+ accountID);//+parseInt(numTaskResults.rows[i].assigned_employee_id));
+    let response = await fetch("http://localhost:5010/displayEmployeeTaskGroup/"+ accountID);//+parseInt(numTaskResults.rows[i].assigned_employee_id));
     let data = await response.json();
     //probably dont need below 4 lines, double check response 2.
-    const response2 = await fetch("http://localhost:5001/displayDepartmentTaskGroups/"+depName);
-    const response3 = await fetch("http://localhost:5001/Employee");
+    const response2 = await fetch("http://localhost:5010/displayDepartmentTaskGroups/"+depName);
+    const response3 = await fetch("http://localhost:5010/Employee");
     const data2 = await response2.json();
     const data3 = await response3.json();
     // console.log("TEMPARRY====: ", tempArr)
@@ -108,7 +108,7 @@ const CurrentOnboarding = () => {
 
     //function name to be called later
     const fetchEmployees = async() =>{ 
-      const results = await fetch("http://localhost:5001/EmployeeNewHire");
+      const results = await fetch("http://localhost:5010/EmployeeNewHire");
       const data = await results.json();
   
       console.log("data", data)
@@ -165,7 +165,7 @@ async function confirm(emp_name, emp_num, task_num) {
       date.getUTCDate();
 
     const url =
-      "http://localhost:5001/confirmTask/" +
+      "http://localhost:5010/confirmTask/" +
       date +
       "/" +
       emp_name +
@@ -191,7 +191,7 @@ async function confirm(emp_name, emp_num, task_num) {
 async function getTaskOwnerName(emp_id){
   try{
     console.log(emp_id);
-    const results = await fetch ("http://localhost:5001/getEmployeeName/");
+    const results = await fetch ("http://localhost:5010/getEmployeeName/");
     const name = await results.name;
     //console.log(name);
     return name;

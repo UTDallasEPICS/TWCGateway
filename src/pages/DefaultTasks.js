@@ -32,7 +32,7 @@ const DefaultTasks = function (e) {
 
   const fetchDB = async () => {
     console.log('Start')
-    const response = await fetch("http://localhost:5001/DefaultTasks");
+    const response = await fetch("http://localhost:5010/DefaultTasks");
     const data = await response.json();
     console.log('We here', data);
     setDb(data);

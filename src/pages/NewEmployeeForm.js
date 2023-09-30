@@ -35,7 +35,7 @@ const fetchDB = async() =>{
   const data = {name, email, jobTitle, valuedept, valueoffice, startDate}
   console.log(valuedept);
   try{
-    await fetch("http://localhost:5001/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
+    await fetch("http://localhost:5010/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
       method: "POST",
     });
   }
@@ -48,7 +48,7 @@ const fetchDB = async() =>{
 
 const fetchDB2 = async(event) =>{ 
   try{
-    const response = await fetch("http://localhost:5001/getEmployeedata/"+email);
+    const response = await fetch("http://localhost:5010/getEmployeedata/"+email);
     const data = await response.json();
   
     
@@ -61,7 +61,7 @@ const fetchDB2 = async(event) =>{
     delete data.rowCount;
     delete data.oid;
     try{
-      await fetch("http://localhost:5001/insertNewTaskGroup/" + data.rows[0].accountid +"/"+ startDate, {
+      await fetch("http://localhost:5010/insertNewTaskGroup/" + data.rows[0].accountid +"/"+ startDate, {
         method: "POST",
       });
       window.location.reload(false);

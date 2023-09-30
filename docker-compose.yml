@@ -7,7 +7,7 @@ services:
       - POSTGRES_DATABASE=postgres
       - POSTGRES_PASSWORD=postgres
     ports:
-      - '5002:5432'
+      - '5005:5432'
     volumes:
       - warren-db:/var/lib/postgresql/data
 volumes:

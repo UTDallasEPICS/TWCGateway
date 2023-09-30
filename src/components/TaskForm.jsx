@@ -49,7 +49,7 @@ const TaskForm = () => {
     const fetchTaskDb = async(holder) =>{ 
         console.log(holder);
         try{
-          await fetch("http://localhost:5001/insertTask/" + holder[0] +"/"+ holder[1] +"/"+ holder[2] +"/"+ holder[3] +"/"+ holder[4] +"/"+ holder[5], {
+          await fetch("http://localhost:5010/insertTask/" + holder[0] +"/"+ holder[1] +"/"+ holder[2] +"/"+ holder[3] +"/"+ holder[4] +"/"+ holder[5], {
             method: "POST",
           });
         }

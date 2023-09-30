@@ -101,7 +101,7 @@ async function remove(emp_name, emp_email) {
     );
 
     const url =
-      "http://localhost:5001/removeOnboarding/"+emp_name+'/'+emp_email;
+      "http://localhost:5010/removeOnboarding/"+emp_name+'/'+emp_email;
 
     console.log('earl: ', url)
     const fin = await fetch(url, {method: 'DELETE'});
@@ -146,7 +146,7 @@ const ProjectTable = () => {
 
 
 const fetchEmployees = async() =>{ 
-  const results = await fetch("http://localhost:5001/EmployeeNewHire");
+  const results = await fetch("http://localhost:5010/EmployeeNewHire");
   const data = await results.json();
 
   console.log("data2", data)
@@ -156,7 +156,7 @@ const fetchEmployees = async() =>{
   return nameArr;
   setNewHire(nameArr)
 
-  // const status = await fetch("http://localhost:5001/CurrentStatus");
+  // const status = await fetch("http://localhost:5010/CurrentStatus");
   // const statusData = await status.json();
   // const statusArr = statusData?.rows?.map(item => [item.name, item.count, item.max]);
   // setStatusArray(statusArr)
@@ -166,7 +166,7 @@ const fetchEmployees = async() =>{
 
 
 const fetchStatus = async() =>{ 
-  const status = await fetch("http://localhost:5001/CurrentStatus",{mode: 'cors'});
+  const status = await fetch("http://localhost:5010/CurrentStatus",{mode: 'cors'});
   const statusData = await status.json();
   const statusArr = statusData?.rows?.map(item => String(item.count +'/'+ item.max));
   console.log('###############',statusArr)
@@ -205,7 +205,7 @@ const tableData = [];
 // }, [])
 
 // const fetchEmployees = async() =>{
-//   const results = await fetch("http://localhost:5001/EmployeeNewHire");
+//   const results = await fetch("http://localhost:5010/EmployeeNewHire");
 //   const data = await results.json();
 
 //   console.log("data", data)

@@ -33,3 +33,14 @@ model task_list {
   task_num             Int       @default(autoincrement())
   employee             employee? @relation(fields: [assigned_employee_id], references: [accountid], onDelete: NoAction, onUpdate: NoAction, map: "employee_foreign_key")
 }
+
+// department table & usage in forms
+
+// UI display based on role
+// dont need separate home, move all nav to be in the top or side
+// fix task create/edit - include department
+// rework user add - email, role, info
+
+// API rework: CRUD for task, user, task_list in separate files, user file includes get taskLists, get supervisedThings
+
+// next semester: next migration, UI overhaul, microsoft 365 integration

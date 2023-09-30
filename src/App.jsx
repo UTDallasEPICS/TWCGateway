@@ -32,7 +32,7 @@ function App() {
   }, [])
 
   const fetchDB = async () => {
-    const response = await fetch("http://localhost:5001/Employee");
+    const response = await fetch("http://localhost:5010/Employee");
     const data = await response.json();
     setDb(data);
   }

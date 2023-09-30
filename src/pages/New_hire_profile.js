@@ -55,7 +55,7 @@ import {useState, useEffect} from 'react';
     }, [])
   
     const fetchDB = async () => {
-      const response = await fetch("http://localhost:5001/displayEmployeedata/"+accountID);
+      const response = await fetch("http://localhost:5010/displayEmployeedata/"+accountID);
       const data = await response.json();
       delete data.fields; 
       delete data._parsers;

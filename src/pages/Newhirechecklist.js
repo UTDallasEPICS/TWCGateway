@@ -103,7 +103,7 @@ const Newhirechecklist = () => {
 
   const fetchDB = async () => {
     console.log("connecting to db")
-    const response = await fetch("http://localhost:5001/displayEmployeeTaskGroup/"+accountID);
+    const response = await fetch("http://localhost:5010/displayEmployeeTaskGroup/"+accountID);
     const data = await response.json();
     console.log("fetch test" + data.rowCount + data.rows[0].task_description);
     setDb(data);
