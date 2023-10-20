@@ -1,8 +1,18 @@
 ## Conceptual Overview
 
-Not important for this commit
+The project aims ...
+
+Tasks are many-to-many to users
+Tasks are many-to-one to task lists
+Supervisors many-to-one to task lists? (could be many-to-many)
+Admin don't need relation tables because they can see everything
+Relationship as a resource based permission system
+
+
 
 ## Project Setup
+
+
 
 <details open>
 <summary>Prerequisites</summary>
@@ -63,34 +73,67 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 
 If any part of the setup does not make sense or is yielding errors, you could paste the steps in ChatGPT or Bing Chat. These tools will be a great first step in debugging the problem.
 
+
 ## Functional Requirements
 
 ### Users
 
+* Admin
+  * Look over all the departments.
+  * Look over all the supervisors.
+  * Look over all the employees and their tasks.
+  * CRUD tasks
+* Supervisors
+  * Look over all the currently onboarding employees.
+  * Track their progress by idicating the completed tasks.
+  * Can't edit taks/ make new tasks/ delete tasks.
+  * Can look at only their department?
+* Employees
+  * Look at their completed and to-be completed tasks.
+
+### Task
+* Identifier
+* Description (task details)
+* Assigned to a task list
+* Supervisor assigned to it
+* Completed by?
+  * Can only the assined supervisor check mark the task?
+  * Can other also?
+
+
+### Task List
+* Department name
+* Assigned supervisors
+* Microsoft Office ID?
+* Department specific tasks
+
+
+### (if supervisors many-to-many)
+
+TBD
+
+### Task to User Relation Table
+* Mark completion
+* Date Assigned
+* Date Completed
+* Deadline
+
+## Pages
+
 Not important for this commit
 
-### Pages
+## Stack
 
 Not important for this commit
 
-### Stack
+## Research Questions
 
 Not important for this commit
 
-### Research Questions
-
-Not important for this commit
-
-### Third party integrations
+## Third party integrations
 
 - Auth0 for authentication
 
-### Deployment
+## Deployment
 
 Not deployed yet
-
-### Instructions
-
-- `docker compose up` -d in root folder
-- `npm run start` in frontend
-- `npm run start` in backend

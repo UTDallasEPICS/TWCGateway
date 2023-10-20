@@ -24,9 +24,9 @@ import {
   const [valueoffice, setValueoffice]= useState('');
   
   const handleSubmit = (e) => { 
+
     const data = {firstname, lastname, email, jobTitle, startDate, valuedept, valueoffice}
-  
-  
+    console.log("temp");
   }
   
   return (

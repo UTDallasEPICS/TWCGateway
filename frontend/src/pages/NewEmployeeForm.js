@@ -33,7 +33,7 @@ const handleSubmit = (e) => {
 const fetchDB = async() =>{ 
   const name = firstname + " " + lastname; 
   const data = {name, email, jobTitle, valuedept, valueoffice, startDate}
-  console.log(valuedept);
+  console.log(data);
   try{
     await fetch("http://localhost:5010/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
       method: "POST",
@@ -50,6 +50,7 @@ const fetchDB2 = async(event) =>{
   try{
     const response = await fetch("http://localhost:5010/getEmployeedata/"+email);
     const data = await response.json();
+    console.log(data);
   
     
     delete data.fields; 
