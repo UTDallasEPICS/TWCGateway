@@ -1,7 +1,3 @@
-//import {taskFiller} from './Database/DatabaseFunctions.js';
-//import { Row, Col, Table, Card, CardTitle, CardBody } from "reactstrap";
-
-
 const express = require('express')
 const bodyParser = require('body-parser')
 const { Client } =  require("pg")
@@ -81,7 +77,6 @@ app.get("/Employee", async (req, res) => {
     }
 });
 
-
 // Use this as a template to make your own queries
 app.get("/EmployeeNewHire", async (req, res) => {
   try {
@@ -93,7 +88,6 @@ app.get("/EmployeeNewHire", async (req, res) => {
         res.send("there was an error");
     }
 });
-
 
 app.get("/CurrentStatus", async (req, res) => {
     try{
@@ -116,9 +110,6 @@ app.get("/DefaultTaskList", async (req, res) => {
         res.send("there was an error");
     }
 });
-
-
-
 
 app.get("/EmployeeSignTest", async function signIn(req, res, account, email){
     try{
@@ -192,7 +183,6 @@ app.delete("/removeOnboarding/:emp_name/:emp_email", async (req, res) => {
         res.send("there was an error" + e.stack);
     }
 });
-
 
 app.get("/getAccountIDBasedOnEmail/:email", async (req, res) => {
     try{
@@ -294,7 +284,6 @@ app.get("/getEmployeeName/", async (req, res) => {
     }
 });
 
-
 app.post("/insertTask/:task_description/:department/:member_assigned/:timeVal/:dayWeekMonth/:BeforeAfter/", async (req, res) => {
     console.log("TRYING");
     try
@@ -318,7 +307,6 @@ app.post("/insertTask/:task_description/:department/:member_assigned/:timeVal/:d
 
 }); 
 
-
 app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_title/:startDate", async (req, res) => {
 
     try
@@ -340,7 +328,6 @@ app.post("/insertEmployee/:name/:email/:account_role/:account_department/:job_ti
     }
 
 }); 
-
 
 // works for test database
 app.post("/insertNewTaskGroup/:id/:date", async (req, res) => {
@@ -421,6 +408,7 @@ app.get("/displayEmployeeTaskGroup/:id", async (req, res) => {
         res.send("there was an error");
     }
 });
+
 app.get("/getTaskCounts", async (req, res) => {
     try{
         const results = await client.query("SELECT assigned_employee_id, Count(*)  FROM public.task_list GROUP BY assigned_employee_id ORDER BY assigned_employee_id ASC");
@@ -431,7 +419,6 @@ app.get("/getTaskCounts", async (req, res) => {
         res.send("there was an error");
     }
 });
-
 
 app.get("/displayDepartmentTaskGroups/:dep", async (req, res) => {
     try{
@@ -471,7 +458,6 @@ app.get("/displayFirstDayTaskGroup/:id", async (req, res) => {
         res.send("there was an error");
     }
 });
-
 
 app.listen(5010, () => console.log("listening on port 5010...."));
 

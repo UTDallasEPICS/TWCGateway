@@ -11,6 +11,7 @@ import {
   Input,
 } from "reactstrap";
 import { useState } from "react";
+import axios from 'axios';
 
 
 
@@ -23,11 +24,25 @@ const [startDate, setstartDate] = useState('');
 const [valuedept, setValuedept]= useState('');
 const [valueoffice, setValueoffice]= useState('');
 const [valuestaff, setValuestaff]= useState('');
-const handleSubmit = (e) => { 
-  e.preventDefault(); 
+const handleSubmit = async (event) =>{ 
+  //e.preventDefault(); 
   //console.log(data);
-  fetchDB();
-  fetchDB2();
+  //fetchDB();
+  // fetchDB2();
+  const fullName = firstname + " " + lastname;
+  console.log("fullName: " + fullName);
+  const { data } = await axios.post('http://localhost:5010/employee', {
+    name: fullName,
+    email: email,
+    accountRole: 'NewHire',
+    accountDepartment: valuedept,
+    jobTitle: jobTitle,
+    startDate: startDate,
+  }, {
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
 };
 
 const fetchDB = async() =>{ 
@@ -35,7 +50,7 @@ const fetchDB = async() =>{
   const data = {name, email, jobTitle, valuedept, valueoffice, startDate}
   console.log(data);
   try{
-    await fetch("http://localhost:5010/insertEmployee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
+    await fetch("http://localhost:5010/employee/" + name +"/"+ email +"/"+ 'NewHire' +"/"+ valuedept +"/"+ jobTitle +"/"+ startDate, {
       method: "POST",
     });
   }
