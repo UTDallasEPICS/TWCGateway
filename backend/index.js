@@ -9,7 +9,6 @@ const corsOptions ={
    credentials:true,            //access-control-allow-credentials:true
    optionSuccessStatus:200,
 }
-
 app.use(cors(corsOptions))
 
 app.use(function(req, res, next) {
@@ -21,10 +20,5 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({type : ["application/x-www-form-urlencoded", "application/json"]}));
 app.use(cors())
 app.use(express.json());
-//app.use(bodyParser.json());
-
 
 app.listen(5010, () => console.log("listening on port 5010...."));
-
-
-

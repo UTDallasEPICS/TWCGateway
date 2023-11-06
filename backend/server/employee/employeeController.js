@@ -34,6 +34,7 @@ module.exports = {
         res.json(results);
     
     },
+    //returns empty, but Status is 200 OK
     getEmployeeByID: async (req, res) => {
             
         const results = await client.query("select * from public.employee where name = $1", [req.params.id]);
@@ -57,7 +58,9 @@ module.exports = {
             
         try{
             const {id} = req.params;
-            const results = await client.query("DELETE FROM public.employee WHERE accountid = $1", [id]);
+            const results = await client.query
+            ("DELETE FROM public.employee WHERE accountid = $1", [id]);
+            console.log(results);
             res.json(results);
         }
         catch(e){

@@ -1,12 +1,12 @@
 const controller = require('./employeeController');
 const addRoutes = (router) => {
-    router.route('/employee').post(controller.addEmployee)
+    router.route('/addEmployee').post(controller.addEmployee)
 
-    router.route('/employee').get(controller.getAllEmployees)
+    router.route('/getAllEmployees').get(controller.getAllEmployees)
 
-    router.route('/employee/:id').get(controller.getEmployeeByID)
+    router.route('/getEmployee/:id').get(controller.getEmployeeByID)
 
-    router.route('employee/:email').get(controller.getEmployeeByEmail)
+    router.route('getEmployee/:email').get(controller.getEmployeeByEmail)
 
     router.route('/deleteEmployee/:id').delete(controller.deleteEmployee)
 }
