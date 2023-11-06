@@ -7,6 +7,7 @@ import {
   } from "reactstrap";
 import DefaultTasks from "../pages/DefaultTasks";
 import {useRef, useState} from 'react';
+import axios from "axios";
 //import { useAuth0 } from "@auth0/auth0-react";
 
 // import {useState} from 'react'
@@ -49,8 +50,17 @@ const TaskForm = () => {
     const fetchTaskDb = async(holder) =>{ 
         console.log(holder);
         try{
-          await fetch("http://localhost:5010/insertTask/" + holder[0] +"/"+ holder[1] +"/"+ holder[2] +"/"+ holder[3] +"/"+ holder[4] +"/"+ holder[5], {
-            method: "POST",
+        //   await fetch("http://localhost:5010/insertTask/" + holder[0] +"/"+ holder[1] +"/"+ holder[2] +"/"+ holder[3] +"/"+ holder[4] +"/"+ holder[5], {
+        //     method: "POST",
+        //   });
+
+          const { data } = await axios.post("http://localhost:5010/addTask", {
+            taskName: holder[0],
+            department: holder[1],
+            member: holder[2],
+            timeVal: holder[3],
+            time: holder[4],
+            befAfter: holder[5]
           });
         }
         catch(e)
