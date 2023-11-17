@@ -35,3 +35,40 @@
 //         }
 //     }
 // }
+
+
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+module.exports = {
+
+    getTaskUsingId: async (req, res) => {
+        const {id} = req.params;
+        const task = await prisma.task.findUnique({
+            where: {
+                id: parseInt(id)
+            }
+        });
+        res.json(task);
+    },
+
+    getAllTasks: async (req, res) => {
+        const allTasks = await prisma.task.findMany();
+        res.json(allTasks);
+    
+    },
+
+    addTask: async (req, res) => {
+        const {name, description, supervisorID} = req.body;
+        const newTask = await prisma.task.create({
+            data: {
+                name,
+                description,
+                supervisorID,
+                
+
+            }
+        });
+        res.json(newTask);
+    },
+}

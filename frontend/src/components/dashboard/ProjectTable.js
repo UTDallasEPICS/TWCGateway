@@ -238,7 +238,7 @@ const tableData = [];
             </thead>
             <tbody>
               {tableData.map((tdata, index) => (
-                <tr key={index} className="border-top" onClick={() => }>
+                <tr key={index} className="border-top">
                   <td>
                     <div className="d-flex align-items-center p-2">
                       
@@ -248,9 +248,7 @@ const tableData = [];
                       </div>
                     </div>
                   </td>
-                  <td>
-                    {tdata.department}
-                  </td>
+                  <td>{tdata.department}</td>
                   <td>
                     {/* {tdata.status === "pending" ? (
                       <span className="p-2 bg-danger rounded-circle d-inline-block ms-3"></span>

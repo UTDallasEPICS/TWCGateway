@@ -17,23 +17,3 @@ export const useUserStore = create((set) => ({
 
 
 }));
-
-
-
-
-
-// export const useXStore = create((set) => ({
-//     user: {
-//       email: "",
-//       userName: "",
-//     },
-
-//     setUser: (email, userName) => {
-//       set(() => ({
-//         user: {
-//           email,
-//           userName,
-//         },
-//       }));
-//     },
-//   }));

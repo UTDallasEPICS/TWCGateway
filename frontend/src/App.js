@@ -4,7 +4,7 @@ import Home from './pages/Home';
 import SuperNavbar from './components/SuperNavbar';
 import HomeS from './pages/HomeS';
 import Messages from './pages/Messages';
-import LoginForm from './components/LoginForm';
+import LoginForm from './components/LoginForm.jsx';
 import TaskForm from './components/TaskForm';
 import Account from './pages/Account';
 import CurrentOnboarding from './pages/CurrentOnboarding';
@@ -23,6 +23,11 @@ import AccountS from './pages/AccountS.js';
 import NewEmployee from './pages/NewEmployee.js';
 import FullLayoutSuper from './layouts/FullLayoutSuper';
 import OnBoardingSV from './pages/OnBoardingSV';
+import AddUser from './pages/addUser';
+import AdminDashboard from './pages/adminDashboard';
+import Employee from './components/Employee';
+
+
 function App() {
   
   const [dataBase, setDb] = useState([])
@@ -58,6 +63,9 @@ function App() {
             <Route path='/admin/NewEmployeeForm' element = {<NewEmployeeForm/>}/>
             <Route path='/admin/DefaultTasks' element = {<DefaultTasks/>}/> 
             <Route path='/admin/NewSupervisorForm' element = {<NewSupervisorForm/>}/>
+            <Route path='/admin/addUser' element = {<AddUser/>}/>
+            <Route path='/admin/adminDashboard' element = {<AdminDashboard/>}/>
+            <Route path='/admin/employees/:id' element = {<Employee/>}/>
           </Route>
           <Route path = "/homeS" element = {<div><SuperNavbar/><HomeS/><Container><OnBoardingSV/></Container></div>}/>
           <Route path = "/supervisor" element = {<div><SuperNavbar/><FullLayoutSuper/></div>}>
@@ -80,3 +88,30 @@ function App() {
 
 export default App;
 
+
+// import React from 'react';
+
+// function OnboardingPage() {
+//   return (
+//     <div className="onboarding">
+//       <h1>Welcome to The Warren Center!</h1>
+
+//       <p>We're so glad you're here. The Warren Center has been serving children and families for over 60 years.</p>
+
+//       <p>Our mission is to advocate for and provide services, resources and support to children with developmental differences and disabilities so they can reach their full potential.</p>  
+
+//       <h2>New Family Onboarding</h2>
+
+//       <ul>
+//         <li>Learn about our programs and services</li>
+//         <li>Meet your child's therapist</li>
+//         <li>Discuss goals for your child</li>
+//         <li>Schedule your first appointments</li>
+//       </ul>
+
+//       <button>Start Onboarding</button>
+//     </div>
+//   );
+//}
+
+//export default OnboardingPage;
