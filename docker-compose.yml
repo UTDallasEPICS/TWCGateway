@@ -11,11 +11,12 @@ services:
     volumes:
       - warren-db:/var/lib/postgresql/data
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
+  # Normally will be using `npx prisma migrate dev` to load the schema now. No defaultDB file to load.
+  # adminer:
+  #   image: adminer
+  #   restart: always
+  #   ports:
+  #     - 8080:8080
 volumes:
   warren-db:
     driver: local

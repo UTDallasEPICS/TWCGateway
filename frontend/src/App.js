@@ -26,6 +26,8 @@ import OnBoardingSV from './pages/OnBoardingSV';
 import AddUser from './pages/addUser';
 import AdminDashboard from './pages/adminDashboard';
 import Employee from './components/Employee';
+import EmployeeTasksPage from './pages/employeeTasksPage';
+import newTask from './pages/newTask';
 
 
 function App() {
@@ -66,6 +68,8 @@ function App() {
             <Route path='/admin/addUser' element = {<AddUser/>}/>
             <Route path='/admin/adminDashboard' element = {<AdminDashboard/>}/>
             <Route path='/admin/employees/:id' element = {<Employee/>}/>
+            <Route path='/admin/EmployeeTasksPage' element = {<EmployeeTasksPage/>}/>
+            <Route path='/admin/newTask' element = {<newTask/>}/>
           </Route>
           <Route path = "/homeS" element = {<div><SuperNavbar/><HomeS/><Container><OnBoardingSV/></Container></div>}/>
           <Route path = "/supervisor" element = {<div><SuperNavbar/><FullLayoutSuper/></div>}>

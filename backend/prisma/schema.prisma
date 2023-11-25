@@ -1,176 +1,4 @@
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// model employee {
-//   name               String?     @db.VarChar(30)
-//   password           String?     @db.VarChar(30)
-//   email              String      @db.VarChar(30)
-//   accountid          Int         @id(map: "accountID_pkey") @default(autoincrement())
-//   account_role       String?     @db.VarChar(30)
-//   account_department String?     @db.VarChar(60)
-//   job_title          String?     @db.VarChar(30)
-//   start_date         DateTime?   @db.Date
-//   task_list          task_list[]
-// }
-
-// model task_list {
-//   task_id              Int       @id @default(autoincrement())
-//   task_description     String?   @default("no task description") @db.VarChar(125)
-//   department_name      String    @default("Basic Onboarding") @db.VarChar(60)
-//   deadline             DateTime  @db.Date
-//   confirm_status       Boolean   @default(false)
-//   confirm_date         DateTime? @db.Date
-//   employee_name        String?   @db.VarChar(60)
-//   member_assigned      String?   @db.VarChar(60)
-//   assigned_employee_id Int?
-//   task_num             Int       @default(autoincrement())
-//   employee             employee? @relation(fields: [assigned_employee_id], references: [accountid], onDelete: Cascade, onUpdate: NoAction, map: "employee_foreign_key")
-// }
-
-// model default_tasks {
-//   task_id          Int     @id @default(autoincrement())
-//   task_description String  @default("no task description") @db.VarChar
-//   department       String? @db.VarChar
-//   deadline         String  @db.VarChar
-//   member_assigned  String? @db.VarChar
-// }
-
-// // department table & usage in forms
-
-// // UI display based on role
-// // dont need separate home, move all nav to be in the top or side
-// // fix task create/edit - include department
-// // rework user add - email, role, info
-
-// // API rework: CRUD for task, user, task_list in separate files, user file includes get taskLists, get supervisedThings
-
-// // next semester: next migration, UI overhaul, microsoft 365 integration
-
-//------------------------------------------------------------------------------------------------------------//
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// model User {
-//   id           Int     @id @default(autoincrement())
-//   name         String
-//   email        String  @unique
-//   role         String
-//   departmentID Int
-//   tasks        Task[]
-//   archived     Boolean @default(false)
-//   @@map("user")
-// }
-
-// model Task {
-//   id                Int        @id @default(autoincrement())
-//   name              String
-//   description       String
-//   supervisor_userID Int
-//   User              User       @relation(fields: [supervisor_userID], references: [id])
-//   taskList          TaskList[]
-//   dateCreated       DateTime   @default(now())
-//   completed         Boolean    @default(false)
-//   archived          Boolean    @default(false)
-//   @@map("task")
-// }
-
-// model Department {
-//   id       Int        @id @default(autoincrement())
-//   name     String
-//   taskList TaskList[]
-//   archived Boolean    @default(false)
-//   @@map("department")
-// }
-
-// model TaskList {
-//   id           Int        @id @default(autoincrement())
-//   name         String
-//   departmentID Int
-//   Department   Department @relation(fields: [departmentID], references: [id])
-//   tasks        Task[]
-//   type         String?
-//   archived     Boolean    @default(false)
-
-//   @@map("tasklist")
-// }
-
-//------------------------------------------------------------------------------------------------------------//
-
-//---------------------------------------------2---------------------------------------------------------------//
-// datasource db {
-//   provider = "postgresql"
-//   url      = env("DATABASE_URL")
-// }
-
-// generator client {
-//   provider = "prisma-client-js"
-// }
-
-// // User model represents Admins, Supervisors, and Employees
-// model User {
-//   id            Int        @id @default(autoincrement())
-//   name          String
-//   email         String     @unique
-//   role          String     // Admin, Supervisor, or Employee
-//   departmentID  Int
-//   department    Department @relation(fields: [departmentID], references: [id])
-//   tasks         Task[]     // Tasks assigned to the user (Employee)
-//   //assignedTasks Task[]     // Tasks assigned to the user (Supervisor)
-//   archived      Boolean    @default(false)
-//   @@map("user")
-// }
-
-// // Task model represents individual tasks
-// model Task {
-//   id                Int        @id @default(autoincrement())
-//   name              String
-//   description       String
-//   supervisorID      Int
-//   supervisor        User       @relation(fields: [supervisorID], references: [id])
-//   taskListID        Int
-//   taskList          TaskList   @relation(fields: [taskListID], references: [id])
-//   dateCreated       DateTime   @default(now())
-//   completed         Boolean    @default(false)
-//   archived          Boolean    @default(false)
-//   @@map("task")
-// }
-
-// // Department model represents a department with its tasks
-// model Department {
-//   id       Int        @id @default(autoincrement())
-//   name     String
-//   taskList TaskList[]
-//   users    User[]
-//   archived Boolean    @default(false)
-//   @@map("department")
-// }
-
-// // TaskList model represents a list of tasks associated with a department
-// model TaskList {
-//   id           Int        @id @default(autoincrement())
-//   name         String
-//   departmentID Int
-//   department   Department @relation(fields: [departmentID], references: [id])
-//   tasks        Task[]
-//   type         String?    // You can define types for different lists if needed
-//   archived     Boolean    @default(false)
-//   @@map("tasklist")
-// }
-//---------------------------------------------------2---------------------------------------------------------//
-// //---------------------------------------------------3---------------------------------------------------------//
-///this is current schema
+//Assumption: There is no user specific task. All tasks are derived from deparment to which the user belongs.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -180,128 +8,90 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// User model represents Admins, Supervisors, and Employees
-model User {
-  id              Int        @id @default(autoincrement())
-  name            String
-  email           String     @unique
-  role            Role // Admin, Supervisor, or Employee
-  departmentID    Int
-  department      Department @relation(fields: [departmentID], references: [id])
-  SupervisedTasks Task[] // Tasks assigned to the supervisor
-  //assignedTasks Task[] // Tasks assigned to the user (Supervisor)
-  archived        Boolean    @default(false)
+model Role {
+  id       Int    @id @default(autoincrement())
+  roleName String @unique
 
-  AssignedTasks UserToTask[]
+  UserRoleMapping UserRoleMapping[]
 
-  @@map("user")
+  archived    Boolean    @default(false)
 }
 
-model UserToTask {
-  id             Int       @id @default(autoincrement())
-  userID         Int
-  taskID         Int
-  user           User      @relation(fields: [userID], references: [id])
-  task           Task      @relation(fields: [taskID], references: [id])
-  deprecated     Boolean   @default(false)
-  dateDeprecated DateTime?
-  completed      Boolean   @default(false)
-  dateCompleted  DateTime?
-  dateCreated    DateTime  @default(now())
-
-  @@map("user_to_task")
-}
-
-enum Role {
-  Admin
-  Supervisor
-  Employee
-}
-
-// Task model represents individual tasks
 model Task {
-  id           Int          @id @default(autoincrement())
-  name         String
-  description  String
-  supervisorID Int
-  supervisor   User         @relation(fields: [supervisorID], references: [id])
-  taskListID   Int?
-  //taskList     TaskList @relation(fields: [taskListID], references: [id])
-  // dateCreated  DateTime     @default(now())
-  // completed    Boolean      @default(false)
-  UserToTask   UserToTask[]
-  Department   Department?  @relation(fields: [departmentID], references: [id])
-  departmentID Int?
-  archived     Boolean      @default(false)
+  id          Int    @id @default(autoincrement())
+  description String
 
-  @@map("task")
+  DepartmentTaskMapping         DepartmentTaskMapping[]
+  ApproverTaskMapping           ApproverTaskMapping[]
+  OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
+
+  archived    Boolean    @default(false)
 }
 
-//Department model represents a department with its tasks
+model User {
+  id    Int    @id @default(autoincrement())
+  name  String
+  email String @unique
+
+  UserRoleMapping               UserRoleMapping[]
+  DepartmentUserMapping         DepartmentUserMapping[]
+  ApproverTaskMapping           ApproverTaskMapping[]
+  OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
+
+  archived    Boolean    @default(false)
+}
+
 model Department {
-  id         Int     @id @default(autoincrement())
-  name       String
-  //taskList TaskList?
-  taskListID Int     @unique
-  users      User[]
-  tasks      Task[]
-  archived   Boolean @default(false)
+  id   Int    @id @default(autoincrement())
+  name String
 
-  @@map("department")
+  DepartmentTaskMapping DepartmentTaskMapping[]
+  DepartmentUserMapping DepartmentUserMapping[]
+
+  archived    Boolean    @default(false)
 }
 
-// TaskList model represents a list of tasks associated with a department
-// model TaskList {
-//   id           Int        @id @default(autoincrement())
-//   name         String
-//   department   Department @relation(fields: [departmentID], references: [id])
-//   //department   Department @relation(fields: [departmentID], references: [id])
-//   departmentID Int        @unique
-//   tasks        Task[]
-//   type         String? // You can define types for different lists if needed
-//   archived     Boolean    @default(false)
+model UserRoleMapping {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+}
 
-//   @@map("tasklist")
-// }
+model DepartmentTaskMapping {
+  id           Int        @id @default(autoincrement())
+  task         Task       @relation(fields: [taskId], references: [id])
+  taskId       Int
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  dueDate      DateTime
+}
 
-//---------------------------------------------------3---------------------------------------------------------//
-// model UserToTask {
-//   id            Int           @id @default(autoincrement())
-//   userID        Int
-//   taskID        Int
-//   user          User          @relation(fields: [userID], references: [id])
-//   task          Task          @relation(fields: [taskID], references: [id])
+model DepartmentUserMapping {
+  id           Int        @id @default(autoincrement())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+}
 
-//   @@map("user_to_task")
-// }
+model ApproverTaskMapping {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  task   Task @relation(fields: [taskId], references: [id])
+  taskId Int
+}
 
-// model TaskList {
-//   id                Int       @id @default(autoincrement())
-//   //name              String
-//   departmentID      Int
-//   departmentName    String
-//   supervisorid      Int
-//   supervisor        User      @relation(fields:[supervisorid], references: [id])
-//   tasks             Task[]    
-//   archived          Boolean   @default(false)
-//   @@map("tasklist")
-// }
-// model Department{
-//   id                Int       @id @default(autoincrement())
-//   name              String
-//   taskList          TaskList[]  
-//   archived          Boolean   @default(false)
-//   @@map("department")
-// }
-//------practice---------//
-// model User {
-//   id      Int      @id @default(autoincrement())
-//   profile Profile?
-// }
-
-// model Profile {
-//   id     Int  @id @default(autoincrement())
-//   user   User @relation(fields: [userId], references: [id])
-//   userId Int  @unique // relation scalar field (used in the `@relation` attribute above)
-// }
-//------practice---------//
+model OnboardingEmployeeTaskMapping {
+  id           Int       @id @default(autoincrement())
+  user         User      @relation(fields: [userId], references: [id])
+  userId       Int
+  task         Task      @relation(fields: [taskId], references: [id])
+  taskId       Int
+  approvedTask Boolean   @default(false)
+  dateApproved DateTime?
+  dateCreated  DateTime  @default(now())
+  dueDate      DateTime
+}

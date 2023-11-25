@@ -10,7 +10,9 @@ const addRoutes = (router) => {
 
     router.route('/updateUser/:id').put(controller.updateUser)
 
-    router.route('/deleteUser/:id').delete(controller.deleteUser)
+    router.route('/deleteUser/:id').put(controller.deleteUser)
+
+    router.route('/getAllTasks').get(controller.getAllTasks)
 }
 module.exports = {
     addRoutes
