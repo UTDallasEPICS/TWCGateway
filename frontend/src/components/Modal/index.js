@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import ReactSelect from 'react-select';
 import {
   Modal,
   ModalOverlay,
@@ -17,9 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import axios from "axios";
-import ReactSelect from 'react-select';
-import {eventEmitter} from '../../pages/users'
-import { set } from 'lodash';
 
 async function validateEmail(email) {
   try {
@@ -45,6 +43,7 @@ function InputModal({roles, departments}) {
     departmentName: [],
     roleName: "",
   };
+
   const [formData, setFormData] = React.useState(initialFormData);
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [emailExists, setEmailExists] = useState(false);
@@ -77,6 +76,7 @@ function InputModal({roles, departments}) {
 
   return (
     <>
+
       <Button
         leftIcon={<AddIcon />}
         colorScheme="teal"
@@ -97,13 +97,20 @@ function InputModal({roles, departments}) {
           setEmailExists(false);
         }}
       >
+
         <ModalOverlay />
+
         <ModalContent>
-          <ModalHeader>Add User</ModalHeader>
+
+          <ModalHeader>
+            Add User
+          </ModalHeader>
 
           <ModalCloseButton />
 
           <ModalBody pb={6}>
+
+            {/* Name Field */}
             <FormControl isRequired>
               <FormLabel>Name</FormLabel>
               <Input
@@ -115,128 +122,82 @@ function InputModal({roles, departments}) {
               />
             </FormControl>
 
-            {/* <FormControl mt={4} isRequired isInvalid={!isEmailValid}>
+            {/* Email Field */}
+            <FormControl mt={4} isRequired isInvalid={!isEmailValid}>
               <FormLabel>Email</FormLabel>
               <Input
                 type="email"
                 value={formData.email}
                 onChange={(e) => {
-                  setFormData({ ...formData, email:e.target.value })
+                  setFormData({ ...formData, email: e.target.value });
                 }}
-                onBlur={async (e) => {
-                  const email = e.target.value;
-                  const isValid = email.includes("@");
-                  setIsEmailValid(isValid);
-
-                  if (isValid) {
-                    try {
-                      const res = await axios.get(`http://localhost:5010/checkEmail/${email}`);
-                      console.log(res.data);
-      
-                      if (res.data !== null) {
-                        console.log("email exists");
-                        setEmailExists(true);
-                      } else {
-                        console.log("email does not exist");
-                        setEmailExists(false);
-                      }
-                    } catch (error) {
-                      console.log("error in verifying email", error);
-                    } finally {
-                      if (emailExists || !isEmailValid) {
-                        setShowError(true);
-                      } else {
-                        setShowError(false);
-                      }
-                    }
-                  }
-                }}
+                onBlur={handleEmailBlur}
               />
               {showError && (
-                <FormErrorMessage>
-                  Email already exists or is invalid
-                </FormErrorMessage>
+                <FormErrorMessage>Email already exists or is invalid</FormErrorMessage>
               )}
-            </FormControl> */}
+            </FormControl>
 
-              <FormControl mt={4} isRequired isInvalid={!isEmailValid}>
-                <FormLabel>Email</FormLabel>
-                <Input
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => {
-                    setFormData({ ...formData, email: e.target.value });
-                  }}
-                  onBlur={handleEmailBlur}
-                />
-                {showError && (
-                  <FormErrorMessage>Email already exists or is invalid</FormErrorMessage>
-                )}
-              </FormControl>
-
+            {/* Department Field */}
             <FormControl mt={4} isRequired>
               <FormLabel>Department</FormLabel>
               {departments.length > 0 && (
                 <ReactSelect 
-                isMulti
-                value={formData.departmentName?.map(name => ({ label: name, value: name })) || []}
-                options={departments.map(department => ({ label: department.name, value: department.name }))}
-                className="basic-multi-select"
-                classNamePrefix="select"
-                onChange={(selectedOptions) => {
-                    const selectedDepartments = selectedOptions.map(option => option.value);
-                    setFormData({...formData, departmentName:selectedDepartments});
-                }}
+                  isMulti
+                  value={formData.departmentName?.map(name => ({ label: name, value: name })) || []}
+                  options={departments.map(department => ({ label: department.name, value: department.name }))}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  onChange={(selectedOptions) => {
+                      const selectedDepartments = selectedOptions.map(option => option.value);
+                      setFormData({...formData, departmentName:selectedDepartments});
+                  }}
                 />
               )}
             </FormControl>
 
+            {/* Role Field */}
             <FormControl mt={4} isRequired>
               <FormLabel>Role</FormLabel>
               {roles.length > 0 && (
                 <Select 
-                    value={formData.roleName} 
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => setFormData({ ...formData, roleName:e.target.value })} 
+                  value={formData.roleName} 
+                  onClick={(e) => e.stopPropagation()}
+                  onChange={(e) => setFormData({ ...formData, roleName:e.target.value })} 
                 >
+                  {roles.map((role) => (
+                    <option 
+                      key={role.id} 
+                      value={role.roleName}
+                    >
 
-                    {roles.map((role) => (
-                        <option 
-                            key={role.id} 
-                            value={role.roleName}
-                        >
+                      {role.roleName}
 
-                            {role.roleName}
-
-                        </option>
-                    ))}
-
+                    </option>
+                  ))}
                 </Select>
               )}
             </FormControl>
           </ModalBody>
 
+          {/* Save Button */}
           <ModalFooter>
             <Button
               colorScheme="teal"
               mr={3}
               onClick={async () => {
-                console.log(formData);
-
                 try {
                   const res = await axios.post("http://localhost:5010/user", formData);
-                  console.log(res.data);
                 } catch (err) {
                   console.log("Error in InputModal Post", err);
                 }
-                //setFormData(initialFormData);
                 onClose();
-
               }}
             >
               Save
             </Button>
 
+            {/* Cancel Button */}
             <Button onClick={() => {
               setFormData(initialFormData); 
               onClose();
@@ -246,8 +207,11 @@ function InputModal({roles, departments}) {
             </Button>
 
           </ModalFooter>
+
         </ModalContent>
+
       </Modal>
+
     </>
   );
 }

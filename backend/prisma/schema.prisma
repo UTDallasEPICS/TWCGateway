@@ -14,7 +14,7 @@ model Role {
 
   UserRoleMapping UserRoleMapping[]
 
-  archived    Boolean    @default(false)
+  archived Boolean @default(false)
 }
 
 model Task {
@@ -25,7 +25,7 @@ model Task {
   ApproverTaskMapping           ApproverTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
 
-  archived    Boolean    @default(false)
+  archived Boolean @default(false)
 }
 
 model User {
@@ -38,7 +38,7 @@ model User {
   ApproverTaskMapping           ApproverTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
 
-  archived    Boolean    @default(false)
+  archived Boolean @default(false)
 }
 
 model Department {
@@ -48,7 +48,7 @@ model Department {
   DepartmentTaskMapping DepartmentTaskMapping[]
   DepartmentUserMapping DepartmentUserMapping[]
 
-  archived    Boolean    @default(false)
+  archived Boolean @default(false)
 }
 
 model UserRoleMapping {

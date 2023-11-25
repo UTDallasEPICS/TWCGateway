@@ -1,116 +1,433 @@
-//TODO: need to check if the updated deleteUser function works
-
-// Sample JSON for addUser
-// {
-//     "name": "Rita",
-//     "email": "reachritawani@gmail.com",
-//     "role": "Admin",
-//     "departmentID": 1
-// }
 
 const { PrismaClient, PrismaClientKnownRequestError } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 module.exports = {
-
+    //POST
     addUser: async (req, res) => {
-        const {name, email, role, departmentID} = req.body;
+        const {name, email, departmentName, roleName} = req.body;
+        console.log(name, email, departmentName, roleName)
         try {
+            const user = await prisma.user.create({
+                data: {
+                    name,
+                    email,
+                    archived: false
+                }
+            });
+
+            const roleId = await prisma.role.findUnique({
+                where: {
+                    roleName
+                }
+            });
+            const userRole = await prisma.userRoleMapping.create({
+                data: {
+                    userId: user.id,
+                    roleId: roleId.id
+                }
+            });
+
+            const departmentIds = await Promise.all(departmentName.map(async (name) => {
+                const department = await prisma.department.findFirst({
+                    where: {
+                        name
+                    }
+                });
+                return department.id;
+            }));
+            const userDepartment = await prisma.departmentUserMapping.createMany({
+                data: departmentIds.map((departmentId) => {
+                    return {
+                        userId: user.id,
+                        departmentId: departmentId
+                    }
+                })
+            });
+
+            res.status(200).json({ message: "User added successfully" });
             
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error adding user" });             
         }
-        catch (err) {
-            if (err instanceof PrismaClientKnownRequestError) {
-                const field = err.meta.target[0];
-                res.status(400).json({ error: `Unique constraint failed on the field: ${field}` });
-            } 
-            else {
-                res.status(500).json({ error: 'Something went wrong.' });
+    },
+
+    //GET
+    getUserById: async (req, res) => {
+        try {
+
+            const user = await prisma.user.findUnique({
+                where: {
+                    archived: false,
+                    id: parseInt(req.params.id)
+                }
+            });
+
+            if (!user) {
+                return res.status(404).json({ message: "User not found or is archived" });
             }
+        
+            const userRole = await prisma.userRoleMapping.findFirst({
+                where: {
+                    userId: parseInt(req.params.id)
+                },
+                orderBy: {
+                    id: 'desc'
+                }
+            });
+            const role = await prisma.role.findUnique({
+                where: {
+                    id: userRole.roleId
+                }
+            });
+            user.roleName = role.roleName;
+
+            const userDepartment = await prisma.departmentUserMapping.findMany({
+                where: {
+                    userId: parseInt(req.params.id)
+                }
+            });
+            const departments = await Promise.all(userDepartment.map(async (mapping) => {
+                const department = await prisma.department.findUnique({
+                    where: {
+                        id: mapping.departmentId
+                    }
+                });
+                return department.name;
+            }));
+            user.departmentName = departments;
+            
+            res.status(200).json(user);
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error retrieving user by ID" });
+        }
+    },
+
+    getUserByEmail: async (req, res) => {
+        try {
+            const user = await prisma.user.findUnique({
+                where: {
+                    email: req.params.email
+                }
+            });
+            
+            res.status(200).json(user);
+
+        } catch (error) {
+            res.status(500).json({ message: "Error retrieving user by email" });
         }
     },
 
     getAllUsers: async (req, res) => {
-        const allUsers = await prisma.user.findMany();
-        res.json(allUsers);
+        try {
+            const users = await prisma.user.findMany(
+                {
+                    where: {
+                        archived: false
+                    }
+                }
+            );
+
+            if (!users) {
+                return res.status(404).json({ message: "No users found or all users archived" });
+            }
+
+            const usersWithRoleAndDepartment = await Promise.all(users.map(async (user) => {
+
+                const userRole = await prisma.userRoleMapping.findFirst({
+                    where: {
+                        userId: user.id
+                    },
+                    orderBy: {
+                        id: 'desc'
+                    }
+                });
+                const role = await prisma.role.findUnique({
+                    where: {
+                        id: userRole.roleId
+                    }
+                });
+                user.roleName = role.roleName;
+                
+                const userDepartment = await prisma.departmentUserMapping.findMany({
+                    where: {
+                        userId: user.id
+                    }
+                });
+                const departments = await Promise.all(userDepartment.map(async (mapping) => {
+                    const department = await prisma.department.findUnique({
+                        where: {
+                            id: mapping.departmentId
+                        }
+                    });
+                    return department.name;
+                }));
+                user.departmentName = departments;
+                
+                return user;
+            }));
+
+            res.status(200).json(usersWithRoleAndDepartment);
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error retrieving all users" });            
+        }
+    },    
+
+    getAllArchivedUsers: async (req, res) => {
+        try {
+            const users = await prisma.user.findMany(
+                {
+                    where: {
+                        archived: true
+                    }
+                }
+            );
+
+            if (!users) {
+                return res.status(404).json({ message: "No users found or all users archived" });
+            }
+
+            const usersWithRoleAndDepartment = await Promise.all(users.map(async (user) => {
+
+                const userRole = await prisma.userRoleMapping.findFirst({
+                    where: {
+                        userId: user.id
+                    },
+                    orderBy: {
+                        id: 'desc'
+                    }
+                });
+
+                const role = await prisma.role.findUnique({
+                    where: {
+                        id: userRole.roleId
+                    }
+                });
+                user.roleName = role.roleName;
     
+                const userDepartment = await prisma.departmentUserMapping.findMany({
+                    where: {
+                        userId: user.id
+                    }
+                });
+                const departments = await Promise.all(userDepartment.map(async (mapping) => {
+                    const department = await prisma.department.findUnique({
+                        where: {
+                            id: mapping.departmentId
+                        }
+                    });
+                    return department.name;
+                }));
+                user.departmentName = departments;
+
+                return user;
+            }));
+
+            res.status(200).json(usersWithRoleAndDepartment);
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error retrieving all arhived users" });            
+        }
     },
 
-    getUserByID: async (req, res) => {
-        const {id} = req.params;
-        const user = await prisma.user.findUnique({
-            where: {
-                id: parseInt(id)
-            }
-        });
-        res.json(user);
-    },
-
-    getUserByEmail: async (req, res) => {
-        const {email} = req.body;
-        const user = await prisma.user.findUnique({
-            where: {
-                email: email
-            }
-        });
-        res.json(user);
-    },
-
+    //PUT
     updateUser: async (req, res) => {
         const {id} = req.params;
-        const {name, email, role, departmentID} = req.body;
-        const updatedUser = await prisma.user.update({
-            where: {
-                id: parseInt(id)
-            },
-            data: {
-                name,
-                email,
-                role,
-                departmentID
+        const {name, departmentName, roleName} = req.body;
+
+        try {
+            const updatedUser = await prisma.user.update({
+                where: {
+                    id: parseInt(id)
+                },
+                data: {
+                    name
+                }
+            });
+            if (!updatedUser) {
+                return res.status(404).json({ message: "User not found or is archived" });
             }
-        });
-        res.json(updatedUser);
+
+            const roleId = await prisma.role.findUnique({
+                where: {
+                    roleName
+                }
+            });
+            const userRole = await prisma.userRoleMapping.create({
+                data: {
+                    userId: parseInt(id),
+                    roleId: roleId.id
+                }
+            });
+
+            await prisma.departmentUserMapping.deleteMany({
+                where: {
+                    userId: parseInt(id)
+                }
+            });
+            
+            const departmentIds = await Promise.all(departmentName.map(async (name) => {
+                const department = await prisma.department.findFirst({
+                    where: {
+                        name
+                    }
+                });
+            
+                if (!department) {
+                    throw new Error(`Department with name ${name} does not exist`);
+                }
+            
+                return department.id;
+            }));
+            const userDepartment = await prisma.departmentUserMapping.createMany({
+                data: departmentIds.map((departmentId) => {
+                    return {
+                        userId: parseInt(id),
+                        departmentId
+                    }
+                })
+            });
+
+            res.status(200).json({ message: "User updated successfully" });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error updating user" });             
+        }
     },
-    
+
+    updateArchivedUser: async (req, res) => {
+        const {id} = req.params;
+        const {archived} = req.body;
+
+        try {
+            const updatedUser = await prisma.user.update({
+                where: {
+                    id: parseInt(id)
+                },
+                data: {
+                    archived
+                }
+            });
+            if (!updatedUser) {
+                return res.status(404).json({ message: "User not found or is archived" });
+            }
+            res.status(200).json({ message: "User updated successfully" });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error updating user" });             
+        }
+    },
+
+    updateAllArchivedUsers: async (req, res) => {
+        const {archived} = req.body;
+
+        try {
+            const updatedUsers = await prisma.user.updateMany({
+                where: {
+                    archived: !archived
+                },
+                data: {
+                    archived
+                }
+            });
+            if (!updatedUsers) {
+                return res.status(404).json({ message: "No users found or all users archived" });
+            }
+            res.status(200).json({ message: "All users updated successfully" });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error updating all users" });             
+        }
+    },
+
+    //DELETE
     deleteUser: async (req, res) => {
         const {id} = req.params;
-        const user = await prisma.user.update({
-            // set user's archive flag to true
-            where: {
-                id: parseInt(id)
-            },
-            data: {
-                archived: true
+
+        try {
+            const deletedUser = await prisma.user.update({
+                where: {
+                    id: parseInt(id)
+                },
+                data: {
+                    archived: true
+                }
+            });
+            if (!deletedUser) {
+                return res.status(404).json({ message: "User not found or is archived" });
             }
-        });
-        res.json(user);
+            res.status(200).json({ message: "User deleted successfully" });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error deleting user" });             
+        }
     },
 
-    getAllTasks: async (req, res) => {
-        const {id} = req.params;
-        const user = await prisma.$queryRaw`SELECT * FROM onboarding_employee_task_mapping`;
-        res.json(user);
+    deleteAllUsers: async (req, res) => {
+        try {
+            const deletedUsers = await prisma.user.updateMany({
+                where: {
+                    archived: false
+                },
+                data: {
+                    archived: true
+                }
+            });
+            if (!deletedUsers) {
+                return res.status(404).json({ message: "No users found or all users archived" });
+            }
+            res.status(200).json({ message: "All users deleted successfully" });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error deleting all users" });             
+        }
+    },
+   
+    deleteAllArchivedUsers: async (req, res) => {
+        try {
+            const archivedUserIds = await prisma.user.findMany({
+                where: {
+                    archived: true
+                }
+            });
+            if (!archivedUserIds) {
+                return res.status(404).json({ message: "No users found or all users not archived" });
+            }
+
+            await Promise.all(archivedUserIds.map(async (user) => {
+                await prisma.userRoleMapping.deleteMany({
+                    where: {
+                        userId: user.id
+                    }
+                });
+                await prisma.departmentUserMapping.deleteMany({
+                    where: {
+                        userId: user.id
+                    }
+                });
+                await prisma.user.delete({
+                    where: {
+                        id: user.id
+                    }
+                });
+            }));
+
+            res.status(200).json({ message: "All users deleted successfully" });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: "Error deleting all archived users" });
+        }
     }
-
-    // // First query
-    // db.query('SELECT * FROM table1 WHERE condition1', (error, results) => {
-    //     if (error) {
-    //         console.log(error);
-    //         return;
-    //     }
-
-    //     // Extract necessary data from results
-    //     const data = results.map(result => result.columnName);
-
-    //     // Second query
-    //     db.query('SELECT * FROM table2 WHERE columnName IN (?)', [data], (error, results) => {
-    //         if (error) {
-    //             console.log(error);
-    //             return;
-    //         }
-
-    //         // Use results from second query
-    //         console.log(results);
-    //     });
-    // });
 }

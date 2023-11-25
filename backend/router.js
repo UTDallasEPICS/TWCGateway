@@ -21,12 +21,12 @@ newRouter.use(bodyParser.urlencoded({extended: true}));
 
 // __dirname returns the current directory
 // path.joins appends /server to the current directory and...
-fs.readdirSync(path.join(__dirname,'./server2')).forEach(
+fs.readdirSync(path.join(__dirname,'./server')).forEach(
 //  ...for each file in the /server directory, it will run the following function
 // moduleName represents the name of each file or directory in the './server' directory.
     function (moduleName) { 
         // path.join appends /server/moduleName/subRouter.js to the current directory
-        const modulePath = path.join(__dirname, './server2', moduleName, 'subRouter.js');
+        const modulePath = path.join(__dirname, './server', moduleName, 'subRouter.js');
         // sample modulePath: /home/Warren-Automated-Onboard/backend/server/user/subRouter.js
 
         //TODO: start documentation here
