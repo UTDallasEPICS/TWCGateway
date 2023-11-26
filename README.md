@@ -1,36 +1,32 @@
 ## Conceptual Overview
 
-The project aims ...
+### What this is?
+This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). There are admins, supervisors, and employees. Admins can perform CRUD operations on tasks and departments. Departments are a collection of tasks. Each task has a supervisor assigned to it. Supervisors can view the progress of their employees and mark tasks as completed. Employees can view their progress but cannot mark tasks as completed. Only supervisors can mark tasks as completed.
 
-Tasks are many-to-many to users
-Tasks are many-to-one to task lists
-Supervisors many-to-one to task lists? (could be many-to-many)
-Admin don't need relation tables because they can see everything
-Relationship as a resource based permission system
+### What this is not?
+This is not a document manager where you can upload different documents for onboarding. This means that it does not support functionalities such as uploading, storing, categorizing, or sharing documents that are typically used during the onboarding process.
 
-
-
-## Project Setup
-
-
+## Project Setup on Your Computer
 
 <details open>
 <summary>Prerequisites</summary>
 
 Before you can run this project, you'll need to have the following software installed on your computer:
 
-- Visual Studio Code
-- Docker
 - Node.js (LTS)
+- Docker
+- Visual Studio Code
 
-If you haven't yet installed VS Code, Docker, and Node.js, you can download them by following the steps listed in the links below :
+If you haven't yet installed Node.js, Docker, and VS Code, you can download them by following the steps listed in the links below :
 
-- Visual Studio Code for [Windows](https://code.visualstudio.com/docs/setup/windows) or [Mac](https://code.visualstudio.com/docs/setup/mac)
-- Docker for [Windows](https://docs.docker.com/docker-for-windows/install/) or [Mac](https://docs.docker.com/docker-for-mac/install/)
 - Node.js (LTS) for [Windows](https://nodejs.org/en/download/) or [Mac](https://nodejs.org/en/download/)
+- Docker for [Windows](https://docs.docker.com/docker-for-windows/install/) or [Mac](https://docs.docker.com/docker-for-mac/install/)
+- Visual Studio Code for [Windows](https://code.visualstudio.com/docs/setup/windows) or [Mac](https://code.visualstudio.com/docs/setup/mac)
 </details>
 <details open>
 <summary>Running the Project for the First Time</summary>
+
+If you are a little adventurous and you are using Windows, then follow this file to setup your environment: [Adventurous Windows Setup](adventurousWindowsSetup.md)
 
 Once you have VS Code, Docker, and Node.js installed, you can setup the project by following these steps:
 

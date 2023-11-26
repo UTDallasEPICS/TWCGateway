@@ -238,6 +238,8 @@ module.exports = {
 
     //PUT
     updateUser: async (req, res) => {
+        // nested writes and nester reads
+        // atomicity - transaction (not needed with one query)
         const {id} = req.params;
         const {name, departmentName, roleName} = req.body;
 

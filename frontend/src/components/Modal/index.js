@@ -22,9 +22,10 @@ import axios from "axios";
 async function validateEmail(email) {
   try {
     const res = await axios.get(`http://localhost:5010/checkEmail/${email}`);
-    console.log(res.data);
-
+    console.log("email: ",res.data);
+    console.log("True or false: ", res.data !== null)
     return res.data !== null;
+
   } catch (error) {
     console.log("error in verifying email", error);
     return false;
@@ -49,8 +50,18 @@ function InputModal({roles, departments}) {
   const [emailExists, setEmailExists] = useState(false);
   const [showError, setShowError] = useState(false);
 
+
+
+  // useEffect(() => {
+  //   if (emailExists || !isEmailValid) {
+  //     setShowError(true);
+  //   } else {
+  //     setShowError(false);
+  //   }
+  // }, [emailExists, isEmailValid]);
+
   useEffect(() => {
-    if (emailExists || !isEmailValid) {
+    if (emailExists && !isEmailValid) {
       setShowError(true);
     } else {
       setShowError(false);
@@ -60,14 +71,16 @@ function InputModal({roles, departments}) {
   const handleEmailBlur = async (e) => {
     const email = e.target.value;
     const isValid = email.includes("@");
+    let exists = false;
     setIsEmailValid(isValid);
 
     if (isValid) {
-      const exists = await validateEmail(email);
+      exists = await validateEmail(email);
+      console.log("exists: ", exists);
       setEmailExists(exists);
     }
 
-    if (emailExists || !isEmailValid) {
+    if (exists) {
       setShowError(true);
     } else {
       setShowError(false);

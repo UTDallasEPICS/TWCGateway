@@ -227,7 +227,7 @@ const Users = () => {
             <TableContainer>
                 <Table 
                     variant='striped'
-                    size='sm'
+                    size='md'
                     colorScheme='gray'
                 >
 
