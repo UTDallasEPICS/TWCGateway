@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import axios from "axios";
+import { Users } from '../../pages/users';
 
 async function validateEmail(email) {
   try {

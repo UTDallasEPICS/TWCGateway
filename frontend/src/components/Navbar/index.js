@@ -3,6 +3,7 @@ import { Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react'
 import Departments from '../../pages/departments';
 import Users from '../../pages/users';
 import Archive from '../../pages/archive';
+import LoginButton from '../LogIn';
 
 const Navbar = () => {
 	return (
@@ -11,6 +12,7 @@ const Navbar = () => {
 				<Tab>Users</Tab>
 				<Tab>Departments</Tab>
 				<Tab>Archive</Tab>
+				<Tab><LoginButton /></Tab>
 			</TabList>
 		
 			<TabPanels>
@@ -26,6 +28,8 @@ const Navbar = () => {
 				<TabPanel>
 					<Archive />
 				</TabPanel>
+
+
 
 			</TabPanels>
 		</Tabs>

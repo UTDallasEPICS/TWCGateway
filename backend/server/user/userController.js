@@ -238,12 +238,14 @@ module.exports = {
 
     //PUT
     updateUser: async (req, res) => {
+        //TODO:
         // nested writes and nester reads
         // atomicity - transaction (not needed with one query)
         const {id} = req.params;
         const {name, departmentName, roleName} = req.body;
 
         try {
+
             const updatedUser = await prisma.user.update({
                 where: {
                     id: parseInt(id)

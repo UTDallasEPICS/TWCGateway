@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import { SearchIcon, CheckIcon, EditIcon, DeleteIcon} from '@chakra-ui/icons';
+import { SearchIcon, CheckIcon, EditIcon, DeleteIcon, ChevronUpIcon, ChevronDownIcon} from '@chakra-ui/icons';
 import { 
     Flex, 
     Spacer, 
@@ -47,6 +47,8 @@ const Users = () => {
 
     const searchInputRef = useRef();
 
+    const [selectedRow, setSelectedRow] = useState(null);
+
     useEffect(() => {
         fetchUsers();
         fetchRoles();
@@ -87,6 +89,12 @@ const Users = () => {
 
     const handleRowClick = (id) => {
         setOpenId(openId === id ? null : id);
+
+        if (selectedRow === id) {
+            setSelectedRow(null);
+        } else {
+            setSelectedRow(id);
+        }
     };
 
     const handleEditClick = (user) => {
@@ -227,20 +235,20 @@ const Users = () => {
             <TableContainer>
                 <Table 
                     variant='striped'
-                    size='md'
+                    size='sm'
                     colorScheme='gray'
                 >
 
                     {/*Column Names - 7 columns*/}
                     <Thead>
                         <Tr>
-                            <Th>#</Th>
+                            <Th></Th>
                             <Th>Name</Th>
                             <Th>Department</Th>
                             <Th>Role</Th>
                             <Th>Status</Th>
-                            <Th></Th> {/* Edit */}
-                            <Th></Th> {/* Delete */}
+                            <Th>Edit</Th> {/* Edit */}
+                            <Th>Delete</Th> {/* Delete */}
                         </Tr>
                     </Thead>
 
@@ -277,7 +285,8 @@ const Users = () => {
 
                                                 {/*#*/}
                                                 <Td>
-                                                    {index + 1}
+                                                    {/* {index + 1} */}
+                                                    {selectedRow === user.id ? <ChevronUpIcon boxSize={6} /> : <ChevronDownIcon boxSize={6} />}
                                                 </Td>
 
                                                 {/*Name*/}
