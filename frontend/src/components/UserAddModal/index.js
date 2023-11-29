@@ -33,7 +33,7 @@ async function validateEmail(email) {
   }
 }
 
-function InputModal({roles, departments}) {
+function UserAddModal({roles, departments}) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const initialRef = React.useRef(null);
@@ -230,4 +230,4 @@ function InputModal({roles, departments}) {
   );
 }
 
-export default InputModal;
+export default UserAddModal;

@@ -22,11 +22,13 @@ import {
     AlertDialogFooter, 
     AlertDialogHeader, 
     AlertDialogContent, 
-    AlertDialogOverlay 
+    AlertDialogOverlay, 
+    Center
 } from '@chakra-ui/react';
 import Select from 'react-select';
 import axios from 'axios';
-import InputModal from '../components/Modal/index.js';
+import userAddModal from '../components/UserAddModal/index.js';
+import UserAddModal from '../components/UserAddModal/index.js';
 
 
 const Users = () => {
@@ -178,15 +180,14 @@ const Users = () => {
 
     return (
         <>
-
             {/*Add and Delete Buttons*/}
-            <Flex>
+            <Flex p={3}>
 
                 {/*Add Button*/}
-                <InputModal 
+                <UserAddModal 
                     roles={roles}
                     departments={departments}
-                />
+                    />
 
                 <Spacer />
 
@@ -198,7 +199,7 @@ const Users = () => {
                     onClick={(e) => {
                         handleDeleteAllClick();
                     }}
-                >
+                    >
                     Delete All Users
                 </Button>
                 {handleDeleteAllAlert()}
@@ -206,16 +207,16 @@ const Users = () => {
             </Flex>
 
             {/*Search Bar*/}
-            <Flex p={4}>
+            <Flex p={1}>
                 <InputGroup>
 
                     {/*Search Icon*/}
                     <InputLeftElement 
                         pointerEvents="none"
-                    >
+                        >
                         <SearchIcon 
                             color="gray.300" 
-                        />
+                            />
                     </InputLeftElement>
 
                     {/*Search Input*/}
@@ -424,7 +425,6 @@ const Users = () => {
                     </Tbody>
                 </Table>
             </TableContainer>
-
         </>
     );  
 }

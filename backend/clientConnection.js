@@ -1,15 +1,15 @@
-// Will use .env in the future. For now using this.
+// // Will use .env in the future. For now using this.
 
-const { Client } =  require("pg")
+// const { Client } =  require("pg")
 
-const client = new Client({
-    user: "postgres",      
-    password: "postgres",   
-    host: "localhost",    
-    port: "5005",          
-    database: "postgres"    
-})
+// const client = new Client({
+//     user: "postgres",      
+//     password: "postgres",   
+//     host: "localhost",    
+//     port: "5005",          
+//     database: "postgres"    
+// })
 
-client.connect();
+// client.connect();
 
-module.exports = client;
+// module.exports = client;
