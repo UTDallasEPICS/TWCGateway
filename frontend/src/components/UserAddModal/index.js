@@ -53,21 +53,21 @@ function UserAddModal({roles, departments}) {
 
 
 
-  // useEffect(() => {
-  //   if (emailExists || !isEmailValid) {
-  //     setShowError(true);
-  //   } else {
-  //     setShowError(false);
-  //   }
-  // }, [emailExists, isEmailValid]);
-
   useEffect(() => {
-    if (emailExists && !isEmailValid) {
+    if (emailExists || !isEmailValid) {
       setShowError(true);
     } else {
       setShowError(false);
     }
   }, [emailExists, isEmailValid]);
+
+  // useEffect(() => {
+  //   if (emailExists && !isEmailValid) {
+  //     setShowError(true);
+  //   } else {
+  //     setShowError(false);
+  //   }
+  // }, [emailExists, isEmailValid]);
 
   const handleEmailBlur = async (e) => {
     const email = e.target.value;

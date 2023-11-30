@@ -4,6 +4,8 @@ import Departments from '../../pages/departments';
 import Users from '../../pages/users';
 import Archive from '../../pages/archive';
 import LoginButton from '../LogIn';
+import LogoutButton from '../Logout';
+import Profile from '../Profile';
 
 const Navbar = () => {
 	return (
@@ -12,7 +14,9 @@ const Navbar = () => {
 				<Tab>Users</Tab>
 				<Tab>Departments</Tab>
 				<Tab>Archive</Tab>
-				<Tab><LoginButton /></Tab>
+				<Tab>LogIn</Tab>
+				<Tab>LogOut</Tab>
+				<Tab>Profile</Tab>
 			</TabList>
 		
 			<TabPanels>
@@ -29,7 +33,17 @@ const Navbar = () => {
 					<Archive />
 				</TabPanel>
 
+				<TabPanel>
+					<LoginButton />
+				</TabPanel>
 
+				<TabPanel>
+					<LogoutButton />
+				</TabPanel>
+
+				<TabPanel>
+					<Profile />
+				</TabPanel>
 
 			</TabPanels>
 		</Tabs>

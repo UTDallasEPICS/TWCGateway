@@ -10,7 +10,11 @@ ReactDOM.render(
     <Auth0Provider
       domain="the-warren-center.us.auth0.com"
       clientId="hvsbhpQc5ImpK85Gpoo3Mrlebbfs1ogZ"
-      redirectUri={window.location.origin + "/users"} // add a function to check role
+      // redirectUri={window.location.origin}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+      }}
+      // onRedirectCallback={onRedirectCallback}
     >
       <App />
     </Auth0Provider>

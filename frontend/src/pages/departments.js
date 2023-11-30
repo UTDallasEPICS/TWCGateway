@@ -97,6 +97,18 @@ const Departments = () => {
             console.error(error);
         }
     }
+
+
+    // const handleDeleteClick = async (id) => {
+    //     try {
+    //         await axios.delete(`http://localhost:5010/department/${id}`);
+    //         fetchDepartments();
+    //     } catch (error) {
+    //         console.error(error);
+    //     }
+    // }
+
+//////////////////////////////////////////////////////////////////////////  
     
     return (
         <>
