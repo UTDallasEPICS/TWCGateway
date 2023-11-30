@@ -6,20 +6,30 @@ import Archive from '../../pages/archive';
 import LoginButton from '../LogIn';
 import LogoutButton from '../Logout';
 import Profile from '../Profile';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
 	return (
 		<Tabs isLazy>
-			<TabList>
+			{/* <TabList>
 				<Tab>Users</Tab>
 				<Tab>Departments</Tab>
 				<Tab>Archive</Tab>
 				<Tab>LogIn</Tab>
 				<Tab>LogOut</Tab>
 				<Tab>Profile</Tab>
+			</TabList> */}
+
+			<TabList>
+				<Tab><Link to="/users">Users</Link></Tab>
+				<Tab><Link to="/departments">Departments</Link></Tab>
+				<Tab><Link to="/archive">Archive</Link></Tab>
+				{/* <Tab><Link to="/login">LogIn</Link></Tab> */}
+				<Tab><Link to="/logout">LogOut</Link></Tab>
+				<Tab><Link to="/profile">Profile</Link></Tab>
 			</TabList>
 		
-			<TabPanels>
+			{/* <TabPanels>
 
 				<TabPanel>
 					<Users />
@@ -45,7 +55,7 @@ const Navbar = () => {
 					<Profile />
 				</TabPanel>
 
-			</TabPanels>
+			</TabPanels> */}
 		</Tabs>
 	);
 };

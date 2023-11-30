@@ -113,6 +113,21 @@ module.exports = {
                     email: req.params.email
                 }
             });
+
+            const roleId = await prisma.userRoleMapping.findFirst({
+                where: {
+                    userId: user.id
+                },
+                orderBy: {
+                    id: 'desc'
+                }
+            });
+            const role = await prisma.role.findUnique({
+                where: {
+                    id: roleId.roleId
+                }
+            });
+            user.roleName = role.roleName;
             
             res.status(200).json(user);
 
@@ -137,6 +152,7 @@ module.exports = {
 
             const usersWithRoleAndDepartment = await Promise.all(users.map(async (user) => {
 
+                console.log("user from userController", user)
                 const userRole = await prisma.userRoleMapping.findFirst({
                     where: {
                         userId: user.id

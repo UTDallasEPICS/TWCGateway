@@ -65,6 +65,7 @@ const Users = () => {
         try {
             console.log("fetchUsers")
             const response = await axios.get(`http://localhost:5010/users`);
+            console.log("response.data: ", response.data)
             setUsers(response.data);
         } catch (error) {
             console.log("Error in fetchUsers: ", error);
@@ -187,7 +188,7 @@ const Users = () => {
                 <UserAddModal 
                     roles={roles}
                     departments={departments}
-                    />
+                />
 
                 <Spacer />
 
