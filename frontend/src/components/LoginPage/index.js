@@ -52,6 +52,16 @@ const LoginPage = () => {
                 navigate("/users")
               )
             }
+            else if (role.roleName === "Supervisor") {
+              return(
+                navigate("/users") //change this
+              )
+            }
+            else if (role.roleName === "Employee") {
+              return(
+                navigate("/users") //change this
+              )
+            }
           },
         );
       }
@@ -62,33 +72,25 @@ const LoginPage = () => {
     return <div>Loading...</div>;
   }
 
-  // function fetchRole(email){
-  //   const response = axios.get(`http://localhost:5010/checkEmail/${email}`)
-
-  //   if (response.data === "Admin") {
-  //     return "Admin";
-  //   } else if (response.data === "Supervisor") {
-  //     return "Supervisor";
-  //   } else if (response.data === "Employee") {
-  //     return "Employee";
-  //   } else if (response.data === null) {
-  //     return null;
-  //   } else {
-  //     return "Error in fetchRole Login Page";
-  //   }
-  // };
-
   return (
     <AnimatedBox>
       <Center h="100vh">
         <Flex direction="column" align="center">
-          <Box borderWidth="3px" borderColor="purple" bg="" p="3" borderRadius="md">
-            <Image src={logo} alt="The-Warren-Center-Logo" />
+
+          <Box 
+            borderWidth="3px" 
+            borderColor="purple" 
+            bg="" 
+            p="3" 
+            borderRadius="md"
+          >
+            <Image src={logo} alt="The-Warren-Center-Gateway-Logo" />
           </Box>
 
           <Box mt={4}>
             <LogIn />
           </Box>
+
         </Flex>
       </Center>
     </AnimatedBox>
