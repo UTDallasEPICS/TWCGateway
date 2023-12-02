@@ -78,13 +78,12 @@ const LoginPage = () => {
         <Flex direction="column" align="center">
 
           <Box 
-            borderWidth="3px" 
-            borderColor="purple" 
-            bg="" 
+            //borderWidth="3px" 
+            //borderColor="purple" 
             p="3" 
-            borderRadius="md"
+            //borderRadius="md"
           >
-            <Image src={logo} alt="The-Warren-Center-Gateway-Logo" />
+            <Image src={logo} alt="The-Warren-Center-Gateway-Logo" height="150"/>
           </Box>
 
           <Box mt={4}>
