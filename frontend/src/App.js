@@ -1,3 +1,5 @@
+// relaod makes the /unauthorized page to be shown
+
 import React, {useState} from 'react';
 import Navbar from './components/Navbar';
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
