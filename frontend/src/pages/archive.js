@@ -4,7 +4,7 @@ import ArchivedUsers from './archivedUsers';
 import ArchivedDepartments from './archivedDepartments';
 import ArchivedTasks from './archivedTasks';
 
-function Archive() {
+function Archive({ userRole }) {
     return (
         <Tabs isLazy>
 			<TabList>
@@ -17,17 +17,17 @@ function Archive() {
 
 
 				<TabPanel>
-					<ArchivedUsers />
+					<ArchivedUsers userRole={userRole}/>
 				</TabPanel>
 
 				
 				<TabPanel>
-                    <ArchivedDepartments />
+                    <ArchivedDepartments userRole={userRole}/>
 				</TabPanel>
 
 
 				<TabPanel>
-					<ArchivedTasks />
+					<ArchivedTasks userRole={userRole}/>
 				</TabPanel>
 
 			</TabPanels>

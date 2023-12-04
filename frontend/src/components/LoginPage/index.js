@@ -21,7 +21,7 @@ const AnimatedBox = chakra('div', {
   }
 });
 
-const LoginPage = () => {
+const LoginPage = ({  setUserRole }) => {
   const navigate = useNavigate();
   const { user, isAuthenticated, isLoading, error } = useAuth0();
   const [profile, setProfile] = useState(null);
@@ -47,6 +47,7 @@ const LoginPage = () => {
         fetchRole(user.email)
           .then((role) => {
             console.log("role", role.roleName);
+            setUserRole(role.roleName);
             if (role.roleName === "Admin") {
               return(
                 navigate("/users")

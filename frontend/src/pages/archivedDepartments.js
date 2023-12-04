@@ -1,6 +1,6 @@
 import {React}  from 'react';
 
-function ArchivedDepartments() {
+function ArchivedDepartments({ userRole }) {
     return (
         <div>
             <p>Archived Departments</p>

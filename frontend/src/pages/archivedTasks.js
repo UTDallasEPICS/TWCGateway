@@ -1,6 +1,6 @@
 import React from 'react';
 
-const ArchivedTasks = () => {
+const ArchivedTasks = ({ userRole }) => {
     return (
         <div>
             <h1>Archived Tasks</h1>

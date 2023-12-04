@@ -25,7 +25,7 @@ import {
 import { RepeatClockIcon, DeleteIcon, SearchIcon } from '@chakra-ui/icons';
 import axios from 'axios';
 
-function ArchivedUsers() {
+function ArchivedUsers({ userRole }) {
     const [searchTerm, setSearchTerm] = React.useState('');
     const [users, setUsers] = React.useState([]);
     const [openId, setOpenId] = React.useState(null);
@@ -94,6 +94,7 @@ function ArchivedUsers() {
     return (
         <>
             {/* Top Buttons*/}
+            {userRole === 'Admin' &&
             <Flex>
 
                 {/*Restore All Users*/}
@@ -147,7 +148,7 @@ function ArchivedUsers() {
                 </AlertDialogOverlay>
                 </AlertDialog>
 
-            </Flex>
+            </Flex>}
 
             {/*Search Bar*/}
             <Flex p={4}>

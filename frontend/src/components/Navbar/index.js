@@ -68,20 +68,31 @@ import { Tabs, TabList, Tab, Button, useDisclosure } from '@chakra-ui/react'
 import Profile from '../Profile';
 import { Link } from 'react-router-dom';
 
-const Navbar = () => {
+const Navbar = ({ userRole }) => {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
 	return (
+		// <Tabs isLazy>
+		// 	<TabList>
+		// 		<Tab><Link to="/users">Users</Link></Tab>
+		// 		<Tab><Link to="/departments">Departments</Link></Tab>
+		// 		<Tab><Link to="/archive">Archive</Link></Tab>
+		// 		<Button onClick={onOpen}>Profile</Button>
+		// 	</TabList>
+
+		// 	<Profile isOpen={isOpen} onClose={onClose} />
+		// </Tabs>
+
 		<Tabs isLazy>
 			<TabList>
-				<Tab><Link to="/users">Users</Link></Tab>
-				<Tab><Link to="/departments">Departments</Link></Tab>
-				<Tab><Link to="/archive">Archive</Link></Tab>
+				<Link to="/users"><Tab>Users</Tab></Link>
+				<Link to="/departments"><Tab>Departments</Tab></Link>
+				<Link to="/archive"><Tab>Archive</Tab></Link>
 				<Button onClick={onOpen}>Profile</Button>
 			</TabList>
-
-			<Profile isOpen={isOpen} onClose={onClose} />
-		</Tabs>
+	
+			<Profile isOpen={isOpen} onClose={onClose} userRole={userRole}/>
+	  	</Tabs>
 	);
 };
 

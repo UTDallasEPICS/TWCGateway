@@ -8,7 +8,8 @@ import { Box, Heading, Text, Spinner, VStack, Modal, ModalOverlay, ModalContent,
 import LogoutButton from '../Logout';
 import LoginButton from '../LogIn';
 
-const Profile = ({ isOpen, onClose }) => {
+const Profile = ({ isOpen, onClose, userRole }) => {
+  console.log("userRole from Profile", userRole)
   const { user, isAuthenticated, isLoading } = useAuth0();
   const [profile, setProfile] = useState(null);
 
@@ -36,6 +37,7 @@ const Profile = ({ isOpen, onClose }) => {
                 <Box p={5}>
                   <Text fontSize="xl" fontWeight="bold">Welcome, {profile.name}!</Text>
                   <Text fontSize="md" color="gray.500">Email: {profile.email}</Text>
+                  <Text fontSize="md" color="gray.500">Role: {userRole}</Text>
                 </Box>
                 <Box p={5}>
                   <LogoutButton />
