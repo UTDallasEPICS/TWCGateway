@@ -244,6 +244,7 @@ function ArchivedUsers({ userRole }) {
                                                 </Td>
 
                                                 {/* Restore */} 
+                                                {userRole === 'Admin' &&
                                                 <Td>
                                                     <IconButton
                                                         icon={<RepeatClockIcon />}
@@ -254,9 +255,10 @@ function ArchivedUsers({ userRole }) {
                                                             handleRestoreClick(user.id);
                                                         }}
                                                     />
-                                                </Td>
+                                                </Td>}
 
                                                 {/* Delete */}
+                                                {userRole === 'Admin' &&
                                                 <Td>
                                                     <IconButton
                                                         icon={<DeleteIcon />}
@@ -267,7 +269,7 @@ function ArchivedUsers({ userRole }) {
                                                             setIsOpen(true);
                                                         }}
                                                     />
-                                                </Td>
+                                                </Td>}
                                 
                                             </Tr>
 

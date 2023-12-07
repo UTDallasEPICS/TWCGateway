@@ -1,15 +1,12 @@
-## Conceptual Overview
+# Conceptual Overview
+This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). The objective is to improve and streamline their current manual onboarding process, aiming for enhanced user efficiency and overall ease of use. The application has three types of users: admins, supervisors, and employees. Admins control all the CRUD modifications on the app. Supervisors can perform only one update action, but they have the ability to view all the pages accessible to the admin. Employees can perform no modifications and can only see their page. 
 
-### What this is?
-This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). There are admins, supervisors, and employees. Admins can perform CRUD operations on tasks and departments. Departments are a collection of tasks. Each task has a supervisor assigned to it. Supervisors can view the progress of their employees and mark tasks as completed. Employees can view their progress but cannot mark tasks as completed. Only supervisors can mark tasks as completed.
-
-### What this is not?
-This is not a document manager where you can upload different documents for onboarding. This means that it does not support functionalities such as uploading, storing, categorizing, or sharing documents that are typically used during the onboarding process.
-
-## Project Setup on Your Computer
-
+# Project Setup
+<!-- 
 <details open>
-<summary>Prerequisites</summary>
+<summary>Prerequisites</summary> -->
+
+## Prerequisites
 
 Before you can run this project, you'll need to have the following software installed on your computer:
 
@@ -22,109 +19,121 @@ If you haven't yet installed Node.js, Docker, and VS Code, you can download them
 - Node.js (LTS) for [Windows](https://nodejs.org/en/download/) or [Mac](https://nodejs.org/en/download/)
 - Docker for [Windows](https://docs.docker.com/docker-for-windows/install/) or [Mac](https://docs.docker.com/docker-for-mac/install/)
 - Visual Studio Code for [Windows](https://code.visualstudio.com/docs/setup/windows) or [Mac](https://code.visualstudio.com/docs/setup/mac)
+
+Note: for Windows users, dedicating time to set up Windows Subsystem for Linux (WSL) will prove to be a worthwhile investment. This is not required to run the project, but is recommended.
+<!-- 
+Note: for Windows users, dedicating time to set up Windows Subsystem for Linux (WSL) will prove to be a worthwhile investment. This is not required to run the project, but is recommended. Roughly you will need to follow these steps to set up WSL:
+  - Install [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (it is just `wsl --install` in PowerShell as admin but you should read the docs)
+  - Install docker compose in WSL 2 by following [these steps](https://docs.docker.com/compose/install/) -->
+
+<!-- 
 </details>
 <details open>
-<summary>Running the Project for the First Time</summary>
+<summary>Running the Project for the First Time</summary> -->
 
-If you are a little adventurous and you are using Windows, then follow this file to setup your environment: [Adventurous Windows Setup](adventurousWindowsSetup.md)
+## Running the Project for the First Time
 
 Once you have VS Code, Docker, and Node.js installed, you can setup the project by following these steps:
 
-1. Open Visual Studio Code and click on the "Clone Repository" button in the welcome screen.
-2. Enter the URL of the repository and choose a local directory to clone it to.
-3. Open a terminal window in Visual Studio Code and navigate to the project directory.
-4. Run the command `npm install` in the terminal, in the `frontend/` and the `backend/` folder to install the project dependencies. It is normal for this command to take a significant amount of time.
-5. Run the command `docker compose up` in the project's root directory to start the docker container. If you don't see anything along the lines of `database system is ready to accept connections`, kill the terminal and try the command again.
-6. Now, in your browser go to `http://localhost:8080/`and you will see Adminer start.
-   1. Change `System` dropdown to `PostgreSQL`
-   2. Change `Server` textfield to `warren-db`
-   3. Enter `Username` as `postgres`
-   4. Enter `Password` as `postgres`
-   5. Leave `Database` empty
-   6. Click login
-7. Now you should see a table, click the top entry called `postgres`.
-8. Now, click the `import` button. It should be in the top left pane.
-9. Now, browse to the project repository and choose the file called `defaultDBSetup.sql`.
-10. After you choose the .sql file, click the `execute` button. In the next page you should see some number of entries and only a green row. There shouldn't be any red rows.
-    1. If you see any red rows:
-       1. On the top of the page, the navigation bar, click on `public`
-       2. Then click on the check box for default_tasks and task_list tables and click the drop button in the box below.
-       3. Then click on the check box for the `employee` table and click the drop button in the box below.
-       4. Then scroll down, find `a_sequence`, and click on it.
-       5. Click on the drop button.
-       6. Re-do steps 8 to 10
-11. Now, you can close the browser tab and go back to VS Code.
-12. In another terminal go to the `backend/` folder and run `npm run dev` to start the backend.
-13. Open a third terminal and go to the `frontend/` folder and run `npm run start` to start the frontend. This step may take an upwards of ten minutes to spin up.
-</details>
+1. Open Visual Studio Code and click on the `Clone Repository` button in the welcome screen
+
+2. In [our GitHub repository](https://github.com/UTDallasEPICS/Warren-Automated-Onboard) click on the green `Code` button and copy the HTTPS repository URL
+
+3. Enter the URL of the repository and choose a local directory to clone it to
+
+4. Open a terminal window in VSCode and navigate to the project directory. If you do not know how to navigate in the terminal look at this [video](https://www.youtube.com/watch?v=j6vKLJxAKfw) or this [blog post](https://www.git-tower.com/learn/git/ebook/en/command-line/appendix/command-line-101)<!-- this is what copilot recommended!!! (https://www.youtube.com/watch?v=MBBWVgE0ewk).-->
+
+5. From the root of the project, go to the `/frontend` folder and type `npm install` and hit the enter key (this may take a while)
+
+6. Run the command `cd ../backend` to go to the backend folder, and run `npm install` (this may take a while)
+
+7. Run the command `cd ..` to go to the root of the project and then run `docker compose up` in the project's root directory to start the docker container. If you don't see anything along the lines of "database system is ready to accept connections", close the terminal and try the command again.
+
+8. Keep the docker terminal open and make a new terminal
+
+9. Go to the backend folder and run the command `npx prisma migrate dev` to create the database
+
+10. Now run `npm run dev` to start the backend
+
+11. Open a third terminal and go to the frontend folder and run `npm start` to start the frontend (this may take a while)
+
+
+<!-- </details>
 <details open>
-<summary>Running the Project Subsequently</summary>
+<summary>Running the Project Subsequently</summary> -->
 
-14. Open the repository in VS Code
-15. In three different terminals
+## Running the Project Subsequently
+
+1. Open the folder where you initially cloned the repository in VS Code
+2. In three different terminals:
     1. Run `docker compose up` in the root of the project
-    2. Run `npm run dev` in the backend/ folder
-    3. Run `npm run start` in the frontend/ folder (this can take a significant amount of time to execute)
-    </details>
+    2. Run `npm run dev` in the /backend folder
+    3. Run `npm run start` in the /frontend folder (this may take a while)
+    <!-- </details> -->
 
-If any part of the setup does not make sense or is yielding errors, you could paste the steps in ChatGPT or Bing Chat. These tools will be a great first step in debugging the problem.
-
-
-## Functional Requirements
-
-### Users
-
-* Admin
-  * Look over all the departments.
-  * Look over all the supervisors.
-  * Look over all the employees and their tasks.
-  * CRUD tasks
-* Supervisors
-  * Look over all the currently onboarding employees.
-  * Track their progress by idicating the completed tasks.
-  * Can't edit taks/ make new tasks/ delete tasks.
-  * Can look at only their department?
-* Employees
-  * Look at their completed and to-be completed tasks.
-
-### Task
-* Identifier
-* Description (task details)
-* Assigned to a task list
-* Supervisor assigned to it
-* Completed by?
-  * Can only the assined supervisor check mark the task?
-  * Can other also?
+**If any part of the setup does not make sense or is yielding errors, you can paste these steps in ChatGPT or Bing Chat. These tools are a great first step in debugging the problem.**
 
 
-### Task List
-* Department name
-* Assigned supervisors
-* Microsoft Office ID?
-* Department specific tasks
+# Functional Requirements
 
+## Roles and Permissions
 
-### (if supervisors many-to-many)
-
-TBD
-
-### Task to User Relation Table
-* Mark completion
-* Date Assigned
-* Date Completed
-* Deadline
+### Admin
+User with the most permissions. Can perform all CRUD operations on all pages.
+### Supervisor
+User with the second most permissions. Sees everything the admin can. However, can perform the action of completing a task for a user only if they are assigned to that specific task. 
+### Employee
+User with the least permissions. Can only see their own page. Can't perform any CRUD operations.
 
 ## Pages
 
-Not important for this commit
+### Admin and Supervisor
+#### Users and Departments
+On the Users page: <br>
+The admins and supervisors will be able to see all the users currently in the system. The admin will have the ability to CRUD users on this page, whereas the supervisor will only be able to view the users. Upon clicking on a specific user, their task list will open up. The admin will be able to mark every task as completed. Whereas, the supervisor will only be able to mark the tasks they are assigned to. 
+
+On the Departments page: <br>
+The admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
+
+### Archive
+This page will have three tabs: Archived Users, Archived Departments, Archived Tasks. The admins and supervisors will be able to see all the archived users, departments, and tasks. The admin will have the ability to either permanently delete or restore users, departments, and tasks. Whereas the supervisor will only be able to view the archived users, departments, and tasks.
+
+### Employee Specific Page (Not implemented yet)
+Employees can't edit anything on this page. They can only interact with the profile button and the supervisor's name. The profile button will open a modal with their profile information. Upon clicking the supervisor's name, it will open a modal with the supervisor's profile information. The idea is that the employee can see their tasks and then be able to see their supervisor's information in case they need to contact them.
+
+## Database Tables
+
+| **Tables**                    | **Attributes**                                   |
+|-------------------------------|-------------------------------------------------|
+| **User**                       |  Name, <br>Email (unique) <br>Archived (boolean)  |
+| **Department**                 | Name <br>Archived (boolean)                    |
+| **Task**                       | Description <br>Archived (boolean)            |
+| **Role**                       | roleName <br>Archived (boolean)                |
+| **UserRoleMapping**            | Relates a user to a role - <br>(userId, roleId)   |
+| **DepartmentTaskMapping**      | Relates a department to a task - <br>(departmentId, taskId) |
+| **DepartmentUserMapping**      | Relates a user to a department - <br>(userId, departmentId) |
+| **ApproverTaskMapping**        | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId) |
+| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId) |
 
 ## Stack
 
-Not important for this commit
+### Frontend
+- React (framework)
+- Chakra UI (component library)
+- Javascript (language)
+### Backend
+- Node.js (runtime)
+- Express.js (framework)
+- Prisma (ORM)
+- PostgreSQL (database)
+- Javascript (language)
+### VS Code Extensions
+- Thunder Client (similar to Postman for testing API endpoints)
+- Prettier (code formatter)
+- GitLens (additional git features)
+- Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
 
-## Research Questions
-
-Not important for this commit
+These are the most important extensions that everyone on the team should have. Other extensions are up to personal preference.
 
 ## Third party integrations
 
@@ -132,4 +141,4 @@ Not important for this commit
 
 ## Deployment
 
-Not deployed yet
+[Not deployed yet]
