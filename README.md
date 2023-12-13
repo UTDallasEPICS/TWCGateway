@@ -49,13 +49,29 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 
 7. Run the command `cd ..` to go to the root of the project and then run `docker compose up` in the project's root directory to start the docker container. If you don't see anything along the lines of "database system is ready to accept connections", close the terminal and try the command again.
 
-8. Keep the docker terminal open and make a new terminal
+8. Keep the docker terminal open and make a new terminal window
 
 9. Go to the backend folder and run the command `npx prisma migrate dev` to create the database
 
-10. Now run `npm run dev` to start the backend
+10. Run the command `npx prisma studio` to open the database in the browser
 
-11. Open a third terminal and go to the frontend folder and run `npm start` to start the frontend (this may take a while)
+11. Click on the `User` table and then click on the `Add record` button to add a new user
+  - Do not change the `id #` field
+  - Put your name or any name in the `name` field
+  - The sign-in system (Auth0) currently has "Sign in with Google" and "Sign in with Microsoft" enabled. So, you can use either a Google or a Microsoft account in the `email` field.
+  - Click the green `Save changes` button
+
+12. Open a new tab and click on the `UserRoleMapping` table and then click on the `Add record` button to add a new user role mapping
+  - Do not change the `id #` field
+  - Put the `id #` of the user you just created in the `userId` field
+  - Put `1` in the `roleId` field
+  - Click the green `Save changes` button
+
+13. Go back to the terminal and open a new terminal window in the backend folder
+
+14. Now run `npm run dev` to start the backend
+
+15. Open a fourth terminal and go to the frontend folder and run `npm start` to start the frontend (this may take a while)
 
 
 <!-- </details>
