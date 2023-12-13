@@ -1,8 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/warren/node_modules
+node_modules/
 /.pnp
 .pnp.js
 
@@ -14,22 +13,10 @@
 
 # misc
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env
-#npm-debug.log*
-#yarn-debug.log*
-#yarn-error.log*
-
-
-#---------------------------------
-# Ignore node_modules directory
-node_modules/
+.env*
+npm-debug.log*
 
 # Ignore build directories
-build/
 dist/
 
 # Ignore logs and temp files
@@ -37,40 +24,18 @@ dist/
 *.tmp
 *.swp
 
-# Ignore sensitive environment files
-#.env
-.env.local
-.env.*.local
-
 # Ignore package-lock.json for npm
-#package-lock.json
 pnpm-lock.yaml
 
 # Ignore yarn.lock for Yarn
 yarn.lock
 
-# Ignore database migrations or seeds
-#/db/migrations/
-#/db/seeds/
-
-# Ignore client-side build artifacts
-#/public/
-
 # Ignore server-side build artifacts
 /build-server/
 
-# Ignore compiled CSS and SCSS files
-#*.css
-#*.scss
-
 # Ignore dependencies in the global scope
-# You might want to adjust this depending on your setup
 /.idea/
 /.vscode/
 
 # Ignore OS-generated files
-.DS_Store
 Thumbs.db
-
-# Ignore npm debug log
-npm-debug.log*

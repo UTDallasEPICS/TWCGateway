@@ -29,7 +29,7 @@ fs.readdirSync(path.join(__dirname,'./server')).forEach(
         const modulePath = path.join(__dirname, './server', moduleName, 'subRouter.js');
         // sample modulePath: /home/Warren-Automated-Onboard/backend/server/user/subRouter.js
 
-        //TODO: start documentation here
+        //TODO: continue documentation here
         if (fs.existsSync(modulePath)) {
             const module = require(modulePath);
             if (module && typeof module.addRoutes === 'function'){

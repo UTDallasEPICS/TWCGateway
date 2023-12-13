@@ -29,9 +29,10 @@ import Select from 'react-select';
 import axios from 'axios';
 import userAddModal from '../components/UserAddModal/index.js';
 import UserAddModal from '../components/UserAddModal/index.js';
+import Cookies from 'js-cookie';
 
 
-const Users = () => {
+const Users = ({ userRole }) => {
     const [users, setUsers] = useState([]);
     const [roles, setRoles] = useState([]);
     const [departments, setDepartments] = useState([]);
@@ -65,6 +66,7 @@ const Users = () => {
         try {
             console.log("fetchUsers")
             const response = await axios.get(`http://localhost:5010/users`);
+            console.log("response.data: ", response.data)
             setUsers(response.data);
         } catch (error) {
             console.log("Error in fetchUsers: ", error);
@@ -181,13 +183,14 @@ const Users = () => {
     return (
         <>
             {/*Add and Delete Buttons*/}
+            {userRole === 'Admin' &&
             <Flex p={3}>
 
                 {/*Add Button*/}
                 <UserAddModal 
-                    roles={roles}
-                    departments={departments}
-                    />
+                roles={roles}
+                departments={departments}
+                />
 
                 <Spacer />
 
@@ -199,12 +202,13 @@ const Users = () => {
                     onClick={(e) => {
                         handleDeleteAllClick();
                     }}
-                    >
+                >
                     Delete All Users
                 </Button>
                 {handleDeleteAllAlert()}
                 
             </Flex>
+            }
 
             {/*Search Bar*/}
             <Flex p={1}>
@@ -248,8 +252,8 @@ const Users = () => {
                             <Th>Department</Th>
                             <Th>Role</Th>
                             <Th>Status</Th>
-                            <Th>Edit</Th> {/* Edit */}
-                            <Th>Delete</Th> {/* Delete */}
+                            {userRole === 'Admin' && <Th>Edit</Th>} {/* Edit */}
+                            {userRole === 'Admin' && <Th>Delete</Th>} {/* Delete */}
                         </Tr>
                     </Thead>
 
@@ -370,33 +374,37 @@ const Users = () => {
                                                 </Td>
 
                                                 {/* Edit */}
-                                                <Td>
-                                                    <IconButton 
-                                                        icon={editId === user.id ? <CheckIcon /> : <EditIcon />} 
-                                                        onClick={
-                                                            (e) => {
-                                                                e.stopPropagation();
-                                                                if (editId === user.id){
-                                                                    handleCheckClick();
-                                                                } else {
-                                                                    handleEditClick(user);
+                                                {userRole === 'Admin' &&
+                                                    <Td>
+                                                        <IconButton 
+                                                            icon={editId === user.id ? <CheckIcon /> : <EditIcon />} 
+                                                            onClick={
+                                                                (e) => {
+                                                                    e.stopPropagation();
+                                                                    if (editId === user.id){
+                                                                        handleCheckClick();
+                                                                    } else {
+                                                                        handleEditClick(user);
+                                                                    }
                                                                 }
-                                                            }
-                                                        } 
-                                                    />
-                                                </Td>
+                                                            } 
+                                                        />
+                                                    </Td>
+                                                }
 
                                                 {/* Delete */} 
-                                                <Td>
-                                                    <IconButton 
-                                                        icon={<DeleteIcon />}
-                                                        colorScheme='red'
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            handleDeleteClick(user.id);
-                                                        }} 
-                                                    />  
-                                                </Td>
+                                                {userRole === 'Admin' &&
+                                                    <Td>
+                                                        <IconButton 
+                                                            icon={<DeleteIcon />}
+                                                            colorScheme='red'
+                                                            onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                handleDeleteClick(user.id);
+                                                            }} 
+                                                        />  
+                                                    </Td>
+                                                }
                                 
                                             </Tr>
 

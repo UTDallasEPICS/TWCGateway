@@ -32,7 +32,7 @@ import {
 import axios from 'axios';
 
 
-const Departments = () => {
+const Departments = ({ userRole }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const searchInputRef = React.useRef();
     const [departments, setDepartments] = useState([]);
@@ -112,6 +112,7 @@ const Departments = () => {
     
     return (
         <>
+            {userRole === 'Admin' &&
             <Flex p={4}>
                 <Button
                     leftIcon={<AddIcon />}
@@ -130,7 +131,7 @@ const Departments = () => {
                 >
                     Delete All Departments
                 </Button>
-            </Flex>
+            </Flex>}
             
             {/*Search Bar*/}
             <Flex p={1}>
@@ -162,8 +163,8 @@ const Departments = () => {
                             <Th>Department Name</Th>
                             <Th># of Tasks</Th>
                             <Th># of Employees</Th>
-                            <Th>Edit Name</Th> {/*Edit*/}
-                            <Th>Delete</Th> {/*Delete*/}
+                            {userRole === 'Admin' && <Th>Edit Name</Th>} {/*Edit*/}
+                            {userRole === 'Admin' && <Th>Delete</Th>} {/*Delete*/}
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -191,6 +192,8 @@ const Departments = () => {
                                 </Td>
                                 <Td>{department.tasks.length}</Td>
                                 <Td>{department.users.length}</Td>
+
+                                {userRole === 'Admin' &&
                                 <Td>
                                     <IconButton 
                                         icon={editId === department.id ? <CheckIcon /> : <EditIcon />} 
@@ -203,7 +206,8 @@ const Departments = () => {
                                             }
                                         }} 
                                     />
-                                </Td>
+                                </Td>}
+                                {userRole === 'Admin' &&
                                 <Td>
                                     <IconButton 
                                         icon={<DeleteIcon />}
@@ -213,7 +217,7 @@ const Departments = () => {
                                             handleDeleteClick(department.id);
                                         }} 
                                     />
-                                </Td>
+                                </Td>}
                             </Tr>
 
                             <Tr>

@@ -14,7 +14,6 @@ ReactDOM.render(
       authorizationParams={{
         redirect_uri: window.location.origin,
       }}
-      // onRedirectCallback={onRedirectCallback}
     >
       <App />
     </Auth0Provider>
