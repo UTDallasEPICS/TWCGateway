@@ -1,15 +1,15 @@
 services:
-  warren-db:
-    image: postgres
-    restart: always
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_DATABASE=postgres
-      - POSTGRES_PASSWORD=postgres
-    ports:
-      - '5005:5432'
-    volumes:
-      - warren-db:/var/lib/postgresql/data
+    warren-db:
+        image: postgres
+        restart: always
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_DATABASE=postgres
+            - POSTGRES_PASSWORD=postgres
+        ports:
+            - '5005:5432'
+        volumes:
+            - warren-db:/var/lib/postgresql/data
 volumes:
-  warren-db:
-    driver: local
+    warren-db:
+        driver: local

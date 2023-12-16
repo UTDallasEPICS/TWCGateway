@@ -1,10 +1,10 @@
-import React from 'react';
-import { Box, Text, Heading, Button } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import LogoutButton from '../Logout';
+import React from 'react'
+import { Box, Text, Heading, Button } from '@chakra-ui/react'
+import { useNavigate } from 'react-router-dom'
+import LogoutButton from '../Logout'
 
 function Unauthorized() {
-    const navigate = useNavigate();
+    const navigate = useNavigate()
 
     return (
         <Box
@@ -23,7 +23,7 @@ function Unauthorized() {
             </Button> */}
             <LogoutButton />
         </Box>
-    );
+    )
 }
 
-export default Unauthorized;
+export default Unauthorized

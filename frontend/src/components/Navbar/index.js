@@ -28,7 +28,7 @@
 // 				{/* <Tab><Link to="/logout">Log Out</Link></Tab> */}
 // 				<Tab><Link to="/profile">Profile</Link></Tab>
 // 			</TabList>
-		
+
 // 			{/* <TabPanels>
 
 // 				<TabPanel>
@@ -62,38 +62,47 @@
 
 // export default Navbar;
 
-
-import React from 'react';
+import React from 'react'
 import { Tabs, TabList, Tab, Button, useDisclosure } from '@chakra-ui/react'
-import Profile from '../Profile';
-import { Link } from 'react-router-dom';
+import Profile from '../Profile'
+import { Link } from 'react-router-dom'
 
 const Navbar = ({ userRole }) => {
-	const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure()
 
-	return (
-		// <Tabs isLazy>
-		// 	<TabList>
-		// 		<Tab><Link to="/users">Users</Link></Tab>
-		// 		<Tab><Link to="/departments">Departments</Link></Tab>
-		// 		<Tab><Link to="/archive">Archive</Link></Tab>
-		// 		<Button onClick={onOpen}>Profile</Button>
-		// 	</TabList>
+    return (
+        // <Tabs isLazy>
+        // 	<TabList>
+        // 		<Tab><Link to="/users">Users</Link></Tab>
+        // 		<Tab><Link to="/departments">Departments</Link></Tab>
+        // 		<Tab><Link to="/archive">Archive</Link></Tab>
+        // 		<Button onClick={onOpen}>Profile</Button>
+        // 	</TabList>
 
-		// 	<Profile isOpen={isOpen} onClose={onClose} />
-		// </Tabs>
+        // 	<Profile isOpen={isOpen} onClose={onClose} />
+        // </Tabs>
 
-		<Tabs isLazy>
-			<TabList>
-				<Link to="/users"><Tab>Users</Tab></Link>
-				<Link to="/departments"><Tab>Departments</Tab></Link>
-				<Link to="/archive"><Tab>Archive</Tab></Link>
-				<Button onClick={onOpen}>Profile</Button>
-			</TabList>
-	
-			<Profile isOpen={isOpen} onClose={onClose} userRole={userRole}/>
-	  	</Tabs>
-	);
-};
+        <Tabs isLazy>
+            <TabList>
+                <Link to="/users">
+                    <Tab>Users</Tab>
+                </Link>
+                <Link to="/departments">
+                    <Tab>Departments</Tab>
+                </Link>
+                <Link to="/archive">
+                    <Tab>Archive</Tab>
+                </Link>
+                <Button onClick={onOpen}>Profile</Button>
+            </TabList>
 
-export default Navbar;
+            <Profile
+                isOpen={isOpen}
+                onClose={onClose}
+                userRole={userRole}
+            />
+        </Tabs>
+    )
+}
+
+export default Navbar
