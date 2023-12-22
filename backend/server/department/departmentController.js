@@ -77,7 +77,10 @@ module.exports = {
 
     archiveDepartment: async (req, res) => {
         const { id } = req.params
+        const { authorization } = req.headers;
         try {
+            console.log(`User ${authorization} archived department ${id}`)
+            console.log(req.headers)
             const archivedDepartment = await prisma.department.update({
                 where: {
                     id: parseInt(id),
@@ -87,6 +90,7 @@ module.exports = {
                 },
             })
             res.status(200).json(archivedDepartment)
+            
         } catch (error) {
             console.log(error)
             res.status(500).json({ message: 'Error archiving department' })

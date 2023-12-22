@@ -1,35 +1,50 @@
-// Step 1: Define the departments
-let departments = [
-    { id: 1, name: 'Department 1' },
-    { id: 2, name: 'Department 2' },
-    // add more departments as needed
-]
+//https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding
+//npx prisma db seed
 
-// Step 2: Define the roles
-let roles = [
-    { id: 1, name: 'Role 1' },
-    { id: 2, name: 'Role 2' },
-    // add more roles as needed
-]
+const { PrismaClient } = require('@prisma/client');
+const prisma = new PrismaClient();
 
-// Step 3: Define the users
-let users = [
-    { id: 1, name: 'User 1', roleId: 1, departmentId: 1 },
-    { id: 2, name: 'User 2', roleId: 2, departmentId: 1 },
-    { id: 3, name: 'User 3', roleId: 1, departmentId: 2 },
-    { id: 4, name: 'User 4', roleId: 2, departmentId: 2 },
-    { id: 5, name: 'User 5', roleId: 1, departmentId: 1 },
-    // add more users as needed
-]
+async function main() {
+    const roleAdmin = await prisma.role.upsert({ //upsert: if exist update, if not insert
+        where: { roleName: 'Admin' }, //where: find by name
+        update: {}, //update: thing to update if found
+        create: { roleName: 'Admin' } //create: insert if not found
+    })
+    const roleSupervisor = await prisma.role.upsert({
+        where: { roleName: 'Supervisor' },
+        update: {},
+        create: { roleName: 'Supervisor' }
+    })
+    const roleEmployee = await prisma.role.upsert({
+        where: { roleName: 'Employee' },
+        update: {},
+        create: { roleName: 'Employee' }
+    })
 
-// Step 4: Map each user to a role
-users.forEach((user) => {
-    let role = roles.find((role) => role.id === user.roleId)
-    user.role = role
-})
+    const userAdmin = await prisma.user.upsert({
+        where: {email: "reachtusharwani@gmail.com"},
+        update: {},
+        create: {
+            name: "Tushar Wani",
+            email: "reachtusharwani@gmail.com"
+        }
+    })
 
-// Step 5: Map each user to a department
-users.forEach((user) => {
-    let department = departments.find((department) => department.id === user.departmentId)
-    user.department = department
-})
+    const userRoleMappingAdmin = await prisma.userRoleMapping.create({
+        data: {
+            userId: userAdmin.id,
+            roleId: roleAdmin.id
+        }
+    })
+}
+
+main()
+    .then(async () => {
+        console.log('Seeding done.')
+        await prisma.$disconnect()
+    })
+    .catch(async (e) => {
+        console.error(e)
+        await prisma.$disconnect()
+        process.exit(1)
+    })

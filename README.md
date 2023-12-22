@@ -163,6 +163,7 @@ Employees can't edit anything on this page. They can only interact with the prof
 
 -   Thunder Client (similar to Postman for testing API endpoints)
 -   Prettier (code formatter)
+-   ESLint (code linter)
 -   GitLens (additional git features)
 -   Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
 

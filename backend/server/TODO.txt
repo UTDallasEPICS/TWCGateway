@@ -1,0 +1,9 @@
+1. Set token authorization token for loggin user in every api call as a header
+2. authorize method needs to do the following
+    1. decode the token
+    2. check if the role of the user
+        if admin
+            provide access to CUD apis
+        else if supervisor
+            CUD should be restricted 403
+            provide access to R api
