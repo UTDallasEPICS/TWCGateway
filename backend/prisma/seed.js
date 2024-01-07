@@ -1,5 +1,6 @@
 //https://www.prisma.io/docs/orm/prisma-migrate/workflows/seeding
 //npx prisma db seed
+//Change the userAdmin with your email and name it whatever you want
 
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
