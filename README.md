@@ -111,15 +111,13 @@ User with the least permissions. Can only see their own page. Can't perform any 
 
 ## Pages
 
-### Admin and Supervisor
+### Users
 
-#### Users and Departments
+On this page the admins and supervisors will be able to see all the users currently in the system. The admin will have the ability to CRUD users on this page, whereas the supervisor will only be able to view the users. Upon clicking on a specific user, their task list will open up. The admin will be able to mark every task as completed. Whereas, the supervisor will only be able to mark the tasks they are assigned to.
 
-On the Users page: <br>
-The admins and supervisors will be able to see all the users currently in the system. The admin will have the ability to CRUD users on this page, whereas the supervisor will only be able to view the users. Upon clicking on a specific user, their task list will open up. The admin will be able to mark every task as completed. Whereas, the supervisor will only be able to mark the tasks they are assigned to.
+### Departments
 
-On the Departments page: <br>
-The admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
+On this page the admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
 
 ### Archive
 
@@ -127,7 +125,7 @@ This page will have three tabs: Archived Users, Archived Departments, Archived T
 
 ### Employee Specific Page (Not implemented yet)
 
-Employees can't edit anything on this page. They can only interact with the profile button and the supervisor's name. The profile button will open a modal with their profile information. Upon clicking the supervisor's name, it will open a modal with the supervisor's profile information. The idea is that the employee can see their tasks and then be able to see their supervisor's information in case they need to contact them.
+Employees will not be able to see any other page except this one. They can't edit anything on this page. They can only interact with the profile button and the supervisor's name. The profile button will open a modal with their profile information. Upon clicking the supervisor's name, it will open a modal with the supervisor's profile information. The idea is that the employee can see their tasks and then be able to see their supervisor's information in case they need to contact them.
 
 ## Database Tables
 
