@@ -107,10 +107,11 @@ module.exports = {
     },
 
     getUserByEmail: async (req, res) => {
+        const { email } = req.body;
         try {
             const user = await prisma.user.findUnique({
                 where: {
-                    email: req.params.email,
+                    email: email,
                 },
             })
 
