@@ -7,13 +7,11 @@ import MenuIcon from '../../icons/MenuIcon';
 import CrossIcon from '../../icons/CrossIcon';
 import ArchiveBoxIcon from '../../icons/ArchiveBoxIcon';
 import { animated, useSpring } from 'react-spring';
-import ProfilePage from '../../pages/ProfilePage';
+import ProfileModal from '../ProfileModal';
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-
 
   const iconTransition = useSpring({
     transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
@@ -126,7 +124,7 @@ const Navbar = () => {
 
       {/* Profile */}
       {/* Expanded Button */}
-      <div
+      {/* <div
           className={`flex items-center px-1 ${
             isExpanded
               ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
@@ -134,15 +132,13 @@ const Navbar = () => {
           }`}
           onClick={() => {
             console.log("Button clicked");
-            setIsProfileModalOpen(true);
-
           }}
         >
           <ProfileIcon className="h-6 w-6" />
           <span className="ml-3 inline-block whitespace-nowrap">Profile</span>
-      </div>
+      </div> */}
       {/* Collapsed Button */}
-      <div
+      {/* <div
           className={`flex items-center px-1 ${
             isExpanded
               ? 'hidden'
@@ -150,13 +146,11 @@ const Navbar = () => {
           }`}
           onClick={() => {
             console.log("Button clicked");
-            setIsProfileModalOpen(true);
-
           }}
         >
           <ProfileIcon className="h-6 w-6" />
-      </div>
-      {isProfileModalOpen && <ProfilePage onClose={() => setIsProfileModalOpen(false)} />}
+      </div> */}
+      <ProfileModal isExpanded={isExpanded}/>
     </div>
   );
 };

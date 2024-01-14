@@ -10,7 +10,7 @@ const Login = () => {
     return(
         <>
             <div 
-                className="flex flex-col h-screen justify-center items-center gradient-background"
+                className="flex flex-col h-screen justify-center items-center login-gradient-background"
             >
                 <img src={logo} alt="logo" className="w-1/4" />
                 <div 
