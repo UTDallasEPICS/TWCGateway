@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import UsersIcon from '../../icons/UsersIcon';
 import DepartmentsIcon from '../../icons/DepartmentsIcon';
-import ProfileIcon from '../../icons/ProfileIcon';
 import MenuIcon from '../../icons/MenuIcon';
 import CrossIcon from '../../icons/CrossIcon';
 import ArchiveBoxIcon from '../../icons/ArchiveBoxIcon';
@@ -139,33 +138,6 @@ const Navbar = () => {
       </div>
 
       {/* Profile */}
-      {/* Expanded Button */}
-      {/* <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
-              : 'hidden'
-          }`}
-          onClick={() => {
-            console.log("Button clicked");
-          }}
-        >
-          <ProfileIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">Profile</span>
-      </div> */}
-      {/* Collapsed Button */}
-      {/* <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'hidden'
-              : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
-          }`}
-          onClick={() => {
-            console.log("Button clicked");
-          }}
-        >
-          <ProfileIcon className="h-6 w-6" />
-      </div> */}
       <ProfileModal isExpanded={isExpanded} />
     </div>
   );
