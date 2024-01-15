@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import UsersIcon from '../../icons/UsersIcon';
-import DepartmentsIcon from '../../icons/DepartmentsIcon';
-import ProfileIcon from '../../icons/ProfileIcon';
-import MenuIcon from '../../icons/MenuIcon';
-import CrossIcon from '../../icons/CrossIcon';
-import ArchiveBoxIcon from '../../icons/ArchiveBoxIcon';
+// import { useNavigate } from 'react-router-dom';
+import UsersIcon from '../../assets/icons/UsersIcon';
+import DepartmentsIcon from '../../assets/icons/DepartmentsIcon';
+import MenuIcon from '../../assets/icons/MenuIcon';
+import CrossIcon from '../../assets/icons/CrossIcon';
+import ArchiveBoxIcon from '../../assets/icons/ArchiveBoxIcon';
 import { animated, useSpring } from 'react-spring';
 import ProfileModal from '../ProfileModal';
 
-const Navbar = () => {
-  const navigate = useNavigate();
+const Navbar: React.FC = () => {
+  // const navigate = useNavigate();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const iconTransition = useSpring({
@@ -37,8 +36,12 @@ const Navbar = () => {
       <button
         onClick={handleMenuClick}
         className={`flex flex-row items-center active:bg-gray-700 rounded`}
+
       >
-        <animated.div style={iconTransition} className="transition-transform">
+        <animated.div
+          style={iconTransition}
+          className="transition-transform"
+        >
           {isExpanded ? (
             <CrossIcon className="h-6 w-6" />
           ) : (
@@ -56,9 +59,6 @@ const Navbar = () => {
               ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
               : 'hidden'
           }`}
-          onClick={() => {
-            navigate('/admin/users');
-          }}
         >
           <UsersIcon className="h-6 w-6" />
           <span className="ml-3 inline-block whitespace-nowrap">Users</span>
@@ -70,9 +70,6 @@ const Navbar = () => {
               ? 'hidden'
               : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
           }`}
-          onClick={() => {
-            navigate('/admin/users');
-          }}
         >
           <UsersIcon className="h-6 w-6" />
         </div>
@@ -85,14 +82,9 @@ const Navbar = () => {
               ? 'button w-30 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
               : 'hidden'
           }`}
-          onClick={() => {
-            navigate('/admin/departments');
-          }}
         >
           <DepartmentsIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">
-            Departments
-          </span>
+          <span className="ml-3 inline-block whitespace-nowrap">Departments</span>
         </div>
         {/* Collapsed Button */}
         <div
@@ -101,9 +93,6 @@ const Navbar = () => {
               ? 'hidden'
               : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
           }`}
-          onClick={() => {
-            navigate('/admin/departments');
-          }}
         >
           <DepartmentsIcon className="h-6 w-6" />
         </div>
@@ -116,9 +105,6 @@ const Navbar = () => {
               ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
               : 'hidden'
           }`}
-          onClick={() => {
-            navigate('/admin/archive');
-          }}
         >
           <ArchiveBoxIcon className="h-6 w-6" />
           <span className="ml-3 inline-block whitespace-nowrap">Archive</span>
@@ -130,9 +116,6 @@ const Navbar = () => {
               ? 'hidden'
               : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
           }`}
-          onClick={() => {
-            navigate('/admin/archive');
-          }}
         >
           <ArchiveBoxIcon className="h-6 w-6" />
         </div>
@@ -166,7 +149,7 @@ const Navbar = () => {
         >
           <ProfileIcon className="h-6 w-6" />
       </div> */}
-      <ProfileModal isExpanded={isExpanded} />
+      <ProfileModal isExpanded={isExpanded}/>
     </div>
   );
 };
