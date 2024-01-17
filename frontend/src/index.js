@@ -1,22 +1,24 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import App from './App'
-import { ChakraProvider } from '@chakra-ui/react'
-import { Auth0Provider } from '@auth0/auth0-react'
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { Auth0Provider } from '@auth0/auth0-react';
+import { BrowserRouter } from 'react-router-dom';
 
-ReactDOM.render(
-    <ChakraProvider>
-        <Auth0Provider
-            domain="the-warren-center.us.auth0.com"
-            clientId="hvsbhpQc5ImpK85Gpoo3Mrlebbfs1ogZ"
-            // redirectUri={window.location.origin}
-            authorizationParams={{
-                redirect_uri: window.location.origin,
-            }}
-        >
-            <App />
-        </Auth0Provider>
-    </ChakraProvider>,
+const root = createRoot(document.getElementById('root'));
 
-    document.getElementById('root')
-)
+root.render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <Auth0Provider
+        domain="dev-723z7f5wvs37uaci.us.auth0.com"
+        clientId="Ehb9dR3K2X6AXwZzCXiyE1f6z4NcXGYN"
+        authorizationParams={{
+          redirect_uri: `http://localhost:3000/login-redirect`,
+        }}
+      >
+        <App />
+      </Auth0Provider>
+    </BrowserRouter>
+  </React.StrictMode>
+);
