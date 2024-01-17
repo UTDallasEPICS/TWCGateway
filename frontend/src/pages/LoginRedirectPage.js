@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logo from '../images/wcgateway-logo.png';
-import './LoginPage.css';
+import '../styles/LoginPage.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import Cookies from 'js-cookie';

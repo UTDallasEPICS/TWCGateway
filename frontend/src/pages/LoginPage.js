@@ -1,6 +1,6 @@
 import React from 'react';
 import logo from '../images/wcgateway-logo.png';
-import './LoginPage.css';
+import '../styles/LoginPage.css';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const LoginPage = () => {
