@@ -1,14 +1,13 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
-import ProfileIcon from '../../icons/ProfileIcon'
-import { useAuth0 } from '@auth0/auth0-react'
-import Cookies from 'js-cookie'
-import CrossIcon from '../../icons/CrossIcon'
+import { Dialog, Transition } from '@headlessui/react';
+import { Fragment, useState } from 'react';
+import ProfileIcon from '../../icons/ProfileIcon';
+import { useAuth0 } from '@auth0/auth0-react';
+import Cookies from 'js-cookie';
+import CrossIcon from '../../icons/CrossIcon';
 
 const ProfileModal = ({ isExpanded }) => {
-  let [isOpen, setIsOpen] = useState(false)
-  const { user, logout } = useAuth0()
-  const role = Cookies.get('role')
+  let [isOpen, setIsOpen] = useState(false);
+  const { user, logout } = useAuth0();
 
   return (
     <>
@@ -20,8 +19,8 @@ const ProfileModal = ({ isExpanded }) => {
               : 'hidden'
           }`}
           onClick={() => {
-            console.log('Button clicked')
-            setIsOpen(true)
+            console.log('Button clicked');
+            setIsOpen(true);
           }}
         >
           <ProfileIcon className="h-6 w-6" />
@@ -35,19 +34,15 @@ const ProfileModal = ({ isExpanded }) => {
               : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
           }`}
           onClick={() => {
-            console.log('Button clicked')
-            setIsOpen(true)
+            console.log('Button clicked');
+            setIsOpen(true);
           }}
         >
           <ProfileIcon className="h-6 w-6" />
         </div>
       )}
 
-      <Transition
-        appear
-        show={isOpen}
-        as={Fragment}
-      >
+      <Transition appear show={isOpen} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -89,19 +84,25 @@ const ProfileModal = ({ isExpanded }) => {
                 </Dialog.Title>
 
                 <div className="mt-4 flex justify-center">
-                  <img
-                    className="h-20 w-20 rounded-full"
-                    src={user.picture}
-                    alt={user.name}
-                  />
+                  {user && (
+                    <img
+                      className="h-20 w-20 rounded-full"
+                      src={user.picture}
+                      alt={user.name}
+                    />
+                  )}
                 </div>
 
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">Email: {user.email}</p>
+                  {user && (
+                    <p className="text-sm text-gray-500">Email: {user.email}</p>
+                  )}
                 </div>
 
                 <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">Role: {role}</p>
+                  <p className="text-sm text-gray-500">
+                    Role: {Cookies.get('role')}
+                  </p>
                 </div>
 
                 <div className="flex flex-row mt-4">
@@ -119,7 +120,7 @@ const ProfileModal = ({ isExpanded }) => {
         </Dialog>
       </Transition>
     </>
-  )
-}
+  );
+};
 
-export default ProfileModal
+export default ProfileModal;

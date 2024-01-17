@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import Login from './pages/Login';
+import LoginPage from './pages/LoginPage';
+import LoginRedirectPage from './pages/LoginRedirectPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminDepartmentsPage from './pages/AdminDepartmentsPage';
 import AdminArchivePage from './pages/AdminArchivePage';
 import SupervisorUsersPage from './pages/SupervisorUsersPage';
+import SupervisorDepartmentsPage from './pages/SupervisorDepartmentsPage';
+import SupervisorArchivePage from './pages/SupervisorArchivePage';
 import EmployeePage from './pages/EmployeePage';
 import PageNotFound from './pages/PageNotFound';
 import { useAuth0 } from '@auth0/auth0-react';
@@ -23,13 +26,16 @@ const App = () => {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login-redirect" element={<LoginRedirectPage />} />
 
       <Route path="/admin/users" element={<AdminUsersPage />} />
       <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
       <Route path="/admin/archive" element={<AdminArchivePage />} />
 
       <Route path="/supervisor/users" element={<SupervisorUsersPage />} />
+      <Route path="/supervisor/departments" element={<SupervisorDepartmentsPage />} />
+      <Route path="/supervisor/archive" element={<SupervisorArchivePage />} />
       
       <Route path="/employee" element={<EmployeePage />} />
 

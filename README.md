@@ -146,7 +146,8 @@ Employees will not be able to see any other page except this one. They can't edi
 ### Frontend
 
 -   React (framework)
--   Chakra UI (component library)
+-   HeadlessUI (component library)
+-   TailwindCSS (styling)
 -   Javascript (language)
 
 ### Backend
@@ -160,16 +161,17 @@ Employees will not be able to see any other page except this one. They can't edi
 ### VS Code Extensions
 
 -   Thunder Client (similar to Postman for testing API endpoints)
+-   Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
 -   Prettier (code formatter)
 -   ESLint (code linter)
 -   GitLens (additional git features)
--   Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
 
 These are the most important extensions that everyone on the team should have. Other extensions are up to personal preference.
 
 ## Third party integrations
 
 -   Auth0 for authentication
+    -  Microsoft sign-in (The Warren Center uses Office 365, so we only need this to authenticate them)
 
 ## Deployment
 

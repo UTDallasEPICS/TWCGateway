@@ -6,7 +6,7 @@ const SupervisorPage = () => {
     <>
       <div className="flex">
         <Navbar />
-        <div className="flex-grow">Hello from SupervisorPage</div>
+        <div className="flex-grow mt-2 mr-2 ml-20">Hello from SupervisorUsersPage</div>
       </div>
     </>
   )
