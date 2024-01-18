@@ -1,17 +1,40 @@
 .login-gradient-background {
-    background: linear-gradient(237deg,#656690,#2b91c9,#adec83,#254778,#616a90);
-    background-size: 300% 300%;
-    animation: gradient-animation 30s ease infinite;
+  background: linear-gradient(
+    237deg,
+    #656690,
+    #2b91c9,
+    #adec83,
+    #254778,
+    #616a90
+  );
+  background-size: 300% 300%;
+  animation: gradient-animation 30s ease infinite;
 }
 
 @keyframes gradient-animation {
-    0% {
-        background-position: 0% 50%;
-    }
-    50% {
-        background-position: 100% 50%;
-    }
-    100% {
-        background-position: 0% 50%;
-    }
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.logo-grow-shrink {
+  animation: grow-shrink 2s ease-in-out infinite; /* Apply the animation */
+}
+
+@keyframes grow-shrink {
+  0% {
+    transform: scale(1); /* Start at normal size */
+  }
+  50% {
+    transform: scale(1.2); /* Grow to 1.2 times the original size */
+  }
+  100% {
+    transform: scale(1); /* Shrink back to normal size */
+  }
 }

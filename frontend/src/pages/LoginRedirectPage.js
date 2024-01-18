@@ -36,10 +36,9 @@ const LoginRedirectPage = () => {
       });
     }
   }, [isAuthenticated, user, navigate, getAccessTokenSilently]);
-
   return (
     <>
-      <div className="flex flex-col h-screen justify-center items-center login-gradient-background">
+      <div className="flex flex-col h-screen justify-center items-center login-gradient-background logo-grow-shrink">
         <img src={logo} alt="logo" className="w-1/4" />
       </div>
     </>
