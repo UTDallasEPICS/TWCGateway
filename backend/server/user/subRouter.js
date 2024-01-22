@@ -3,6 +3,9 @@ const addRoutes = router => {
   router.post('/user', controller.addUser);
 
   router.get('/users', controller.getAllUsers);
+  router.get('/users/employees', controller.getAllEmployeeUsers);
+  router.get('/users/supervisors', controller.getAllSupervisorUsers);
+  router.get('/users/admins', controller.getAllAdminUsers);
   router.get('/user/:id', controller.getUserById);
   router.post('/checkEmail/', controller.getUserByEmail); //Why is this a post request? -> https://stackoverflow.com/questions/46404051/send-object-with-axios-get-request
   router.get('/users/archived', controller.getAllArchivedUsers);

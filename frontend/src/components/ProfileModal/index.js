@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import CrossIcon from '../../icons/CrossIcon';
 
 const ProfileModal = ({ isExpanded }) => {
-  let [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuth0();
 
   return (

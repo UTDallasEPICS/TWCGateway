@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import logo from '../images/wcgateway-logo.png';
+import logo from '../images/twcgatewaylogoname.svg';
 import '../styles/LoginPage.css';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
@@ -39,7 +39,11 @@ const LoginRedirectPage = () => {
   return (
     <>
       <div className="flex flex-col h-screen justify-center items-center login-gradient-background logo-grow-shrink">
-        <img src={logo} alt="logo" className="w-1/4" />
+        <img
+          src={logo}
+          alt="logo"
+          style={{ width: '1920px', height: '200px' }}
+        />
       </div>
     </>
   );

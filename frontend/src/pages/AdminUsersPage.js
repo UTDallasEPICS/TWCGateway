@@ -1,92 +1,232 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-import EditIcon from '../icons/EditIcon';
-import DeleteIcon from '../icons/DeleteIcon';
+import SendToArchiveBoxIcon from '../icons/SendToArchiveBoxIcon';
 import Table from '../components/Table';
 import EditUserModal from '../components/EditUserModal';
+import AddUserIcon from '../icons/AddUserIcon';
+import Divider from '../components/Divider';
 
-const EditButton = ({ onClick }) => {
-  return (
-    <div
-      className="flex button text-white justify-center items-center w-10 h-7 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400"
-      onClick={onClick}
-    >
-      <EditIcon />
-    </div>
-  );
-};
+// const SendToArchiveBoxButton = () => {
+//   return (
+//     <div className="flex button text-white justify-center items-center w-10 h-7 bg-red-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#b91c1c,0_0px_0_0_#b91c1c41] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#b91c1c,0_15px_0_0_#b91c1c41] border-b-[1px] border-red-400">
+//       <SendToArchiveBoxIcon />
+//     </div>
+//   );
+// }; red button tailwind config for reference
 
-const DeleteButton = () => {
+const SendToArchiveBoxButton = () => {
   return (
-    <div className="flex button text-white justify-center items-center w-10 h-7 bg-red-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#b91c1c,0_0px_0_0_#b91c1c41] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#b91c1c,0_15px_0_0_#b91c1c41] border-b-[1px] border-red-400">
-      <DeleteIcon />
-    </div>
+    <button className="flex text-white justify-center items-center w-10 h-7 bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+      <SendToArchiveBoxIcon />
+    </button>
   );
 };
 
 const AdminUsersPage = () => {
-  const [users, setUsers] = useState([]);
+  const [employees, setEmployees] = useState([]);
+  const [supervisors, setSupervisors] = useState([]);
+  const [admins, setAdmins] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
-    axios.get(`http://localhost:5010/users/`).then(response => {
+    axios.get(`http://localhost:5010/users/employees`).then(response => {
       // Simulate loading by pausing execution for 2 seconds
       // setTimeout(() => {
       //   setUsers(response.data);
       //   setIsLoading(false);
       // }, 4000);
-      setUsers(response.data);
+      setEmployees(response.data);
+      setIsLoading(false);
+    });
+    axios.get(`http://localhost:5010/users/supervisors`).then(response => {
+      // Simulate loading by pausing execution for 2 seconds
+      // setTimeout(() => {
+      //   setUsers(response.data);
+      //   setIsLoading(false);
+      // }, 4000);
+      setSupervisors(response.data);
+      setIsLoading(false);
+    });
+    axios.get(`http://localhost:5010/users/admins`).then(response => {
+      // Simulate loading by pausing execution for 2 seconds
+      // setTimeout(() => {
+      //   setUsers(response.data);
+      //   setIsLoading(false);
+      // }, 4000);
+      setAdmins(response.data);
       setIsLoading(false);
     });
   }, []);
 
-  const handleEdit = user => {
-    setCurrentUser(user);
-    setIsModalOpen(true);
-  };
+  const employeeHeadings = [
+    'Name',
+    'Department',
+    'Role',
+    'Status',
+    'Edit',
+    'Archive',
+  ];
+  const supervisorHeadings = [
+    'Name',
+    'Department',
+    'Role',
+    'Status',
+    'Edit',
+    'Archive',
+  ];
+  const adminHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit'];
 
-  const handleSubmit = user => {
-    console.log(user);
-    setIsModalOpen(false);
-  };
-
-  const headings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Delete'];
-
-  const data = isLoading
+  const employeeData = isLoading
     ? [{}]
-    : users.map(user => ({
+    : employees.map(user => ({
         Name: user.name,
         Department: user.departmentName.join(', '),
         Role: user.roleName,
         Status: '0/0',
         Edit: (
-          <EditButton
-            onClick={() => {
-              console.log('edit button is clicked');
-              handleEdit(user);
-            }}
-          />
+          <EditUserModal user={user}/>
         ),
-        Delete: <DeleteButton />,
+        Archive: <SendToArchiveBoxButton />,
+      }));
+
+  const supervisorData = isLoading
+    ? [{}]
+    : supervisors.map(user => ({
+        Name: user.name,
+        Department: user.departmentName.join(', '),
+        Role: user.roleName,
+        Status: '0/0',
+        Edit: (
+          <EditUserModal user={user}/>
+        ),
+        Archive: <SendToArchiveBoxButton />,
+      }));
+
+  const adminData = isLoading
+    ? [{}]
+    : admins.map(user => ({
+        Name: user.name,
+        Department: user.departmentName.join(', '),
+        Role: user.roleName,
+        Status: '0/0',
+        Edit: (
+          <EditUserModal user={user}/>
+        ),
       }));
 
   return (
     <div className="flex">
       <Navbar />
 
-      <div className="flex-grow mt-2 mr-2 ml-20 bg-white">
-        <Table data={data} headings={headings} isLoading={isLoading} />
-        {currentUser && (
-          <EditUserModal
-            open={isModalOpen}
-            setOpen={setIsModalOpen}
-            user={currentUser}
-            onSubmit={handleSubmit}
+      <div className="flex flex-col flex-grow">
+        <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
+          {/*Section Heading*/}
+          <h1 className="mb-4 text-white text-2xl font-bold">
+            Onboarding Employees
+          </h1>
+          {/*Add and Archive buttons*/}
+          <div className="flex justify-between items-center">
+            <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
+              <div className="flex items-center space-x-2 px-2">
+                <AddUserIcon />
+                <span>Add New Employee</span>
+              </div>
+            </button>
+            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+              <div className="flex items-center space-x-2 px-2">
+                <SendToArchiveBoxIcon />
+                <span>Archive All Employees</span>
+              </div>
+            </button>
+          </div>
+          {/*Search Bar*/}
+          <div>
+            <input
+              className="w-[250px] mb-2 border-2 border-gray-300 focus:outline-none focus:border-warrenBlue rounded"
+              type="text"
+              placeholder=" Search Onboarding Employees"
+              onFocus={e => e.target.select()}
+            />
+          </div>
+          {/*Table*/}
+          <Table
+            data={employeeData}
+            headings={employeeHeadings}
+            isLoading={isLoading}
           />
-        )}
+        </div>
+
+        <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
+          {/*Section Heading*/}
+          <h1 className="mb-4 text-white text-2xl font-bold">Supervisors</h1>
+          {/*Add and Archive buttons*/}
+          <div className="flex justify-between items-center">
+            <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
+              <div className="flex items-center space-x-2 px-2">
+                <AddUserIcon />
+                <span>Add New Supervisor</span>
+              </div>
+            </button>
+            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+              <div className="flex items-center space-x-2 px-2">
+                <SendToArchiveBoxIcon />
+                <span>Archive All Supervisors</span>
+              </div>
+            </button>
+          </div>
+          {/*Search Bar*/}
+          <div>
+            <input
+              className="w-[250px] mb-2 border-2 border-gray-300 focus:outline-none focus:border-warrenBlue rounded"
+              type="text"
+              placeholder=" Search Supervisors"
+              onFocus={e => e.target.select()}
+            />
+          </div>
+          {/*Table*/}
+          <Table
+            data={supervisorData}
+            headings={supervisorHeadings}
+            isLoading={isLoading}
+          />
+        </div>
+
+        <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
+          {/*Section Heading*/}
+          <h1 className="mb-4 text-white text-2xl font-bold">Admins</h1>
+          {/*Add and Archive buttons*/}
+          <div className="flex justify-between items-center">
+            <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
+              <div className="flex items-center space-x-2 px-2">
+                <AddUserIcon />
+                <span>Add New Admins</span>
+              </div>
+            </button>
+            {/* <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+              <div className="flex items-center space-x-2 px-2">
+                <SendToArchiveBoxIcon />
+                <span>Archive All Admins</span>
+              </div>
+            </button> */}
+          </div>
+          {/*Search Bar*/}
+          <div>
+            <input
+              className="w-[250px] mb-2 border-2 border-gray-300 focus:outline-none focus:border-warrenBlue rounded"
+              type="text"
+              placeholder=" Search Admins"
+              onFocus={e => e.target.select()}
+            />
+          </div>
+          {/*Table*/}
+          <Table
+            data={adminData}
+            headings={adminHeadings}
+            isLoading={isLoading}
+          />
+        </div>
       </div>
     </div>
   );
