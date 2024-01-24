@@ -10,6 +10,7 @@ import SupervisorDepartmentsPage from './pages/SupervisorDepartmentsPage';
 import SupervisorArchivePage from './pages/SupervisorArchivePage';
 import EmployeePage from './pages/EmployeePage';
 import PageNotFound from './pages/PageNotFound';
+import RedirectPage from './pages/RedirectPage';
 import { useAuth0 } from '@auth0/auth0-react';
 
 const App = () => {
@@ -26,6 +27,8 @@ const App = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<RedirectPage />} /> {/*This route because for some reason when the app first loads, it tries to access the root '/'. Since, it wasn't defined before, it flashed the PageNotFound component for a second, and that looks weird.*/}
+
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login-redirect" element={<LoginRedirectPage />} />
 

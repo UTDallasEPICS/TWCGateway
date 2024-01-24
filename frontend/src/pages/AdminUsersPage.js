@@ -81,39 +81,36 @@ const AdminUsersPage = () => {
   const employeeData = isLoading
     ? [{}]
     : employees.map(user => ({
+        id: user.id,
         Name: user.name,
         Department: user.departmentName.join(', '),
         Role: user.roleName,
         Status: '0/0',
-        Edit: (
-          <EditUserModal user={user}/>
-        ),
+        Edit: <EditUserModal user={user}/>,
         Archive: <SendToArchiveBoxButton />,
       }));
 
   const supervisorData = isLoading
     ? [{}]
     : supervisors.map(user => ({
+        id: user.id,
         Name: user.name,
         Department: user.departmentName.join(', '),
         Role: user.roleName,
         Status: '0/0',
-        Edit: (
-          <EditUserModal user={user}/>
-        ),
+        Edit: <EditUserModal user={user} />,
         Archive: <SendToArchiveBoxButton />,
       }));
 
   const adminData = isLoading
     ? [{}]
     : admins.map(user => ({
+        id: user.id,
         Name: user.name,
         Department: user.departmentName.join(', '),
         Role: user.roleName,
         Status: '0/0',
-        Edit: (
-          <EditUserModal user={user}/>
-        ),
+        Edit: <EditUserModal user={user} />,
       }));
 
   return (
@@ -121,6 +118,7 @@ const AdminUsersPage = () => {
       <Navbar />
 
       <div className="flex flex-col flex-grow">
+        {/*Onboarding Employees*/}
         <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">
@@ -158,6 +156,7 @@ const AdminUsersPage = () => {
           />
         </div>
 
+        {/*Supervisors*/}
         <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Supervisors</h1>
@@ -169,7 +168,7 @@ const AdminUsersPage = () => {
                 <span>Add New Supervisor</span>
               </div>
             </button>
-            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+            <button className="flex mb-8 w-56 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
                 <span>Archive All Supervisors</span>
@@ -193,7 +192,8 @@ const AdminUsersPage = () => {
           />
         </div>
 
-        <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
+        {/*Admins*/}
+        <div className="ml-20 mr-2 mt-2 mb-2 p-6 rounded-lg bg-gray-900">
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Admins</h1>
           {/*Add and Archive buttons*/}

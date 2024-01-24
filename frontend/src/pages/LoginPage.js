@@ -11,7 +11,7 @@ const LoginPage = () => {
       <div className="flex flex-col h-screen justify-center items-center login-gradient-background">
         <img
           src={logo}
-          alt="logo"
+          alt=""
           style={{ width: '1920px', height: '200px' }}
         />
         <div
