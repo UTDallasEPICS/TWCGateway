@@ -15,7 +15,7 @@ const EditUserModal = ({ user }) => {
   const [roles, setRoles] = useState([]);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-  const [users, setUsers] = useState([]);
+  
 
   useEffect(() => {
     axios.get(`http://localhost:5010/departments/`).then(response => {
@@ -27,12 +27,6 @@ const EditUserModal = ({ user }) => {
     });
   }, []);
 
-  const fetchUsers = async () => {
-    axios.get(`http://localhost:5010/users/`).then(response => {
-      setUsers(response.data);
-    });
-  };
-
   const resetForm = () => {
     setName(user.name);
     setSelectedDepartments(user.departmentName);
@@ -43,32 +37,23 @@ const EditUserModal = ({ user }) => {
   const handleSubmit = e => {
     const errors = {};
 
-    console.log('user.id: ' + user.id);
-    console.log('selectedRole: ' + selectedRole);
-    console.log('selectedDepartments: ' + selectedDepartments);
-    console.log('name' + name);
     if (!name) {
       errors.name = 'Name is required';
     }
-    console.log('reached after name validation');
     if (selectedRole === 'Employee' && selectedDepartments.length === 0) {
       errors.departments = 'At least one department must be selected for onboarding employees';
     }
-    console.log('reached after employee validation');
     if (selectedRole === 'Admin' && selectedDepartments.length > 0) {
       errors.departments = 'Admins cannot be assigned to departments';
     }
-    console.log('reached after admin validation');
     if (selectedRole === 'Supervisor' && selectedDepartments.length > 0) {
       errors.departments = 'Supervisors cannot be assigned to departments';
     }
-    console.log('reached after validation');
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
-    console.log('reached before axios');
-    // Submit the form
+
     axios
       .put(`http://localhost:5010/user/${user.id}`, {
         name: name,
@@ -82,10 +67,7 @@ const EditUserModal = ({ user }) => {
         console.log(error);
       });
 
-    console.log(name, selectedDepartments, selectedRole);
-    console.log(formErrors);
     setOpen(false);
-    fetchUsers();
     resetForm();
     window.location.reload();
   };
