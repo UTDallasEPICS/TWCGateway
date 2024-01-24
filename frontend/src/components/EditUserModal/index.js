@@ -27,7 +27,7 @@ const EditUserModal = ({ user }) => {
     });
   }, []);
 
-  const fetchUsers = () => {
+  const fetchUsers = async () => {
     axios.get(`http://localhost:5010/users/`).then(response => {
       setUsers(response.data);
     });
@@ -87,6 +87,7 @@ const EditUserModal = ({ user }) => {
     setOpen(false);
     fetchUsers();
     resetForm();
+    window.location.reload();
   };
 
   return (
