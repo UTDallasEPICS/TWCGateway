@@ -4,10 +4,10 @@ import { Listbox } from '@headlessui/react';
 import CheckIcon from '../../icons/CheckIcon';
 import ChevronUpDownIcon from '../../icons/ChevronUpDownIcon';
 import CrossIcon from '../../icons/CrossIcon';
-import EditIcon from '../../icons/EditIcon';
+import AddUserIcon from '../../icons/AddUserIcon';
 import axios from 'axios';
 
-const EditUserModal = ({ user }) => {
+const AddUserButton = ({ user }) => {
   const [name, setName] = useState(user.name);
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
@@ -75,10 +75,10 @@ const EditUserModal = ({ user }) => {
   return (
     <>
       <button
-        className="flex text-white justify-center items-center w-10 h-7 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400"
+        className="flex text-white justify-center items-center w-10 h-7 bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-green-400"
         onClick={() => setOpen(true)}
       >
-        <EditIcon />
+        <AddUserIcon />
       </button>
       <Transition appear show={open} as={Fragment}>
         <Dialog
@@ -89,7 +89,7 @@ const EditUserModal = ({ user }) => {
             resetForm();
           }}
         >
-          <div className="min-h-screen px-5 text-center">
+          <div className="min-h-screen px-4 text-center">
             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
 
             <span className="inline-block h-screen align-middle" aria-hidden="true">
@@ -221,4 +221,4 @@ const EditUserModal = ({ user }) => {
   );
 };
 
-export default EditUserModal;
+export default AddUserButton;

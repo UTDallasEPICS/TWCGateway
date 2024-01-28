@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar';
 import SendToArchiveBoxIcon from '../icons/SendToArchiveBoxIcon';
 import Table from '../components/Table';
 import EditUserModal from '../components/EditUserModal';
+import AddUserButton from '../components/AddNewUser';
 import AddUserIcon from '../icons/AddUserIcon';
 import Divider from '../components/Divider';
 
@@ -65,9 +66,9 @@ const AdminUsersPage = () => {
     setSearchTerm(event.target.value);
   };
 
-  const employeeHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
-  const supervisorHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
-  const adminHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
+  const employeeHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Add User', 'Archive'];
+  const supervisorHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Add User', 'Archive'];
+  const adminHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Add User', 'Archive'];
 
   const employeeData = isLoading
     ? [{}]
@@ -80,6 +81,7 @@ const AdminUsersPage = () => {
           Role: user.roleName,
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
+          Add: <AddUserButton user={user}/>,
           Archive: <SendToArchiveBoxButton />,
         }));
 
@@ -94,6 +96,7 @@ const AdminUsersPage = () => {
           Role: user.roleName,
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
+          Add: <AddUserButton user={user}/>,
           Archive: <SendToArchiveBoxButton />,
         }));
 
@@ -108,6 +111,7 @@ const AdminUsersPage = () => {
           Role: user.roleName,
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
+          Add: <AddUserButton user={user}/>,
           Archive: <SendToArchiveBoxButton />,
         }));
 
@@ -138,6 +142,7 @@ const AdminUsersPage = () => {
                 <span>Add New Employee</span>
               </div>
             </button>
+            
             <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
