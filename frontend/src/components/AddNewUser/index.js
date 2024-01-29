@@ -7,20 +7,19 @@ import CrossIcon from '../../icons/CrossIcon';
 import AddUserIcon from '../../icons/AddUserIcon';
 import axios from 'axios';
 
-const AddUserButton = ({ user }) => {
-  const [name, setName] = useState(user.name);
+const AddUserButton = () => {
+  const [name, setName] = useState('');
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(user.roleName);
+  const [selectedRole, setSelectedRole] = useState('');
   const [roles, setRoles] = useState([]);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-  
 
   useEffect(() => {
     axios.get(`http://localhost:5010/departments/`).then(response => {
       setDepartments(response.data.map(dept => dept.name));
-      setSelectedDepartments(user.departmentName);
+      //setSelectedDepartments(us);
     });
     axios.get(`http://localhost:5010/roles/`).then(response => {
       setRoles(response.data.map(role => role.roleName));
@@ -28,9 +27,8 @@ const AddUserButton = ({ user }) => {
   }, []);
 
   const resetForm = () => {
-    setName(user.name);
-    setSelectedDepartments(user.departmentName);
-    setSelectedRole(user.roleName);
+    setName('');
+    setSelectedDepartments([]);
     setFormErrors({});
   };
 
@@ -55,7 +53,7 @@ const AddUserButton = ({ user }) => {
     }
 
     axios
-      .put(`http://localhost:5010/user/${user.id}`, {
+      .put(`http://localhost:5010/users`, {
         name: name,
         departmentName: selectedDepartments,
         roleName: selectedRole,
@@ -75,10 +73,15 @@ const AddUserButton = ({ user }) => {
   return (
     <>
       <button
-        className="flex text-white justify-center items-center w-10 h-7 bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-green-400"
-        onClick={() => setOpen(true)}
+        className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400"
+        onClick={() => {
+          setOpen(true);
+        }}
       >
-        <AddUserIcon />
+        <div className="flex items-center space-x-2 px-2">
+          <AddUserIcon />
+          <span>Add New Supervisor</span>
+        </div>
       </button>
       <Transition appear show={open} as={Fragment}>
         <Dialog
@@ -101,7 +104,7 @@ const AddUserButton = ({ user }) => {
               /*ref={draggableRef}*/ className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl border-2 border-gray-800 border-opacity-50"
             >
               <button
-                className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 onClick={() => {
                   setOpen(false);
                   resetForm();
@@ -110,7 +113,7 @@ const AddUserButton = ({ user }) => {
                 <CrossIcon className="h-6 w-6" />
               </button>
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                Edit User
+                Add User
               </Dialog.Title>
 
               <div className="mt-2">
