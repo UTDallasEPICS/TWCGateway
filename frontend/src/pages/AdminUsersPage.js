@@ -173,12 +173,13 @@ const AdminUsersPage = () => {
           <h1 className="mb-4 text-white text-2xl font-bold">Supervisors</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
-            <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
+            {/* <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
               <div className="flex items-center space-x-2 px-2">
                 <AddUserIcon />
                 <span>Add New Supervisor</span>
               </div>
-            </button>
+            </button> */}
+            <AddUserButton />
             <button className="flex mb-8 w-56 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
@@ -205,12 +206,13 @@ const AdminUsersPage = () => {
           <h1 className="mb-4 text-white text-2xl font-bold">Admins</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
-            <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
+            {/* <button className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400">
               <div className="flex items-center space-x-2 px-2">
                 <AddUserIcon />
                 <span>Add New Admins</span>
               </div>
-            </button>
+            </button> */}
+            <AddUserButton />
             <button className="flex mb-8 w-48 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
