@@ -134,7 +134,8 @@ const AdminUsersPage = () => {
                 <span>Add New Employee</span>
               </div>
             </button>
-            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400"
+              onClick={async () => { await axios.put(`http://localhost:5010/users/archive/employees`)}}>
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
                 <span>Archive All Employees</span>
@@ -169,7 +170,8 @@ const AdminUsersPage = () => {
                 <span>Add New Supervisor</span>
               </div>
             </button>
-            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+            <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400"
+              onClick={async () => { await axios.put(`http://localhost:5010/users/archive/supervisors`)}}>
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
                 <span>Archive All Supervisors</span>
@@ -204,12 +206,13 @@ const AdminUsersPage = () => {
                 <span>Add New Admins</span>
               </div>
             </button>
-            {/* <button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400">
+            {<button className="flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400"
+              onClick={async () => { await axios.put(`http://localhost:5010/users/archive/admins`)}}>
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
                 <span>Archive All Admins</span>
               </div>
-            </button> */}
+            </button>}
           </div>
           {/*Search Bar*/}
           <div>

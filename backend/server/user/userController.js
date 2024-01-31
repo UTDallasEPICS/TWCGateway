@@ -525,44 +525,142 @@ module.exports = {
     }
   },
 
-  updateArchivedUser: async (req, res) => {
-    const { id } = req.params;
-    const { archived } = req.body;
-
+  archiveUser: async (req, res) => {
     try {
-      const updatedUser = await prisma.user.update({
+      const archivedUser = await prisma.user.update({
         where: {
-          id: parseInt(id),
+          userId: parseInt(req.params.id),
         },
         data: {
-          archived,
+          archived: true,
         },
       });
-      if (!updatedUser) {
+      if (!archivedUser) {
         return res
           .status(404)
-          .json({ message: 'User not found or is archived' });
+          .json({ message: 'User not found or is already archived' });
       }
-      res.status(200).json({ message: 'User updated successfully' });
+      res.status(200).json({ message: 'User archived successfully' });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: 'Error updating user' });
+      res.status(500).json({ message: 'Error archiving user' });
     }
   },
 
-  updateAllArchivedUsers: async (req, res) => {
+  archiveAllEmployees: async (req, res) => {
+    // Get all userIds with a roleId of 3
+    const userRoleMappings = await prisma.userRoleMapping.findMany({
+      where: {
+        roleId: 3,
+      },
+    });
+
+    const userIds = userRoleMappings.map((mapping) => mapping.userId);
+    try {
+      const archivedAllEmployees = await prisma.user.updateMany({
+        where: {
+          id: {
+            in: userIds,
+          },
+          archived: false,
+        },
+        data: {
+          archived: true,
+        },
+      });
+      if (!archivedAllEmployees) {
+        return res
+          .status(404)
+          .json({ message: 'No employees found or all employees archived' });
+      }
+      res.status(200).json({ message: 'All employees archived successfully' });
+    } catch (error){
+      console.log(error);
+      res.status(500).json({ message: 'Error archiving all employees' });
+    }
+  },
+
+  archiveAllSupervisors: async (req, res) => {
+    // Get all userIds with a roleId of 2
+    const userRoleMappings = await prisma.userRoleMapping.findMany({
+      where: {
+        roleId: 2,
+      },
+    });
+
+    const userIds = userRoleMappings.map((mapping) => mapping.userId);
+
+    try {
+      const archivedAllSupervisors = await prisma.user.updateMany({
+        where: {
+          id: {
+            in: userIds,
+          },
+          archived: false,
+        },
+        data: {
+          archived: true,
+        },
+      });
+      if (!archivedAllSupervisors) {
+        return res
+          .status(404)
+          .json({ message: 'No supervisors found or all supervisors archived' });
+      }
+      res.status(200).json({ message: 'All supervisors archived successfully' });
+    } catch (error){
+      console.log(error);
+      res.status(500).json({ message: 'Error archiving all supervisors' });
+    }
+  },
+
+  archiveAllAdmins: async (req, res) => { // Should this ignore the admin who presses the button?
+    try {
+      // Get all userIds with a roleId of 1
+      const userRoleMappings = await prisma.userRoleMapping.findMany({
+        where: {
+          roleId: 1,
+        },
+      });
+
+      const userIds = userRoleMappings.map((mapping) => mapping.userId);
+
+      const archivedAllAdmins = await prisma.user.updateMany({
+        where: {
+          id: {
+            in: userIds,
+          },
+          archived: false,
+        },
+        data: {
+          archived: true,
+        },
+      });
+      if (!archivedAllAdmins) {
+        return res
+          .status(404)
+          .json({ message: 'No admins found or all admins archived' });
+      }
+      res.status(200).json({ message: 'All admins archived successfully' });
+    } catch (error){
+      console.log(error);
+      res.status(500).json({ message: 'Error archiving all admins' });
+    }
+  },
+
+  /*archiveAllUsers: async (req, res) => {
     const { archived } = req.body;
 
     try {
-      const updatedUsers = await prisma.user.updateMany({
+      const archivedAllUsers = await prisma.user.updateMany({
         where: {
-          archived: !archived,
+          archived: false,
         },
         data: {
-          archived,
+          archived: true,
         },
       });
-      if (!updatedUsers) {
+      if (!archivedAllUsers) {
         return res
           .status(404)
           .json({ message: 'No users found or all users archived' });
@@ -572,7 +670,7 @@ module.exports = {
       console.log(error);
       res.status(500).json({ message: 'Error updating all users' });
     }
-  },
+  },*/
 
   //DELETE
   deleteUser: async (req, res) => {
