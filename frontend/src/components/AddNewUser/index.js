@@ -9,6 +9,7 @@ import axios from 'axios';
 
 const AddUserButton = () => {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [selectedRole, setSelectedRole] = useState('');
@@ -26,6 +27,24 @@ const AddUserButton = () => {
     });
   }, []);
 
+  const checkEmailExists = async (email) => {
+    axios
+      .post(`http://localhost:5010/checkEmail/`, {
+        email: email,
+      })
+      .then(response => {
+        if (response.data.length > 0) {
+          console.log('Email already exists')
+          return true;
+        }
+        console.log('Email does not exist')
+        return false;
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
   const resetForm = () => {
     setName('');
     setSelectedDepartments([]);
@@ -33,10 +52,18 @@ const AddUserButton = () => {
   };
 
   const handleSubmit = e => {
+    //e.preventDefault(); tried didn't work
     const errors = {};
 
     if (!name) {
       errors.name = 'Name is required';
+    }
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = 'Email is invalid';
+    } else if (checkEmailExists(email)) {
+      errors.email = 'Email already exists';
     }
     if (selectedRole === 'Employee' && selectedDepartments.length === 0) {
       errors.departments = 'At least one department must be selected for onboarding employees';
@@ -53,8 +80,9 @@ const AddUserButton = () => {
     }
 
     axios
-      .put(`http://localhost:5010/users`, {
+      .post(`http://localhost:5010/user`, {
         name: name,
+        email: email,
         departmentName: selectedDepartments,
         roleName: selectedRole,
       })
@@ -80,7 +108,7 @@ const AddUserButton = () => {
       >
         <div className="flex items-center space-x-2 px-2">
           <AddUserIcon />
-          <span>Add New Supervisor</span>
+          <span>Add New Employee</span>
         </div>
       </button>
       <Transition appear show={open} as={Fragment}>
@@ -123,6 +151,13 @@ const AddUserButton = () => {
                     <span className="text-gray-700">Name</span>
                     <input type="text" value={name} onChange={e => setName(e.target.value)} className="mt-1 block w-full rounded-md border-2 shadow-md" />
                     {formErrors.name && <p style={{ color: 'red' }}>{formErrors.name}</p>}
+                  </label>
+
+                  {/* Email */}
+                  <label className="block mt-5">
+                    <span className="text-gray-700">Email</span>
+                    <input type="text" value={email} onChange={e => setEmail(e.target.value)} className="mt-1 block w-full rounded-md border-2 shadow-md" />
+                    {formErrors.email && <p style={{ color: 'red' }}>{formErrors.email}</p>}
                   </label>
 
                   {/* Department */}
@@ -207,7 +242,7 @@ const AddUserButton = () => {
                     className="flex text-white justify-center items-center mt-10 w-20 h-7 bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#28a745,0_15px_0_0_#28a74541] border-b-[1px] border-green-400"
                     onClick={() => {
                       handleSubmit();
-                      //window.location.reload();
+                      //window.location.reload(); tried didn't work
                     }}
                   >
                     <CheckIcon />
