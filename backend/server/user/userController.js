@@ -526,10 +526,11 @@ module.exports = {
   },
 
   archiveUser: async (req, res) => {
+    console.log(req.params.uid)
     try {
       const archivedUser = await prisma.user.update({
         where: {
-          userId: parseInt(req.params.id),
+          id: parseInt(req.params.uid),
         },
         data: {
           archived: true,
