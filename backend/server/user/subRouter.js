@@ -11,8 +11,11 @@ const addRoutes = router => {
   router.get('/users/archived', controller.getAllArchivedUsers);
 
   router.put('/user/:id', controller.updateUser);
-  router.put('/user/archived/:id', controller.updateArchivedUser);
-  router.put('/users/archived', controller.updateAllArchivedUsers);
+  router.put('/user/archive/:uid', controller.archiveUser);
+  router.put('/users/archive/employees', controller.archiveAllEmployees);
+  router.put('/users/archive/supervisors', controller.archiveAllSupervisors);
+  router.put('/users/archive/admins', controller.archiveAllAdmins);
+  //router.put('/users/archived', controller.updateAllArchivedUsers);
 
   router.delete('/user/:id', controller.deleteUser);
   router.delete('/users', controller.deleteAllUsers);
