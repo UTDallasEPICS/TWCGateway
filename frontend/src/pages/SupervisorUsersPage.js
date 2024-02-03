@@ -1,5 +1,5 @@
-import React from 'react'
-import Navbar from '../components/Navbar'
+import React from 'react';
+import Navbar from '../components/Navbar';
 
 const SupervisorPage = () => {
   return (
@@ -9,7 +9,7 @@ const SupervisorPage = () => {
         <div className="flex-grow mt-2 mr-2 ml-20">Hello from SupervisorUsersPage</div>
       </div>
     </>
-  )
-}
+  );
+};
 
-export default SupervisorPage
+export default SupervisorPage;

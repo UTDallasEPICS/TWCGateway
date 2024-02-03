@@ -100,6 +100,7 @@ const AdminUsersPage = () => {
         Role: user.roleName,
         Status: '0/0',
         Edit: <EditUserModal user={user} />,
+        Archive: <SendToArchiveBoxButton userId={user.id} />,
       }));
 
   return (

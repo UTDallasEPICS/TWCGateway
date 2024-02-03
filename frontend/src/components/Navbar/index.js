@@ -34,16 +34,9 @@ const Navbar = () => {
       }}
     >
       {/* Menu */}
-      <button
-        onClick={handleMenuClick}
-        className={`flex flex-row items-center active:bg-gray-700 rounded`}
-      >
+      <button onClick={handleMenuClick} className={`flex flex-row items-center active:bg-gray-700 rounded`}>
         <animated.div style={iconTransition} className="transition-transform">
-          {isExpanded ? (
-            <CrossIcon className="h-6 w-6" />
-          ) : (
-            <MenuIcon className="h-6 w-6" />
-          )}
+          {isExpanded ? <CrossIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
         </animated.div>
       </button>
 
@@ -102,9 +95,7 @@ const Navbar = () => {
           }}
         >
           <DepartmentsIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">
-            Departments
-          </span>
+          <span className="ml-3 inline-block whitespace-nowrap">Departments</span>
         </div>
         {/* Collapsed Button */}
         <div

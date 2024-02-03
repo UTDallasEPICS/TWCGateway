@@ -43,19 +43,11 @@ const ProfileModal = ({ isExpanded }) => {
       )}
 
       <Transition appear show={isOpen} as={Fragment}>
-        <Dialog
-          as="div"
-          className="fixed inset-0 z-10 overflow-y-auto"
-          open={isOpen}
-          onClose={setIsOpen}
-        >
+        <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" open={isOpen} onClose={setIsOpen}>
           <div className="min-h-screen px-4 text-center">
             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
 
-            <span
-              className="inline-block h-screen align-middle"
-              aria-hidden="true"
-            >
+            <span className="inline-block h-screen align-middle" aria-hidden="true">
               &#8203;
             </span>
 
@@ -69,40 +61,19 @@ const ProfileModal = ({ isExpanded }) => {
               leaveTo="opacity-0 scale-95"
             >
               <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl profile-gradient-background">
-                <button
-                  type="button"
-                  className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  onClick={() => setIsOpen(false)}
-                >
+                <button type="button" className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={() => setIsOpen(false)}>
                   <CrossIcon className="h-6 w-6" />
                 </button>
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900 text-center"
-                >
+                <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900 text-center">
                   Profile
                 </Dialog.Title>
 
-                <div className="mt-4 flex justify-center">
-                  {user && (
-                    <img
-                      className="h-20 w-20 rounded-full"
-                      src={user.picture}
-                      alt={user.name}
-                    />
-                  )}
-                </div>
+                <div className="mt-4 flex justify-center">{user && <img className="h-20 w-20 rounded-full" src={user.picture} alt={user.name} />}</div>
+
+                <div className="mt-4 text-center">{user && <p className="text-sm text-gray-500">Email: {user.email}</p>}</div>
 
                 <div className="mt-4 text-center">
-                  {user && (
-                    <p className="text-sm text-gray-500">Email: {user.email}</p>
-                  )}
-                </div>
-
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">
-                    Role: {Cookies.get('role')}
-                  </p>
+                  <p className="text-sm text-gray-500">Role: {Cookies.get('role')}</p>
                 </div>
 
                 <div className="flex flex-row mt-4">

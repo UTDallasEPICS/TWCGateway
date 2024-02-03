@@ -15,18 +15,12 @@ const LoginRedirectPage = () => {
     if (isAuthenticated) {
       getAccessTokenSilently().then(token => {
         axios
-          .post(
-            `http://localhost:5010/checkEmail/`,
-            { email: user.email },
-            { headers: { Authorization: `Bearer ${token}` } }
-          )
+          .post(`http://localhost:5010/checkEmail/`, { email: user.email }, { headers: { Authorization: `Bearer ${token}` } })
           .then(response => {
             Cookies.set('role', response.data.roleName);
             if (response.data.roleName === 'Admin') navigate('/admin/users');
-            else if (response.data.roleName === 'Supervisor')
-              navigate('/supervisor/users');
-            else if (response.data.roleName === 'Employee')
-              navigate('/employee');
+            else if (response.data.roleName === 'Supervisor') navigate('/supervisor/users');
+            else if (response.data.roleName === 'Employee') navigate('/employee');
             else navigate('/login');
           })
           .catch(error => {
@@ -39,11 +33,7 @@ const LoginRedirectPage = () => {
   return (
     <>
       <div className="flex flex-col h-screen justify-center items-center login-gradient-background logo-grow-shrink">
-        <img
-          src={logo}
-          alt="logo"
-          style={{ width: '1920px', height: '200px' }}
-        />
+        <img src={logo} alt="logo" style={{ width: '1920px', height: '200px' }} />
       </div>
     </>
   );

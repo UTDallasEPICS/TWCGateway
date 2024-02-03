@@ -27,17 +27,17 @@ const AddUserButton = () => {
     });
   }, []);
 
-  const checkEmailExists = async (email) => {
+  const checkEmailExists = async email => {
     axios
       .post(`http://localhost:5010/checkEmail/`, {
         email: email,
       })
       .then(response => {
         if (response.data.length > 0) {
-          console.log('Email already exists')
+          console.log('Email already exists');
           return true;
         }
-        console.log('Email does not exist')
+        console.log('Email does not exist');
         return false;
       })
       .catch(error => {

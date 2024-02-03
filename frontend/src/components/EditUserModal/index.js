@@ -15,7 +15,6 @@ const EditUserModal = ({ user }) => {
   const [roles, setRoles] = useState([]);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
-  
 
   useEffect(() => {
     axios.get(`http://localhost:5010/departments/`).then(response => {

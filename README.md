@@ -12,15 +12,15 @@ This is a web application to help onboard new employees designed specifically fo
 
 Before you can run this project, you'll need to have the following software installed on your computer:
 
--   Node.js (LTS)
--   Docker
--   Visual Studio Code
+- Node.js (LTS)
+- Docker
+- Visual Studio Code
 
 If you haven't yet installed Node.js, Docker, and VS Code, you can download them by following the steps listed in the links below :
 
--   Node.js (LTS) for [Windows](https://nodejs.org/en/download/) or [Mac](https://nodejs.org/en/download/)
--   Docker for [Windows](https://docs.docker.com/docker-for-windows/install/) or [Mac](https://docs.docker.com/docker-for-mac/install/)
--   Visual Studio Code for [Windows](https://code.visualstudio.com/docs/setup/windows) or [Mac](https://code.visualstudio.com/docs/setup/mac)
+- Node.js (LTS) for [Windows](https://nodejs.org/en/download/) or [Mac](https://nodejs.org/en/download/)
+- Docker for [Windows](https://docs.docker.com/docker-for-windows/install/) or [Mac](https://docs.docker.com/docker-for-mac/install/)
+- Visual Studio Code for [Windows](https://code.visualstudio.com/docs/setup/windows) or [Mac](https://code.visualstudio.com/docs/setup/mac)
 
 Note: for Windows users, dedicating time to set up Windows Subsystem for Linux (WSL) will prove to be a worthwhile investment. This is not required to run the project, but is recommended.
 
@@ -60,17 +60,17 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 
 11. Click on the `User` table and then click on the `Add record` button to add a new user
 
--   Do not change the `id #` field
--   Put your name or any name in the `name` field
--   The sign-in system (Auth0) currently has "Sign in with Google" and "Sign in with Microsoft" enabled. So, you can use either a Google or a Microsoft account in the `email` field.
--   Click the green `Save changes` button
+- Do not change the `id #` field
+- Put your name or any name in the `name` field
+- The sign-in system (Auth0) currently has "Sign in with Google" and "Sign in with Microsoft" enabled. So, you can use either a Google or a Microsoft account in the `email` field.
+- Click the green `Save changes` button
 
 12. Open a new tab and click on the `UserRoleMapping` table and then click on the `Add record` button to add a new user role mapping
 
--   Do not change the `id #` field
--   Put the `id #` of the user you just created in the `userId` field
--   Put `1` in the `roleId` field
--   Click the green `Save changes` button
+- Do not change the `id #` field
+- Put the `id #` of the user you just created in the `userId` field
+- Put `1` in the `roleId` field
+- Click the green `Save changes` button
 
 13. Go back to the terminal and open a new terminal window in the backend folder
 
@@ -86,10 +86,10 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 
 1. Open the folder where you initially cloned the repository in VS Code
 2. In three different terminals:
-    1. Run `docker compose up` in the root of the project
-    2. Run `npm run dev` in the /backend folder
-    3. Run `npm run start` in the /frontend folder (this may take a while)
-     <!-- </details> -->
+   1. Run `docker compose up` in the root of the project
+   2. Run `npm run dev` in the /backend folder
+   3. Run `npm run start` in the /frontend folder (this may take a while)
+   <!-- </details> -->
 
 **If any part of the setup does not make sense or is yielding errors, you can paste these steps in ChatGPT or Bing Chat. These tools are a great first step in debugging the problem.**
 
@@ -145,33 +145,33 @@ Employees will not be able to see any other page except this one. They can't edi
 
 ### Frontend
 
--   React (framework)
--   HeadlessUI (component library)
--   TailwindCSS (styling)
--   Javascript (language)
+- React (framework)
+- HeadlessUI (component library)
+- TailwindCSS (styling)
+- Javascript (language)
 
 ### Backend
 
--   Node.js (runtime)
--   Express.js (framework)
--   Prisma (ORM)
--   PostgreSQL (database)
--   Javascript (language)
+- Node.js (runtime)
+- Express.js (framework)
+- Prisma (ORM)
+- PostgreSQL (database)
+- Javascript (language)
 
 ### VS Code Extensions
 
--   Thunder Client (similar to Postman for testing API endpoints)
--   Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
--   Prettier (code formatter)
--   ESLint (code linter)
--   GitLens (additional git features)
+- Thunder Client (similar to Postman for testing API endpoints)
+- Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
+- Prettier (code formatter)
+- ESLint (code linter)
+- GitLens (additional git features)
 
 These are the most important extensions that everyone on the team should have. Other extensions are up to personal preference.
 
 ## Third party integrations
 
--   Auth0 for authentication
-    -  Microsoft sign-in (The Warren Center uses Office 365, so we only need this to authenticate them)
+- Auth0 for authentication
+  - Microsoft sign-in (The Warren Center uses Office 365, so we only need this to authenticate them)
 
 ## Deployment
 
