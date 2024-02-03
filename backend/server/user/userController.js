@@ -65,9 +65,7 @@ module.exports = {
       });
 
       if (!user) {
-        return res
-          .status(404)
-          .json({ message: 'User not found or is archived' });
+        return res.status(404).json({ message: 'User not found or is archived' });
       }
 
       const userRole = await prisma.userRoleMapping.findFirst({
@@ -148,9 +146,7 @@ module.exports = {
       });
 
       if (!users) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
 
       const usersWithRoleAndDepartment = await Promise.all(
@@ -208,9 +204,7 @@ module.exports = {
       });
 
       if (!users) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
 
       const usersWithRoleAndDepartment = await Promise.all(
@@ -252,9 +246,7 @@ module.exports = {
         })
       );
 
-      const employeeUsers = usersWithRoleAndDepartment.filter(
-        user => user.roleName === 'Employee'
-      );
+      const employeeUsers = usersWithRoleAndDepartment.filter(user => user.roleName === 'Employee');
 
       res.status(200).json(employeeUsers);
     } catch (error) {
@@ -272,9 +264,7 @@ module.exports = {
       });
 
       if (!users) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
 
       const usersWithRoleAndDepartment = await Promise.all(
@@ -316,16 +306,12 @@ module.exports = {
         })
       );
 
-      const supervisorUsers = usersWithRoleAndDepartment.filter(
-        user => user.roleName === 'Supervisor'
-      );
+      const supervisorUsers = usersWithRoleAndDepartment.filter(user => user.roleName === 'Supervisor');
 
       res.status(200).json(supervisorUsers);
     } catch (error) {
       console.log(error);
-      res
-        .status(500)
-        .json({ message: 'Error retrieving all supervisor users' });
+      res.status(500).json({ message: 'Error retrieving all supervisor users' });
     }
   },
 
@@ -338,9 +324,7 @@ module.exports = {
       });
 
       if (!users) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
 
       const usersWithRoleAndDepartment = await Promise.all(
@@ -382,9 +366,7 @@ module.exports = {
         })
       );
 
-      const adminUsers = usersWithRoleAndDepartment.filter(
-        user => user.roleName === 'Admin'
-      );
+      const adminUsers = usersWithRoleAndDepartment.filter(user => user.roleName === 'Admin');
 
       res.status(200).json(adminUsers);
     } catch (error) {
@@ -402,9 +384,7 @@ module.exports = {
       });
 
       if (!users) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
 
       const usersWithRoleAndDepartment = await Promise.all(
@@ -471,9 +451,7 @@ module.exports = {
         },
       });
       if (!updatedUser) {
-        return res
-          .status(404)
-          .json({ message: 'User not found or is archived' });
+        return res.status(404).json({ message: 'User not found or is archived' });
       }
 
       const roleId = await prisma.role.findUnique({
@@ -539,9 +517,7 @@ module.exports = {
         },
       });
       if (!updatedUser) {
-        return res
-          .status(404)
-          .json({ message: 'User not found or is archived' });
+        return res.status(404).json({ message: 'User not found or is archived' });
       }
       res.status(200).json({ message: 'User updated successfully' });
     } catch (error) {
@@ -563,9 +539,7 @@ module.exports = {
         },
       });
       if (!updatedUsers) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
       res.status(200).json({ message: 'All users updated successfully' });
     } catch (error) {
@@ -588,9 +562,7 @@ module.exports = {
         },
       });
       if (!deletedUser) {
-        return res
-          .status(404)
-          .json({ message: 'User not found or is archived' });
+        return res.status(404).json({ message: 'User not found or is archived' });
       }
       res.status(200).json({ message: 'User deleted successfully' });
     } catch (error) {
@@ -610,9 +582,7 @@ module.exports = {
         },
       });
       if (!deletedUsers) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
+        return res.status(404).json({ message: 'No users found or all users archived' });
       }
       res.status(200).json({ message: 'All users deleted successfully' });
     } catch (error) {
@@ -629,9 +599,7 @@ module.exports = {
         },
       });
       if (!archivedUserIds) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users not archived' });
+        return res.status(404).json({ message: 'No users found or all users not archived' });
       }
 
       await Promise.all(

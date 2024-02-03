@@ -5,10 +5,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'warrenBlue': '#24bae9',
-        'warrenBlueDark': '#187c9c',
-        'warrenPurple': '#7f3f98',
-        'warrenYellow': '#fbe34b',
+        warrenBlue: '#24bae9',
+        warrenBlueDark: '#187c9c',
+        warrenPurple: '#7f3f98',
+        warrenYellow: '#fbe34b',
       },
     },
   },
