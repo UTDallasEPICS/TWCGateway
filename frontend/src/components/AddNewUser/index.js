@@ -108,7 +108,7 @@ const AddUserButton = () => {
       >
         <div className="flex items-center space-x-2 px-2">
           <AddUserIcon />
-          <span>Add New Employee</span>
+          <span>Add</span>
         </div>
       </button>
       <Transition appear show={open} as={Fragment}>

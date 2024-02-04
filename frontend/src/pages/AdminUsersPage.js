@@ -7,9 +7,14 @@ import EditUserModal from '../components/EditUserModal';
 import AddUserButton from '../components/AddNewUser';
 import AddUserIcon from '../icons/AddUserIcon';
 import Divider from '../components/Divider';
+import Cookies from 'js-cookie';
 
-const SendToArchiveBoxButton = ({ userId }) => {
+const SendToArchiveBoxButton = ({ userId, currUserId }) => {
   const [isArchiving, setIsArchiving] = useState(false);
+
+  if (currUserId === userId) {
+    return null;
+  }
 
   return (
     <button
@@ -31,6 +36,7 @@ const SendToArchiveBoxButton = ({ userId }) => {
 };
 
 const AdminUsersPage = () => {
+  const [currUserId, setCurrUserId] = useState('');
   const [employees, setEmployees] = useState([]);
   const [supervisors, setSupervisors] = useState([]);
   const [admins, setAdmins] = useState([]);
@@ -42,6 +48,9 @@ const AdminUsersPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
+    axios.post(`http://localhost:5010/checkEmail/`, { email: Cookies.get('email') }).then(response => {
+      setCurrUserId(response.data.id);
+    });
     axios.get(`http://localhost:5010/users/employees`).then(response => {
       setEmployees(response.data);
       setIsLoading(false);
@@ -75,7 +84,7 @@ const AdminUsersPage = () => {
           Role: user.roleName,
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
-          Archive: <SendToArchiveBoxButton userId={user.id} />,
+          Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
 
   const supervisorData = isLoading
@@ -88,7 +97,7 @@ const AdminUsersPage = () => {
           Role: user.roleName,
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
-          Archive: <SendToArchiveBoxButton userId={user.id} />,
+          Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
 
   const adminData = isLoading
@@ -101,7 +110,7 @@ const AdminUsersPage = () => {
           Role: user.roleName,
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
-          Archive: <SendToArchiveBoxButton userId={user.id} />,
+          Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
 
   return (
