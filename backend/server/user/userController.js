@@ -6,7 +6,6 @@ module.exports = {
   //POST
   addUser: async (req, res) => {
     const { name, email, departmentName, roleName } = req.body;
-    console.log(name, email, departmentName, roleName);
     try {
       const user = await prisma.user.create({
         data: {
@@ -115,6 +114,11 @@ module.exports = {
           email: email,
         },
       });
+
+      if (!user) {
+        res.status(404).json({ message: 'User not found' });
+        return;
+      }
 
       const roleId = await prisma.userRoleMapping.findFirst({
         where: {
@@ -504,11 +508,10 @@ module.exports = {
   },
 
   archiveUser: async (req, res) => {
-    console.log(req.params.uid);
     try {
       const archivedUser = await prisma.user.update({
         where: {
-          id: parseInt(req.params.uid),
+          id: parseInt(req.params.id),
         },
         data: {
           archived: true,
@@ -630,105 +633,50 @@ module.exports = {
     }
   },
 
-  archiveAllAdmins: async (req, res) => {
-    // Should this ignore the admin who presses the button?
-    try {
-      // Get all userIds with a roleId of 1
-      const userRoleMappings = await prisma.userRoleMapping.findMany({
-        where: {
-          roleId: 1,
-        },
-      });
-
-      const userIds = userRoleMappings.map(mapping => mapping.userId);
-
-      const archivedAllAdmins = await prisma.user.updateMany({
-        where: {
-          id: {
-            in: userIds,
-          },
-          archived: false,
-        },
-        data: {
-          archived: true,
-        },
-      });
-      if (!archivedAllAdmins) {
-        return res.status(404).json({ message: 'No admins found or all admins archived' });
-      }
-      res.status(200).json({ message: 'All admins archived successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error archiving all admins' });
-    }
-  },
-
-  /*archiveAllUsers: async (req, res) => {
-    const { archived } = req.body;
-
-    try {
-      const archivedAllUsers = await prisma.user.updateMany({
-        where: {
-          archived: false,
-        },
-        data: {
-          archived: true,
-        },
-      });
-      if (!archivedAllUsers) {
-        return res
-          .status(404)
-          .json({ message: 'No users found or all users archived' });
-      }
-      res.status(200).json({ message: 'All users updated successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error updating all users' });
-    }
-  },*/
-
   //DELETE
-  deleteUser: async (req, res) => {
-    const { id } = req.params;
+  // deleteUser: async (req, res) => {
+  //   const { id } = req.params;
 
-    try {
-      const deletedUser = await prisma.user.update({
-        where: {
-          id: parseInt(id),
-        },
-        data: {
-          archived: true,
-        },
-      });
-      if (!deletedUser) {
-        return res.status(404).json({ message: 'User not found or is archived' });
-      }
-      res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error deleting user' });
-    }
-  },
+  //   try {
+  //     const deletedUser = await prisma.user.update({
+  //       where: {
+  //         id: parseInt(id),
+  //       },
+  //       data: {
+  //         archived: true,
+  //       },
+  //     });
+  //     if (!deletedUser) {
+  //       return res.status(404).json({ message: 'User not found or is archived' });
+  //     }
+  //     res.status(200).json({ message: 'User deleted successfully' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).json({ message: 'Error deleting user' });
+  //   }
+  // },
 
-  deleteAllUsers: async (req, res) => {
-    try {
-      const deletedUsers = await prisma.user.updateMany({
-        where: {
-          archived: false,
-        },
-        data: {
-          archived: true,
-        },
-      });
-      if (!deletedUsers) {
-        return res.status(404).json({ message: 'No users found or all users archived' });
-      }
-      res.status(200).json({ message: 'All users deleted successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error deleting all users' });
-    }
-  },
+  // deleteAllUsers: async (req, res) => {
+  //   try {
+  //     const deletedUsers = await prisma.user.updateMany({
+  //       where: {
+  //         archived: false,
+  //       },
+  //       data: {
+  //         archived: true,
+  //       },
+  //     });
+  //     if (!deletedUsers) {
+  //       return res.status(404).json({ message: 'No users found or all users archived' });
+  //     }
+  //     res.status(200).json({ message: 'All users deleted successfully' });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).json({ message: 'Error deleting all users' });
+  //   }
+  // },
+
+  // deleteArchivedUser: async (req, res) => {},
 
   deleteAllArchivedUsers: async (req, res) => {
     try {

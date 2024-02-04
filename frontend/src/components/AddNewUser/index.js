@@ -28,21 +28,28 @@ const AddUserButton = () => {
   }, []);
 
   const checkEmailExists = async email => {
-    axios
+    let emailExists = false;
+    await axios
       .post(`http://localhost:5010/checkEmail/`, {
         email: email,
       })
       .then(response => {
-        if (response.data.length > 0) {
+        console.log('response: ', response);
+        console.log('response.data: ', response.data);
+        if (response.data) {
           console.log('Email already exists');
-          return true;
+          emailExists = true;
         }
-        console.log('Email does not exist');
-        return false;
       })
       .catch(error => {
-        console.log(error);
+        console.log('error: ', error);
+        if (error.response && error.response.status === 404) {
+          console.log('Email does not exist');
+          emailExists = false;
+        }
       });
+    console.log('emailExists: ', emailExists);
+    return emailExists;
   };
 
   const resetForm = () => {
@@ -51,47 +58,57 @@ const AddUserButton = () => {
     setFormErrors({});
   };
 
-  const handleSubmit = e => {
-    //e.preventDefault(); tried didn't work
+  const handleSubmit = async e => {
     const errors = {};
 
     if (!name) {
       errors.name = 'Name is required';
     }
+
     if (!email) {
       errors.email = 'Email is required';
     } else if (!/\S+@\S+\.\S+/.test(email)) {
       errors.email = 'Email is invalid';
-    } else if (checkEmailExists(email)) {
-      errors.email = 'Email already exists';
+    } else {
+      try {
+        const emailExists = await checkEmailExists(email);
+        if (emailExists) {
+          errors.email = 'Email already exists';
+        }
+      } catch (error) {
+        console.error('Error checking if email exists', error);
+      }
     }
+
     if (selectedRole === 'Employee' && selectedDepartments.length === 0) {
       errors.departments = 'At least one department must be selected for onboarding employees';
     }
+
     if (selectedRole === 'Admin' && selectedDepartments.length > 0) {
       errors.departments = 'Admins cannot be assigned to departments';
     }
+
     if (selectedRole === 'Supervisor' && selectedDepartments.length > 0) {
       errors.departments = 'Supervisors cannot be assigned to departments';
     }
+
+    console.log('errors: ', errors);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
 
-    axios
-      .post(`http://localhost:5010/user`, {
+    try {
+      const response = await axios.post(`http://localhost:5010/user`, {
         name: name,
         email: email,
         departmentName: selectedDepartments,
         roleName: selectedRole,
-      })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
       });
+      console.log(response);
+    } catch (error) {
+      console.error('Error creating user', error);
+    }
 
     setOpen(false);
     resetForm();
