@@ -60,45 +60,49 @@ const AdminUsersPage = () => {
     setSearchTerm(event.target.value);
   };
 
-  
-
   const employeeHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
   const supervisorHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
   const adminHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
 
   const employeeData = isLoading
     ? [{}]
-    : employees.map(user => ({
-        id: user.id,
-        Name: user.name,
-        Department: user.departmentName.join(', '),
-        Role: user.roleName,
-        Status: '0/0',
-        Edit: <EditUserModal user={user} />,
-        Archive: <SendToArchiveBoxButton userId={user.id} />,
-      }));
+    : employees
+        .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        .map(user => ({
+          id: user.id,
+          Name: user.name,
+          Department: user.departmentName.join(', '),
+          Role: user.roleName,
+          Status: '0/0',
+          Edit: <EditUserModal user={user} />,
+          Archive: <SendToArchiveBoxButton userId={user.id} />,
+        }));
 
   const supervisorData = isLoading
     ? [{}]
-    : supervisors.map(user => ({
-        Name: user.name,
-        Department: user.departmentName.join(', '),
-        Role: user.roleName,
-        Status: '0/0',
-        Edit: <EditUserModal user={user} />,
-        Archive: <SendToArchiveBoxButton userId={user.id} />,
-      }));
+    : supervisors
+        .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        .map(user => ({
+          Name: user.name,
+          Department: user.departmentName.join(', '),
+          Role: user.roleName,
+          Status: '0/0',
+          Edit: <EditUserModal user={user} />,
+          Archive: <SendToArchiveBoxButton userId={user.id} />,
+        }));
 
   const adminData = isLoading
     ? [{}]
-    : admins.map(user => ({
-        Name: user.name,
-        Department: user.departmentName.join(', '),
-        Role: user.roleName,
-        Status: '0/0',
-        Edit: <EditUserModal user={user} />,
-        Archive: <SendToArchiveBoxButton userId={user.id} />,
-      }));
+    : admins
+        .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        .map(user => ({
+          Name: user.name,
+          Department: user.departmentName.join(', '),
+          Role: user.roleName,
+          Status: '0/0',
+          Edit: <EditUserModal user={user} />,
+          Archive: <SendToArchiveBoxButton userId={user.id} />,
+        }));
 
   return (
     <div className="flex">
