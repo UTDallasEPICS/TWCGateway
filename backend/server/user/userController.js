@@ -695,7 +695,9 @@ module.exports = {
         },
       });
       if (!archivedUserIds) {
-        return res.status(404).json({ message: 'No users found or all users not archived' });
+        return res
+          .status(404)
+          .json({ message: 'No users found or all users not archived' });
       }
 
       await Promise.all(

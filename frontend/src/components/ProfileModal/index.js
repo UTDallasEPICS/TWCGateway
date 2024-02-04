@@ -1,13 +1,26 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import ProfileIcon from '../../icons/ProfileIcon';
 import { useAuth0 } from '@auth0/auth0-react';
 import Cookies from 'js-cookie';
 import CrossIcon from '../../icons/CrossIcon';
+import axios from 'axios';
 
 const ProfileModal = ({ isExpanded }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState('');
   const { user, logout } = useAuth0();
+
+  useEffect(() => {
+    axios
+      .post(`http://localhost:5010/checkEmail/`, { email: user.email })
+      .then(res => {
+        setName(res.data.name);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }, []);
 
   return (
     <>
@@ -68,12 +81,24 @@ const ProfileModal = ({ isExpanded }) => {
                   Profile
                 </Dialog.Title>
 
-                <div className="mt-4 flex justify-center">{user && <img className="h-20 w-20 rounded-full" src={user.picture} alt={user.name} />}</div>
+                <div className="mt-4 flex justify-center">{user && <img className="h-20 w-20 rounded-full" src={user.picture} alt={name} />}</div>
 
-                <div className="mt-4 text-center">{user && <p className="text-sm text-gray-500">Email: {user.email}</p>}</div>
-
-                <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500">Role: {Cookies.get('role')}</p>
+                <div className="mt-4 ml-20">
+                  <div className="">
+                    <span className="font-bold">Name</span>
+                    <span className="ml-1 font-bold">-</span>
+                    <span className="ml-2">{name}</span>
+                  </div>
+                  <div className="">
+                    <span className="font-bold">Email</span>
+                    <span className="ml-2 font-bold">-</span>
+                    <span className="ml-2">{user.email}</span>
+                  </div>
+                  <div className="">
+                    <span className="font-bold">Role</span>
+                    <span className="ml-4 font-bold">-</span>
+                    <span className="ml-2">{Cookies.get('role')}</span>
+                  </div>
                 </div>
 
                 <div className="flex flex-row mt-4">
