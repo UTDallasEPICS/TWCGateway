@@ -525,27 +525,49 @@ module.exports = {
   },
 
   archiveAllEmployees: async (req, res) => {
-    // Get all userIds with a roleId of 3
-    const userRoleMappings = await prisma.userRoleMapping.findMany({
-      where: {
-        roleId: 3,
-      },
-    });
-
-    const userIds = userRoleMappings.map(mapping => mapping.userId);
     try {
-      const archivedAllEmployees = await prisma.user.updateMany({
+      const employeeRoleMappings = await prisma.userRoleMapping.findMany({
         where: {
-          id: {
-            in: userIds,
-          },
-          archived: false,
-        },
-        data: {
-          archived: true,
+          roleId: 3,
         },
       });
-      if (!archivedAllEmployees) {
+
+      const uniqueUserIds = [...new Set(employeeRoleMappings.map(mapping => mapping.userId))];
+
+      const collectUserIdsToArchive = async () => {
+        let userIdsToArchive = [];
+        await Promise.all(
+          uniqueUserIds.map(async userId => {
+            const latestEntry = await prisma.userRoleMapping.findFirst({
+              where: {
+                userId: userId,
+              },
+              orderBy: {
+                id: 'desc',
+              },
+            });
+            if (latestEntry.roleId === 3) {
+              userIdsToArchive.push(userId);
+            }
+          })
+        );
+        return userIdsToArchive;
+      };
+
+      const userIdsToArchive = await collectUserIdsToArchive();
+
+      const archiveAllEmployees = userIdsToArchive.map(async userId => {
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            archived: true,
+          },
+        });
+      });
+
+      if (!archiveAllEmployees) {
         return res.status(404).json({ message: 'No employees found or all employees archived' });
       }
       res.status(200).json({ message: 'All employees archived successfully' });
@@ -556,28 +578,49 @@ module.exports = {
   },
 
   archiveAllSupervisors: async (req, res) => {
-    // Get all userIds with a roleId of 2
-    const userRoleMappings = await prisma.userRoleMapping.findMany({
-      where: {
-        roleId: 2,
-      },
-    });
-
-    const userIds = userRoleMappings.map(mapping => mapping.userId);
-
     try {
-      const archivedAllSupervisors = await prisma.user.updateMany({
+      const supervisorRoleMappings = await prisma.userRoleMapping.findMany({
         where: {
-          id: {
-            in: userIds,
-          },
-          archived: false,
-        },
-        data: {
-          archived: true,
+          roleId: 2,
         },
       });
-      if (!archivedAllSupervisors) {
+
+      const uniqueUserIds = [...new Set(supervisorRoleMappings.map(mapping => mapping.userId))];
+
+      const collectUserIdsToArchive = async () => {
+        let userIdsToArchive = [];
+        await Promise.all(
+          uniqueUserIds.map(async userId => {
+            const latestEntry = await prisma.userRoleMapping.findFirst({
+              where: {
+                userId: userId,
+              },
+              orderBy: {
+                id: 'desc',
+              },
+            });
+            if (latestEntry.roleId === 2) {
+              userIdsToArchive.push(userId);
+            }
+          })
+        );
+        return userIdsToArchive;
+      };
+
+      const userIdsToArchive = await collectUserIdsToArchive();
+
+      const archiveAllSupervisors = userIdsToArchive.map(async userId => {
+        await prisma.user.update({
+          where: {
+            id: userId,
+          },
+          data: {
+            archived: true,
+          },
+        });
+      });
+
+      if (!archiveAllSupervisors) {
         return res.status(404).json({ message: 'No supervisors found or all supervisors archived' });
       }
       res.status(200).json({ message: 'All supervisors archived successfully' });

@@ -13,7 +13,7 @@ const ProfileModal = ({ isExpanded }) => {
 
   useEffect(() => {
     axios
-      .post(`http://localhost:5010/checkEmail/`, { email: user.email })
+      .post(`http://localhost:5010/checkEmail/`, { email: Cookies.get('email')})
       .then(res => {
         setName(res.data.name);
       })
@@ -92,7 +92,7 @@ const ProfileModal = ({ isExpanded }) => {
                   <div className="">
                     <span className="font-bold">Email</span>
                     <span className="ml-2 font-bold">-</span>
-                    <span className="ml-2">{user.email}</span>
+                    <span className="ml-2">{Cookies.get('email')}</span>
                   </div>
                   <div className="">
                     <span className="font-bold">Role</span>

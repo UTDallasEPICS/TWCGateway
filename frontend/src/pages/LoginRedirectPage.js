@@ -18,6 +18,7 @@ const LoginRedirectPage = () => {
           .post(`http://localhost:5010/checkEmail/`, { email: user.email }, { headers: { Authorization: `Bearer ${token}` } })
           .then(response => {
             Cookies.set('role', response.data.roleName);
+            Cookies.set('email', response.data.email);
             if (response.data.roleName === 'Admin') navigate('/admin/users');
             else if (response.data.roleName === 'Supervisor') navigate('/supervisor/users');
             else if (response.data.roleName === 'Employee') navigate('/employee');
