@@ -4,14 +4,15 @@ import { Listbox } from '@headlessui/react';
 import CheckIcon from '../../icons/CheckIcon';
 import ChevronUpDownIcon from '../../icons/ChevronUpDownIcon';
 import CrossIcon from '../../icons/CrossIcon';
-import EditIcon from '../../icons/EditIcon';
+import AddUserIcon from '../../icons/AddUserIcon';
 import axios from 'axios';
 
-const EditUserModal = ({ user }) => {
-  const [name, setName] = useState(user.name);
+const AddUserButton = () => {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [selectedRole, setSelectedRole] = useState((user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()));
+  const [selectedRole, setSelectedRole] = useState('');
   const [roles, setRoles] = useState(['Employee', 'Supervisor', 'Admin']);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
@@ -19,51 +20,94 @@ const EditUserModal = ({ user }) => {
   useEffect(() => {
     axios.get(`http://localhost:5010/departments/`).then(response => {
       setDepartments(response.data.map(dept => dept.name));
-      setSelectedDepartments(user.departmentName);
+      //setSelectedDepartments(us);
     });
   }, []);
 
+  const checkEmailExists = async email => {
+    let emailExists = false;
+    await axios
+      .post(`http://localhost:5010/checkEmail/`, {
+        email: email,
+      })
+      .then(response => {
+        console.log('response: ', response);
+        console.log('response.data: ', response.data);
+        if (response.data) {
+          console.log('Email already exists');
+          emailExists = true;
+        }
+      })
+      .catch(error => {
+        console.log('error: ', error);
+        if (error.response && error.response.status === 404) {
+          console.log('Email does not exist');
+          emailExists = false;
+        }
+      });
+    console.log('emailExists: ', emailExists);
+    return emailExists;
+  };
+
   const resetForm = () => {
-    setName(user.name);
-    setSelectedDepartments(user.departmentName);
-    setSelectedRole(user.roleName);
+    setName('');
+    setSelectedDepartments([]);
     setFormErrors({});
   };
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     const errors = {};
 
     if (!name) {
       errors.name = 'Name is required';
     }
+
+    if (!email) {
+      errors.email = 'Email is required';
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      errors.email = 'Email is invalid';
+    } else {
+      try {
+        const emailExists = await checkEmailExists(email);
+        if (emailExists) {
+          errors.email = 'Email already exists';
+        }
+      } catch (error) {
+        console.error('Error checking if email exists', error);
+      }
+    }
+
     if (selectedRole === 'Employee' && selectedDepartments.length === 0) {
       errors.departments = 'At least one department must be selected for onboarding employees';
     }
+
     if (selectedRole === 'Admin' && selectedDepartments.length > 0) {
       errors.departments = 'Admins cannot be assigned to departments';
     }
+
     if (selectedRole === 'Supervisor' && selectedDepartments.length > 0) {
       errors.departments = 'Supervisors cannot be assigned to departments';
     }
+
+    console.log('errors: ', errors);
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
       return;
     }
 
-    const upperCaseRole = selectedRole.toUpperCase(); // can't update selectedRole state variable because it doesn't update in time for the axios.put request
-    
-    axios
-      .put(`http://localhost:5010/user/${user.id}`, {
+    const upperCaseRole = selectedRole.toUpperCase();
+
+    try {
+      const response = await axios.post(`http://localhost:5010/user`, {
         name: name,
-        role: upperCaseRole,
+        email: email,
         departmentName: selectedDepartments,
-      })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
+        role: upperCaseRole,
       });
+      console.log(response);
+    } catch (error) {
+      console.error('Error creating user', error);
+    }
 
     setOpen(false);
     resetForm();
@@ -73,10 +117,15 @@ const EditUserModal = ({ user }) => {
   return (
     <>
       <button
-        className="flex text-white justify-center items-center w-10 h-7 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400"
-        onClick={() => setOpen(true)}
+        className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400"
+        onClick={() => {
+          setOpen(true);
+        }}
       >
-        <EditIcon />
+        <div className="flex items-center space-x-2 px-2">
+          <AddUserIcon />
+          <span>Add</span>
+        </div>
       </button>
       <Transition appear show={open} as={Fragment}>
         <Dialog
@@ -87,7 +136,7 @@ const EditUserModal = ({ user }) => {
             resetForm();
           }}
         >
-          <div className="min-h-screen px-5 text-center">
+          <div className="min-h-screen px-4 text-center">
             <Dialog.Overlay className="fixed inset-0 bg-black opacity-30" />
 
             <span className="inline-block h-screen align-middle" aria-hidden="true">
@@ -99,7 +148,7 @@ const EditUserModal = ({ user }) => {
               /*ref={draggableRef}*/ className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl border-2 border-gray-800 border-opacity-50"
             >
               <button
-                className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                 onClick={() => {
                   setOpen(false);
                   resetForm();
@@ -108,7 +157,7 @@ const EditUserModal = ({ user }) => {
                 <CrossIcon className="h-6 w-6" />
               </button>
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                Edit User
+                Add User
               </Dialog.Title>
 
               <div className="mt-2">
@@ -118,6 +167,13 @@ const EditUserModal = ({ user }) => {
                     <span className="text-gray-700">Name</span>
                     <input type="text" value={name} onChange={e => setName(e.target.value)} className="mt-1 block w-full rounded-md border-2 shadow-md" />
                     {formErrors.name && <p style={{ color: 'red' }}>{formErrors.name}</p>}
+                  </label>
+
+                  {/* Email */}
+                  <label className="block mt-5">
+                    <span className="text-gray-700">Email</span>
+                    <input type="text" value={email} onChange={e => setEmail(e.target.value)} className="mt-1 block w-full rounded-md border-2 shadow-md" />
+                    {formErrors.email && <p style={{ color: 'red' }}>{formErrors.email}</p>}
                   </label>
 
                   {/* Department */}
@@ -202,7 +258,7 @@ const EditUserModal = ({ user }) => {
                     className="flex text-white justify-center items-center mt-10 w-20 h-7 bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#28a745,0_15px_0_0_#28a74541] border-b-[1px] border-green-400"
                     onClick={() => {
                       handleSubmit();
-                      //window.location.reload();
+                      //window.location.reload(); tried didn't work
                     }}
                   >
                     <CheckIcon />
@@ -219,4 +275,4 @@ const EditUserModal = ({ user }) => {
   );
 };
 
-export default EditUserModal;
+export default AddUserButton;

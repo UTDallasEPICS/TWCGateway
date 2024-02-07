@@ -8,11 +8,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Role {
-  id              Int               @id @default(autoincrement())
-  roleName        String            @unique
-  UserRoleMapping UserRoleMapping[]
-  archived        Boolean           @default(false)
+// model Role {
+//   id              Int               @id @default(autoincrement())
+//   roleName        String            @unique
+//   UserRoleMapping UserRoleMapping[]
+//   archived        Boolean           @default(false)
+// }
+
+enum UserRole {
+  ADMIN
+  SUPERVISOR
+  EMPLOYEE
 }
 
 model Task {
@@ -28,7 +34,8 @@ model User {
   id                            Int                             @id @default(autoincrement())
   name                          String
   email                         String                          @unique
-  UserRoleMapping               UserRoleMapping[]
+  // UserRoleMapping               UserRoleMapping[]
+  role                          UserRole
   DepartmentUserMapping         DepartmentUserMapping[]
   ApproverTaskMapping           ApproverTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
@@ -37,19 +44,19 @@ model User {
 
 model Department {
   id                    Int                     @id @default(autoincrement())
-  name                  String
+  name                  String                  @unique 
   DepartmentTaskMapping DepartmentTaskMapping[]
   DepartmentUserMapping DepartmentUserMapping[]
   archived              Boolean                 @default(false)
 }
 
-model UserRoleMapping {
-  id     Int  @id @default(autoincrement())
-  user   User @relation(fields: [userId], references: [id])
-  userId Int
-  role   Role @relation(fields: [roleId], references: [id])
-  roleId Int
-}
+// model UserRoleMapping {
+//   id     Int  @id @default(autoincrement())
+//   user   User @relation(fields: [userId], references: [id])
+//   userId Int
+//   role   Role @relation(fields: [roleId], references: [id])
+//   roleId Int
+// }
 
 model DepartmentTaskMapping {
   id           Int        @id @default(autoincrement())

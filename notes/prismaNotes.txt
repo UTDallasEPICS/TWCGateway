@@ -1,0 +1,15 @@
+1Q. How would something like archive employee work?
+1A.  i To archive all users with the role of employee we would need their ids first.
+    ii To get their ids we will look at the userRoleMapping table
+          * The problem with that is there are multiple assignments for a single user in the table (because roles can change and every time a new entry is made)
+
+    1. employeeRoleMappings = fetch entries from userRoleMapping where roleId is employee
+    2. uniqueUserIds = extract unique userIds from employeeRoleMappings
+    3. userIdsToArchive = []
+    4. for each userId in uniqueUserIds:
+        4.1 latestEntry = fetch the latest entry from userRoleMapping where userId is userId
+        4.2 if latestEntry's roleId is employee:
+            4.2.1 add userId to userIdsToArchive
+    5. for each userId in userIdsToArchive:
+        5.1 update user where id is userId to set archived to true
+
