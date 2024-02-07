@@ -81,7 +81,7 @@ const AdminUsersPage = () => {
           id: user.id,
           Name: user.name,
           Department: user.departmentName.join(', '),
-          Role: user.roleName,
+          Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
@@ -92,9 +92,10 @@ const AdminUsersPage = () => {
     : supervisors
         .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .map(user => ({
+          id: user.id,
           Name: user.name,
           Department: user.departmentName.join(', '),
-          Role: user.roleName,
+          Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
@@ -105,9 +106,10 @@ const AdminUsersPage = () => {
     : admins
         .filter(user => user.name.toLowerCase().includes(searchTerm.toLowerCase()))
         .map(user => ({
+          id: user.id,
           Name: user.name,
           Department: user.departmentName.join(', '),
-          Role: user.roleName,
+          Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
           Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,

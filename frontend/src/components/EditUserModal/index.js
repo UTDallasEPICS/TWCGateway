@@ -11,8 +11,8 @@ const EditUserModal = ({ user }) => {
   const [name, setName] = useState(user.name);
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [selectedRole, setSelectedRole] = useState(user.roleName);
-  const [roles, setRoles] = useState([]);
+  const [selectedRole, setSelectedRole] = useState((user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()));
+  const [roles, setRoles] = useState(['Employee', 'Supervisor', 'Admin']);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
@@ -20,9 +20,6 @@ const EditUserModal = ({ user }) => {
     axios.get(`http://localhost:5010/departments/`).then(response => {
       setDepartments(response.data.map(dept => dept.name));
       setSelectedDepartments(user.departmentName);
-    });
-    axios.get(`http://localhost:5010/roles/`).then(response => {
-      setRoles(response.data.map(role => role.roleName));
     });
   }, []);
 
@@ -53,11 +50,13 @@ const EditUserModal = ({ user }) => {
       return;
     }
 
+    const upperCaseRole = selectedRole.toUpperCase(); // can't update selectedRole state variable because it doesn't update in time for the axios.put request
+    
     axios
       .put(`http://localhost:5010/user/${user.id}`, {
         name: name,
+        role: upperCaseRole,
         departmentName: selectedDepartments,
-        roleName: selectedRole,
       })
       .then(response => {
         console.log(response);

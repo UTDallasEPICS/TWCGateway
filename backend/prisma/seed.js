@@ -2,40 +2,111 @@
 //npx prisma db seed
 //Change the userAdmin with your email and name it whatever you want
 
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient, UserRole } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  const roleAdmin = await prisma.role.upsert({
-    //upsert: if exist update, if not insert
-    where: { roleName: 'Admin' }, //where: find by name
-    update: {}, //update: thing to update if found
-    create: { roleName: 'Admin' }, //create: insert if not found
-  });
-  const roleSupervisor = await prisma.role.upsert({
-    where: { roleName: 'Supervisor' },
-    update: {},
-    create: { roleName: 'Supervisor' },
-  });
-  const roleEmployee = await prisma.role.upsert({
-    where: { roleName: 'Employee' },
-    update: {},
-    create: { roleName: 'Employee' },
-  });
-
-  const userAdmin = await prisma.user.upsert({
+  const userAdmin1 = await prisma.user.upsert({
     where: { email: 'reachtusharwani@gmail.com' },
     update: {},
     create: {
       name: 'Tushar Wani',
       email: 'reachtusharwani@gmail.com',
+      role: UserRole.ADMIN,
     },
   });
 
-  const userRoleMappingAdmin = await prisma.userRoleMapping.create({
+  const userAdmin2 = await prisma.user.upsert({
+    where: { email: 'tom@tom.com' },
+    update: {},
+    create: {
+      name: 'Tom',
+      email: 'tom@tom.com',
+      role: UserRole.ADMIN,
+    },
+  });
+
+  const userSupervisor1 = await prisma.user.upsert({
+    where: { email: 'john@john.com' },
+    update: {},
+    create: {
+      name: 'John',
+      email: 'john@john.com',
+      role: UserRole.SUPERVISOR,
+    },
+  });
+
+  const userSupervisor2 = await prisma.user.upsert({
+    where: { email: 'avery@avery.com' },
+    update: {},
+    create: {
+      name: 'Avery',
+      email: 'avery@avery.com',
+      role: UserRole.SUPERVISOR,
+    },
+  });
+
+  const userEmployee1 = await prisma.user.upsert({
+    where: { email: 'employee1@employee1.com' },
+    update: {},
+    create: {
+      name: 'Employee1',
+      email: 'employee1@employee1.com',
+      role: UserRole.EMPLOYEE,
+    },
+  });
+
+  const userEmployee2 = await prisma.user.upsert({
+    where: { email: 'employee2@employee2.com' },
+    update: {},
+    create: {
+      name: 'Employee2',
+      email: 'employee2@employee2.com',
+      role: UserRole.EMPLOYEE,
+    },
+  });
+
+  const department1 = await prisma.department.upsert({
+    where: { name: 'Basic Onboarding' },
+    update: {},
+    create: {
+      name: 'Basic Onboarding',
+    },
+  });
+
+  const department2 = await prisma.department.upsert({
+    where: { name: 'Clinic' },
+    update: {},
+    create: {
+      name: 'Clinic',
+    },
+  });
+
+  await prisma.departmentUserMapping.create({
     data: {
-      userId: userAdmin.id,
-      roleId: roleAdmin.id,
+      user: { connect: { id: userEmployee1.id } },
+      department: { connect: { id: department1.id } },
+    },
+  });
+
+  await prisma.departmentUserMapping.create({
+    data: {
+      user: { connect: { id: userEmployee1.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.departmentUserMapping.create({
+    data: {
+      user: { connect: { id: userEmployee2.id } },
+      department: { connect: { id: department1.id } },
+    },
+  });
+
+  await prisma.departmentUserMapping.create({
+    data: {
+      user: { connect: { id: userEmployee2.id } },
+      department: { connect: { id: department2.id } },
     },
   });
 }

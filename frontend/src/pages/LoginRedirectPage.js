@@ -17,11 +17,12 @@ const LoginRedirectPage = () => {
         axios
           .post(`http://localhost:5010/checkEmail/`, { email: user.email }, { headers: { Authorization: `Bearer ${token}` } })
           .then(response => {
-            Cookies.set('role', response.data.roleName);
+            const caseChangedRole = (response.data.role.charAt(0).toUpperCase() + response.data.role.slice(1).toLowerCase());
+            Cookies.set('role', caseChangedRole);
             Cookies.set('email', response.data.email);
-            if (response.data.roleName === 'Admin') navigate('/admin/users');
-            else if (response.data.roleName === 'Supervisor') navigate('/supervisor/users');
-            else if (response.data.roleName === 'Employee') navigate('/employee');
+            if (response.data.role === 'ADMIN') navigate('/admin/users');
+            else if (response.data.role === 'SUPERVISOR') navigate('/supervisor/users');
+            else if (response.data.role === 'EMPLOYEE') navigate('/employee');
             else navigate('/login');
           })
           .catch(error => {

@@ -13,7 +13,7 @@ const AddUserButton = () => {
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
   const [selectedRole, setSelectedRole] = useState('');
-  const [roles, setRoles] = useState([]);
+  const [roles, setRoles] = useState(['Employee', 'Supervisor', 'Admin']);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
 
@@ -21,9 +21,6 @@ const AddUserButton = () => {
     axios.get(`http://localhost:5010/departments/`).then(response => {
       setDepartments(response.data.map(dept => dept.name));
       //setSelectedDepartments(us);
-    });
-    axios.get(`http://localhost:5010/roles/`).then(response => {
-      setRoles(response.data.map(role => role.roleName));
     });
   }, []);
 
@@ -98,12 +95,14 @@ const AddUserButton = () => {
       return;
     }
 
+    const upperCaseRole = selectedRole.toUpperCase();
+
     try {
       const response = await axios.post(`http://localhost:5010/user`, {
         name: name,
         email: email,
         departmentName: selectedDepartments,
-        roleName: selectedRole,
+        role: upperCaseRole,
       });
       console.log(response);
     } catch (error) {
