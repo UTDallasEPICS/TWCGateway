@@ -15,11 +15,7 @@ generator client {
 //   archived        Boolean           @default(false)
 // }
 
-enum UserRole {
-  ADMIN
-  SUPERVISOR
-  EMPLOYEE
-}
+
 
 model Task {
   id                            Int                             @id @default(autoincrement())
@@ -35,11 +31,17 @@ model User {
   name                          String
   email                         String                          @unique
   // UserRoleMapping               UserRoleMapping[]
-  role                          UserRole
+  role                          UserRole @default(EMPLOYEE)
   DepartmentUserMapping         DepartmentUserMapping[]
   ApproverTaskMapping           ApproverTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
   archived                      Boolean                         @default(false)
+}
+
+enum UserRole {
+  ADMIN
+  SUPERVISOR
+  EMPLOYEE
 }
 
 model Department {
