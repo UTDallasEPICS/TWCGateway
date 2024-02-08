@@ -17,11 +17,11 @@ async function main() {
   });
 
   const userAdmin2 = await prisma.user.upsert({
-    where: { email: 'tom@tom.com' },
+    where: { email: 'frangiol03@gmail.com' },
     update: {},
     create: {
-      name: 'Tom',
-      email: 'tom@tom.com',
+      name: 'Fred Angiolillo',
+      email: 'frangiol03@gmail.com',
       role: UserRole.ADMIN,
     },
   });
