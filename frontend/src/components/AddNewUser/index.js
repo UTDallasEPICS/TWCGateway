@@ -7,12 +7,12 @@ import CrossIcon from '../../icons/CrossIcon';
 import AddUserIcon from '../../icons/AddUserIcon';
 import axios from 'axios';
 
-const AddUserButton = () => {
+const AddUserButton = ({userRole}) => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [selectedRole, setSelectedRole] = useState('');
+  //const [selectedRole, setSelectedRole] = useState('');
   const [roles, setRoles] = useState(['Employee', 'Supervisor', 'Admin']);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
@@ -77,7 +77,7 @@ const AddUserButton = () => {
       }
     }
 
-    if (selectedRole === 'Employee' && selectedDepartments.length === 0) {
+    /*if (selectedRole === 'Employee' && selectedDepartments.length === 0) {
       errors.departments = 'At least one department must be selected for onboarding employees';
     }
 
@@ -87,7 +87,7 @@ const AddUserButton = () => {
 
     if (selectedRole === 'Supervisor' && selectedDepartments.length > 0) {
       errors.departments = 'Supervisors cannot be assigned to departments';
-    }
+    }*/
 
     console.log('errors: ', errors);
     if (Object.keys(errors).length > 0) {
@@ -95,7 +95,7 @@ const AddUserButton = () => {
       return;
     }
 
-    const upperCaseRole = selectedRole.toUpperCase();
+    const upperCaseRole = /*selectedRole*/userRole.toUpperCase();
 
     try {
       const response = await axios.post(`http://localhost:5010/user`, {
@@ -157,7 +157,7 @@ const AddUserButton = () => {
                 <CrossIcon className="h-6 w-6" />
               </button>
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
-                Add User
+                Add {userRole}
               </Dialog.Title>
 
               <div className="mt-2">
@@ -214,7 +214,7 @@ const AddUserButton = () => {
                     {formErrors.departments && <p style={{ color: 'red' }}>{formErrors.departments}</p>}
                   </label>
 
-                  {/* Role */}
+                  {/*{/* Role * /}
                   <label className="block mt-5">
                     <span className="text-gray-700">Role</span>
                     <Listbox value={selectedRole} onChange={setSelectedRole}>
@@ -250,7 +250,7 @@ const AddUserButton = () => {
                       </div>
                     </Listbox>
                     {formErrors.selectedRole && <p style={{ color: 'red' }}>{formErrors.selectedRole}</p>}
-                  </label>
+                  </label>*/}
 
                   {/* Submit */}
                   {/* <div className="flex justify-center items-center"> */}
