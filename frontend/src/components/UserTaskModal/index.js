@@ -4,6 +4,8 @@ import CrossIcon from '../../icons/CrossIcon';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import Table from '../Table';
+import TableRowSkeleton from '../TableRowSkeleton';
+import '../../styles/Table.css';
 
 const UserTaskModal = ({ isOpen, setIsOpen, row, userData }) => {
   //make table using faux data
@@ -11,19 +13,16 @@ const UserTaskModal = ({ isOpen, setIsOpen, row, userData }) => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getTasks();
-  }, [])
-
-  const getTasks = () => {
     axios.get(`https://dummyjson.com/todos`).then(response => {
       console.log(response.data);
       setTasks(response.data.todos);
       setIsLoading(false);
     });
-  };
+  }, []);
 
   const tableHeadings = ['Task', 'Status'];
-  const tableData = isLoading ? [] : tasks.map(task => [task.todo, task.completed ? 'Completed' : 'Incomplete']);
+  console.log(isLoading)
+  const tableData = isLoading ? <TableRowSkeleton /> : tasks.map(task => ({ Task: task.todo, Status: task.completed ? 'Completed' : 'Incomplete' }));
 
   return (
     <>
@@ -36,7 +35,7 @@ const UserTaskModal = ({ isOpen, setIsOpen, row, userData }) => {
               &#8203;
             </span>
 
-            <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl border-2 border-gray-800 border-opacity-50">
+            <div className="inline-block w-full p-6 my-8 overflow-auto text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl border-2 border-gray-800 border-opacity-50" style={{width: '90vw', height: '80vh', scrollbarWidth: 'thin', scrollbarColor: 'rgba(155, 155, 155, 0.7) transparent', overflowX: 'auto'}}>
               <button className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" onClick={() => setIsOpen(false)}>
                 <CrossIcon className="h-6 w-6" />
               </button>
@@ -47,7 +46,9 @@ const UserTaskModal = ({ isOpen, setIsOpen, row, userData }) => {
               <div className="mt-2 flex justify-center">
                 {row.Name} | {userData.email}
               </div>
-              <Table data={tableData} headings={tableHeadings} isLoading={isLoading} />
+              <div style={{overflowX: 'auto'}}>
+                <Table data={tableData} headings={tableHeadings} isLoading={isLoading} />
+              </div>
             </div>
           </div>
         </Dialog>

@@ -269,6 +269,85 @@ module.exports = {
     }
   },
 
+  getAllArchivedUsers: async (req, res) => {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          archived: true,
+          
+        },
+      });
+
+      if (!users) {
+        return res.status(404).json({ message: 'No users found or no archived users' });
+      }
+
+      const usersWithDepartments = await Promise.all(
+        users.map(async user => {
+          const userDepartment = await prisma.departmentUserMapping.findMany({
+            where: {
+              userId: user.id,
+            },
+          });
+          const departments = await Promise.all(
+            userDepartment.map(async mapping => {
+              const department = await prisma.department.findUnique({
+                where: {
+                  id: mapping.departmentId,
+                },
+              });
+              return department.name;
+            })
+          );
+          user.departmentName = departments;
+          return user;
+        })
+      );
+
+      res.status(200).json(usersWithDepartments);
+    } catch {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving all archived users' });
+    }
+  },
+
+  getArchivedUserById: async (req, res) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          archived: true,
+          id: parseInt(req.params.id),
+        },
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found or is not archived' });
+      }
+
+      const userDepartment = await prisma.departmentUserMapping.findMany({
+        where: {
+          userId: parseInt(req.params.id),
+        },
+      });
+      const departments = await Promise.all(
+        userDepartment.map(async mapping => {
+          const department = await prisma.department.findUnique({
+            where: {
+              id: mapping.departmentId,
+            },
+          });
+          return department.name;
+        })
+      );
+      user.departmentName = departments;
+
+      res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving archived user by ID' });
+    }
+  },
+
   //PUT
   updateUser: async (req, res) => {
     //TODO:
@@ -346,6 +425,26 @@ module.exports = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: 'Error archiving user' });
+    }
+  },
+
+  unarchiveUser: async (req, res) => {
+    try {
+      const unarchivedUser = await prisma.user.update({
+        where: {
+          id: parseInt(req.params.id),
+        },
+        data: {
+          archived: false,
+        },
+      });
+      if (!unarchivedUser) {
+        return res.status(404).json({ message: 'User not found or is not archived' });
+      }
+      res.status(200).json({ message: 'User unarchived successfully' });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error unarchiving user' });
     }
   },
 

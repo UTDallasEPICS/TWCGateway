@@ -95,4 +95,36 @@ module.exports = {
       res.status(500).json({ message: 'Error archiving department' });
     }
   },
+
+  getAllArchivedDepartments: async (req, res) => {
+    try {
+      const departments = await prisma.department.findMany({
+        where: {
+          archived: true,
+        },
+      });
+      res.status(200).json(departments);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving all archived departments' });
+    }
+  },
+
+  unarchiveDepartment: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const unarchivedDepartment = await prisma.department.update({
+        where: {
+          id: parseInt(id),
+        },
+        data: {
+          archived: false,
+        },
+      });
+      res.status(200).json(unarchivedDepartment);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error unarchiving department' });
+    }
+  },
 };

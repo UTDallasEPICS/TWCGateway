@@ -19,9 +19,11 @@ body {
 /* Handle */
 ::-webkit-scrollbar-thumb {
   background: #c35eeb;
+  border-radius: 10px; /* Add this line */
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #3c1c48;
+  border-radius: 10px; /* Add this line */
 }

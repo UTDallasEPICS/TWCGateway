@@ -1,0 +1,11 @@
+.current-page::after {
+  content: "";
+  position: absolute;
+  bottom: -15px; /* Adjust as needed */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px; /* Adjust as needed */
+  height: 25px; /* Adjust as needed */
+  background-color: #7f3f98;
+  border-radius: 50%;
+}

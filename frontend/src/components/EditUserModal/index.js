@@ -11,7 +11,7 @@ const EditUserModal = ({ user }) => {
   const [name, setName] = useState(user.name);
   const [departments, setDepartments] = useState([]);
   const [selectedDepartments, setSelectedDepartments] = useState([]);
-  const [selectedRole, setSelectedRole] = useState((user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()));
+  const [selectedRole, setSelectedRole] = useState(user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase());
   const [roles, setRoles] = useState(['Employee', 'Supervisor', 'Admin']);
   const [open, setOpen] = useState(false);
   const [formErrors, setFormErrors] = useState({});
@@ -51,7 +51,7 @@ const EditUserModal = ({ user }) => {
     }
 
     const upperCaseRole = selectedRole.toUpperCase(); // can't update selectedRole state variable because it doesn't update in time for the axios.put request
-    
+
     axios
       .put(`http://localhost:5010/user/${user.id}`, {
         name: name,
@@ -74,7 +74,10 @@ const EditUserModal = ({ user }) => {
     <>
       <button
         className="flex text-white justify-center items-center w-10 h-7 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400"
-        onClick={() => setOpen(true)}
+        onClick={event => {
+          event.stopPropagation();
+          setOpen(true);
+        }}
       >
         <EditIcon />
       </button>

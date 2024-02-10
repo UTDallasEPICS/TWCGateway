@@ -23,7 +23,8 @@ const SendToArchiveBoxButton = ({ userId, currUserId }) => {
           ? 'opacity-50 cursor-not-allowed'
           : 'active:translate-y-2 active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400'
       }`}
-      onClick={async () => {
+      onClick={async (event) => {
+        event.stopPropagation();
         setIsArchiving(true);
         await axios.put(`http://localhost:5010/user/archive/${userId}`);
         window.location.reload();
