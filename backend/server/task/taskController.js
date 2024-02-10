@@ -22,7 +22,8 @@ const prisma = new PrismaClient();
 module.exports = {
     // Create a new task
     addTask: async(req, res) => {
-        const { desc, departmentID } = req.body;
+        // const { desc, departmentID } = req.body; //just spell out description
+        const {description, departmentId} = req.body; 
         console.log(desc, departmentID);
         try{
             const task = await prisma.task.create({
@@ -36,12 +37,13 @@ module.exports = {
                 data: {
                     taskId: task.id,
                     departmentId: departmentID,
-                    dueDate: new Date(), // add this line
+                    // dueDate: new Date(), // add this line //why this line and where is the supervisor assignment?
                 },
             });
             
 
-            res.status(201).json({ message: 'Task added successfully' });
+            // res.status(201).json({ message: 'Task added successfully' }); //why is this 201?
+            res.status(200).json({ message: 'Task added successfully' });
         }
         catch(error){
             console.log(error);

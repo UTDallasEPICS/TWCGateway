@@ -70,9 +70,9 @@ const AdminUsersPage = () => {
     setSearchTerm(event.target.value);
   };
 
-  const employeeHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
-  const supervisorHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
-  const adminHeadings = ['Name', 'Department', 'Role', 'Status', 'Edit', 'Archive'];
+  const employeeHeadings = ['Name', 'Department', 'Edit', 'Archive'];
+  const supervisorHeadings = ['Name', 'Edit', 'Archive'];
+  const adminHeadings = ['Name', 'Edit', 'Archive'];
 
   const employeeData = isLoading
     ? [{}]
@@ -83,7 +83,6 @@ const AdminUsersPage = () => {
           Name: user.name,
           Department: user.departmentName.join(', '),
           Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
-          Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
@@ -95,9 +94,7 @@ const AdminUsersPage = () => {
         .map(user => ({
           id: user.id,
           Name: user.name,
-          Department: user.departmentName.join(', '),
           Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
-          Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
@@ -109,9 +106,7 @@ const AdminUsersPage = () => {
         .map(user => ({
           id: user.id,
           Name: user.name,
-          Department: user.departmentName.join(', '),
           Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
-          Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
