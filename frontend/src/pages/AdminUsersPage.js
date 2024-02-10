@@ -82,7 +82,8 @@ const AdminUsersPage = () => {
           id: user.id,
           Name: user.name,
           Department: user.departmentName.join(', '),
-          Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
+          Role: user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase(),
+          Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
@@ -94,7 +95,9 @@ const AdminUsersPage = () => {
         .map(user => ({
           id: user.id,
           Name: user.name,
-          Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
+          Department: user.departmentName.join(', '),
+          Role: user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase(),
+          Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
@@ -106,7 +109,9 @@ const AdminUsersPage = () => {
         .map(user => ({
           id: user.id,
           Name: user.name,
-          Role: (user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase()),
+          Department: user.departmentName.join(', '),
+          Role: user.role.charAt(0).toUpperCase() + user.role.slice(1).toLowerCase(),
+          Status: '0/0',
           Edit: <EditUserModal user={user} />,
           Archive: <SendToArchiveBoxButton userId={user.id} currUserId={currUserId} />,
         }));
@@ -133,7 +138,7 @@ const AdminUsersPage = () => {
           <h1 className="mb-4 text-white text-2xl font-bold">Onboarding Employees</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
-            <AddUserButton />
+            <AddUserButton userRole={'Employee'} />
             <button
               className={`flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none ${
                 isArchivingEmployees
@@ -164,7 +169,7 @@ const AdminUsersPage = () => {
           <h1 className="mb-4 text-white text-2xl font-bold">Supervisors</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
-            <AddUserButton />
+            <AddUserButton userRole={'Supervisor'} />
             <button
               className={`flex mb-8 w-56 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none ${
                 isArchivingSupervisors
@@ -194,7 +199,7 @@ const AdminUsersPage = () => {
           <h1 className="mb-4 text-white text-2xl font-bold">Admins</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
-            <AddUserButton />
+            <AddUserButton userRole={'Admin'} />
           </div>
           {/*Table*/}
           <Table data={adminData} headings={adminHeadings} isLoading={isLoading} />
