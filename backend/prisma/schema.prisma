@@ -1,4 +1,3 @@
-//Assumption: There is no user specific task. All tasks are derived from deparment to which the user belongs.
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -7,15 +6,6 @@ datasource db {
 generator client {
   provider = "prisma-client-js"
 }
-
-// model Role {
-//   id              Int               @id @default(autoincrement())
-//   roleName        String            @unique
-//   UserRoleMapping UserRoleMapping[]
-//   archived        Boolean           @default(false)
-// }
-
-
 
 model Task {
   id                            Int                             @id @default(autoincrement())
@@ -30,8 +20,7 @@ model User {
   id                            Int                             @id @default(autoincrement())
   name                          String
   email                         String                          @unique
-  // UserRoleMapping               UserRoleMapping[]
-  role                          UserRole @default(EMPLOYEE)
+  role                          UserRole                        @default(EMPLOYEE)
   DepartmentUserMapping         DepartmentUserMapping[]
   ApproverTaskMapping           ApproverTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
@@ -46,19 +35,11 @@ enum UserRole {
 
 model Department {
   id                    Int                     @id @default(autoincrement())
-  name                  String                  @unique 
+  name                  String                  @unique
   DepartmentTaskMapping DepartmentTaskMapping[]
   DepartmentUserMapping DepartmentUserMapping[]
   archived              Boolean                 @default(false)
 }
-
-// model UserRoleMapping {
-//   id     Int  @id @default(autoincrement())
-//   user   User @relation(fields: [userId], references: [id])
-//   userId Int
-//   role   Role @relation(fields: [roleId], references: [id])
-//   roleId Int
-// }
 
 model DepartmentTaskMapping {
   id           Int        @id @default(autoincrement())
