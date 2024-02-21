@@ -5,6 +5,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import Cookies from 'js-cookie';
 import CrossIcon from '../../icons/CrossIcon';
 import axios from 'axios';
+import Button from '../Button';
 
 const ProfileModal = ({ isExpanded }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,36 +25,16 @@ const ProfileModal = ({ isExpanded }) => {
 
   return (
     <>
-      {isExpanded ? (
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
-              : 'hidden'
-          }`}
-          onClick={() => {
-            console.log('Button clicked');
-            setIsOpen(true);
-          }}
-        >
-          <ProfileIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">Profile</span>
-        </div>
-      ) : (
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'hidden'
-              : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400'
-          }`}
-          onClick={() => {
-            console.log('Button clicked');
-            setIsOpen(true);
-          }}
-        >
-          <ProfileIcon className="h-6 w-6" />
-        </div>
-      )}
+      <Button
+        extraStyling={`py-3 px-3`}
+        onClick={() => {
+          console.log('Button clicked');
+          setIsOpen(true);
+        }}
+        tooltip="Profile"
+      >
+        <ProfileIcon className="h-6 w-6" />
+      </Button>
 
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="fixed inset-0 z-10 overflow-y-auto" open={isOpen} onClose={setIsOpen}>

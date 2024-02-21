@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Button from '../Button';
 import { useNavigate } from 'react-router-dom';
 import UsersIcon from '../../icons/UsersIcon';
 import DepartmentsIcon from '../../icons/DepartmentsIcon';
@@ -28,148 +29,131 @@ const Navbar = () => {
   };
 
   return (
-    <div
-      className={`flex flex-col items-start fixed h-full bg-warrenBlueDark z-10 bg-opacity-30 text-white justify-between p-5 group overflow-hidden`}
-      style={{
-        backgroundColor: '#0c3f4f',
-        backgroundImage: `url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%239C92AC' fill-opacity='0.3' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E")`,
-      }}
-    >
-      {/* Menu */}
-      <button onClick={handleMenuClick} className={`flex flex-row items-center active:bg-gray-700 rounded`}>
-        <animated.div style={iconTransition} className="transition-transform">
-          {isExpanded ? <CrossIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
-        </animated.div>
-      </button>
+    <>
+      <div className={`flex flex-col h-full fixed lg:justify-between p-2 navbar-styling hidden lg:block`}>
+        <div className="lg:h-1/3"></div>
+        <div className="flex flex-col justify-center items-center space-y-4 lg:h-1/3">
+          {/* Users */}
+          <Button
+            extraStyling={`py-3 px-3`}
+            onClick={() => {
+              if (Cookies.get('role') === 'Admin') {
+                navigate('/admin/users');
+                setCurrentPage('/admin/users');
+              } else {
+                navigate('/supervisor/users');
+                setCurrentPage('/supervisor/users');
+              }
+            }}
+            tooltip="Users"
+          >
+            <UsersIcon />
+          </Button>
 
-      <div className="flex flex-col items-start gap-y-10">
-        {/* Users */}
-        {/* Expanded Button */}
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400' 
-              : 'hidden'
-          }`}
-          onClick={() => {
-            if (Cookies.get('role') === 'Admin') {
-              navigate('/admin/users');
-              setCurrentPage('/admin/users');
-            } else {
-              navigate('/supervisor/users');
-              setCurrentPage('/supervisor/users');
-            }
-          }}
-        >
-          <UsersIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">Users</span>
-        </div>
-        {/* Collapsed Button */}
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'hidden'
-              : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400' + (currentPage === '/admin/users' || currentPage === '/supervisor/users' ? ' current-page' : '')
-          }`}
-          onClick={() => {
-            if (Cookies.get('role') === 'Admin') {
-              navigate('/admin/users');
-              setCurrentPage('/admin/users');
-            } else {
-              navigate('/supervisor/users');
-              setCurrentPage('/supervisor/users');
-            }
-          }}
-        >
-          <UsersIcon className="h-6 w-6" />
-        </div>
+          {/* Departments */}
+          <Button
+            extraStyling={`py-3 px-3`}
+            onClick={() => {
+              if (Cookies.get('role') === 'Admin') {
+                navigate('/admin/departments');
+                setCurrentPage('/admin/departments');
+              } else {
+                navigate('/supervisor/departments');
+                setCurrentPage('/supervisor/departments');
+              }
+            }}
+            tooltip="Departments"
+          >
+            <DepartmentsIcon className="h-6 w-6" />
+          </Button>
 
-        {/* Departments */}
-        {/* Expanded Button */}
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400' 
-              : 'hidden'
-          }`}
-          onClick={() => {
-            if (Cookies.get('role') === 'Admin') {
-              navigate('/admin/departments');
-              setCurrentPage('/admin/departments');
-            } else {
-              navigate('/supervisor/departments');
-              setCurrentPage('/supervisor/departments');
-            }
-          }}
-        >
-          <DepartmentsIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">Departments</span>
-        </div>
-        {/* Collapsed Button */}
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'hidden'
-              : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400' + (currentPage === '/admin/departments' || currentPage === '/supervisor/departments' ? ' current-page' : '')
-          }`}
-          onClick={() => {
-            if (Cookies.get('role') === 'Admin') {
-              navigate('/admin/departments');
-              setCurrentPage('/admin/departments');
-            } else {
-              navigate('/supervisor/departments');
-              setCurrentPage('/supervisor/departments');
-            }
-          }}
-        >
-          <DepartmentsIcon className="h-6 w-6" />
+          {/* Archive */}
+          <Button
+            extraStyling={`py-3 px-3`}
+            onClick={() => {
+              if (Cookies.get('role') === 'Admin') {
+                navigate('/admin/archive');
+                setCurrentPage('/admin/archive');
+              } else {
+                navigate('/supervisor/archive');
+                setCurrentPage('/supervisor/archive');
+              }
+            }}
+            tooltip="Archive"
+          >
+            <ArchiveBoxIcon className="h-6 w-6" />
+          </Button>
         </div>
 
-        {/* Archive */}
-        {/* Expanded Button */}
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'button w-25 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400' 
-              : 'hidden'
-          }`}
-          onClick={() => {
-            if (Cookies.get('role') === 'Admin') {
-              navigate('/admin/archive');
-              setCurrentPage('/admin/archive');
-            } else {
-              navigate('/supervisor/archive');
-              setCurrentPage('/supervisor/archive');
-            }
-          }}
-        >
-          <ArchiveBoxIcon className="h-6 w-6" />
-          <span className="ml-3 inline-block whitespace-nowrap">Archive</span>
-        </div>
-        {/* Collapsed Button */}
-        <div
-          className={`flex items-center px-1 ${
-            isExpanded
-              ? 'hidden'
-              : 'button w-8 h-8 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400' + (currentPage === '/admin/archive' || currentPage === '/supervisor/archive' ? ' current-page' : '')
-          }`}
-          onClick={() => {
-            if (Cookies.get('role') === 'Admin') {
-              navigate('/admin/archive');
-              setCurrentPage('/admin/archive');
-            } else {
-              navigate('/supervisor/archive');
-              setCurrentPage('/supervisor/archive');
-            }
-          }}
-        >
-          <ArchiveBoxIcon className="h-6 w-6" />
+        {/* Profile */}
+        <div className="lg:h-1/3 items-bottom flex flex-col justify-end">
+          <ProfileModal isExpanded={isExpanded} />
         </div>
       </div>
 
-      {/* Profile */}
-      <ProfileModal isExpanded={isExpanded} />
-    </div>
+      <div className={`fixed bottom-0 z-10 p-2 h-auto w-full fixed block lg:hidden navbar-styling`}>
+        <div className="flex flex-row justify-between">
+          <div className="lg:h-1/3"></div>
+          <div className="flex flex-row justify-center space-x-4 items-center lg:h-1/3">
+            {/* Users */}
+            <Button
+              extraStyling={`py-3 px-3`}
+              onClick={() => {
+                if (Cookies.get('role') === 'Admin') {
+                  navigate('/admin/users');
+                  setCurrentPage('/admin/users');
+                } else {
+                  navigate('/supervisor/users');
+                  setCurrentPage('/supervisor/users');
+                }
+              }}
+              tooltip="Users"
+            >
+              <UsersIcon />
+            </Button>
+
+            {/* Departments */}
+            <Button
+              extraStyling={`py-3 px-3`}
+              onClick={() => {
+                if (Cookies.get('role') === 'Admin') {
+                  navigate('/admin/departments');
+                  setCurrentPage('/admin/departments');
+                } else {
+                  navigate('/supervisor/departments');
+                  setCurrentPage('/supervisor/departments');
+                }
+              }}
+              tooltip="Departments"
+            >
+              <DepartmentsIcon className="h-6 w-6" />
+            </Button>
+
+            {/* Archive */}
+            <Button
+              extraStyling={`py-3 px-3`}
+              onClick={() => {
+                if (Cookies.get('role') === 'Admin') {
+                  navigate('/admin/archive');
+                  setCurrentPage('/admin/archive');
+                } else {
+                  navigate('/supervisor/archive');
+                  setCurrentPage('/supervisor/archive');
+                }
+              }}
+              tooltip="Archive"
+            >
+              <ArchiveBoxIcon className="h-6 w-6" />
+            </Button>
+          </div>
+
+          {/* Profile */}
+          <div className="lg:h-1/3 items-bottom flex flex-col justify-end">
+            <ProfileModal isExpanded={isExpanded} />
+          </div>
+        </div>
+      </div>
+    </>
   );
 };
 

@@ -75,6 +75,7 @@ function AdminArchivePage() {
   }));
 
   return (
+    document.title = 'TWCGateway | Archive',
     <div>
       <div className="flex">
         <Navbar />

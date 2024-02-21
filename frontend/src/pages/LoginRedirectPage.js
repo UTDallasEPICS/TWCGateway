@@ -26,8 +26,8 @@ const LoginRedirectPage = () => {
             else navigate('/login');
           })
           .catch(error => {
-            console.log(error);
-            navigate('/login');
+            console.log("error in redirect-page", error);
+            navigate('/login' , { state: { error: error.response.data.message} });
           });
       });
     }

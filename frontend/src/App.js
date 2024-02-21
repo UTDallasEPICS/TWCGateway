@@ -11,7 +11,10 @@ import SupervisorArchivePage from './pages/SupervisorArchivePage';
 import EmployeePage from './pages/EmployeePage';
 import PageNotFound from './pages/PageNotFound';
 import RedirectPage from './pages/RedirectPage';
+import UserPage from './pages/UserPage';
 import { useAuth0 } from '@auth0/auth0-react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   const navigate = useNavigate();
@@ -26,6 +29,8 @@ const App = () => {
   }, [navigate, user, isLoading]);
 
   return (
+    <>
+    <ToastContainer />
     <Routes>
       <Route path="/" element={<RedirectPage />} />{' '}
       {/*This route because for some reason when the app first loads, it tries to access the root '/'. Since, it wasn't defined before, it flashed the PageNotFound component for a second, and that looks weird.*/}
@@ -38,8 +43,11 @@ const App = () => {
       <Route path="/supervisor/departments" element={<SupervisorDepartmentsPage />} />
       <Route path="/supervisor/archive" element={<SupervisorArchivePage />} />
       <Route path="/employee" element={<EmployeePage />} />
+      <Route path="admin/user/:id" element={<UserPage />} />
+      <Route path="supervisor/user/:id" element={<UserPage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
+    </>
   );
 };
 

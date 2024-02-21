@@ -5,6 +5,7 @@ import CheckIcon from '../../icons/CheckIcon';
 import ChevronUpDownIcon from '../../icons/ChevronUpDownIcon';
 import CrossIcon from '../../icons/CrossIcon';
 import AddUserIcon from '../../icons/AddUserIcon';
+import Button from '../Button';
 import axios from 'axios';
 
 const AddUserButton = ({userRole}) => {
@@ -102,17 +103,18 @@ const AddUserButton = ({userRole}) => {
 
   return (
     <>
-      <button
-        className="flex mb-8 w-48 h-10 text-white justify-center items-center bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1db004,0_0px_0_0_#1db00441] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1db004,0_15px_0_0_#1db00441] border-b-[1px] border-green-400"
+      <Button
+        extraStyling={`py-3 px-3 mb-1`}
         onClick={() => {
           setOpen(true);
         }}
+        tooltip={`Add ${userRole}`}
+        color="green"
       >
         <div className="flex items-center space-x-2 px-2">
           <AddUserIcon />
-          <span>Add</span>
         </div>
-      </button>
+      </Button>
       <Transition appear show={open} as={Fragment}>
         <Dialog
           as="div"

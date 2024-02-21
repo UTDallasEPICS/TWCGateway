@@ -47,6 +47,7 @@ const AdminDepartmentsPage = () => {
   const tableHeading = ['Task', 'Status'];
 
   return (
+    document.title = 'TWCGateway | Departments',
     <>
       <div>
         <div className="flex">

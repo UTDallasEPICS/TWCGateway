@@ -1,0 +1,42 @@
+.custom-ui {
+  /* background-color: #ae6ebe; Change this to your theme's background color */
+  background-color: #d84848;
+  color: #fff; /* Change this to your theme's text color */
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  max-width: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.custom-ui h1 {
+  margin-top: 0;
+  font-size: 20px;
+}
+
+.custom-ui p {
+  margin: 20px 0;
+}
+
+.custom-ui button {
+  border: none;
+  background-color: #ff0000;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 135px;
+}
+
+.custom-ui button:last-child {
+  margin-right: 0;
+}
+
+.react-confirm-alert-overlay {
+  background: rgba(0, 0, 0, 0.5); /* Change this to your desired overlay color */
+}
+
+.react-confirm-alert-body {
+  background: none;
+}

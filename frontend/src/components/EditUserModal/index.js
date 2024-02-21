@@ -5,6 +5,7 @@ import CheckIcon from '../../icons/CheckIcon';
 import ChevronUpDownIcon from '../../icons/ChevronUpDownIcon';
 import CrossIcon from '../../icons/CrossIcon';
 import EditIcon from '../../icons/EditIcon';
+import Button from '../Button';
 import axios from 'axios';
 
 const EditUserModal = ({ user }) => {
@@ -72,15 +73,16 @@ const EditUserModal = ({ user }) => {
 
   return (
     <>
-      <button
-        className="flex text-white justify-center items-center w-10 h-7 bg-blue-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#1b6ff8,0_15px_0_0_#1b70f841] border-b-[1px] border-blue-400"
+      <Button
+        extraStyling="py-1 px-1"
+        tooltip="Edit Data"
         onClick={event => {
           event.stopPropagation();
           setOpen(true);
         }}
       >
         <EditIcon />
-      </button>
+      </Button>
       <Transition appear show={open} as={Fragment}>
         <Dialog
           as="div"
@@ -101,15 +103,16 @@ const EditUserModal = ({ user }) => {
             <div
               /*ref={draggableRef}*/ className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl border-2 border-gray-800 border-opacity-50"
             >
-              <button
-                className="absolute top-3 right-3 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              <Button
+                extraStyling="absolute top-2 right-2"
+                color='gray'
                 onClick={() => {
                   setOpen(false);
                   resetForm();
                 }}
               >
-                <CrossIcon className="h-6 w-6" />
-              </button>
+                <CrossIcon />
+              </Button>
               <Dialog.Title as="h3" className="text-lg leading-6 font-medium text-gray-900">
                 Edit User
               </Dialog.Title>
@@ -201,15 +204,16 @@ const EditUserModal = ({ user }) => {
 
                   {/* Submit */}
                   {/* <div className="flex justify-center items-center"> */}
-                  <div
-                    className="flex text-white justify-center items-center mt-10 w-20 h-7 bg-green-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#1b6ff8,0_0px_0_0_#1b70f841] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#28a745,0_15px_0_0_#28a74541] border-b-[1px] border-green-400"
+                  <Button
+                    extraStyling="flex justify-center items-center mt-5 w-full"
+                    color="green"
                     onClick={() => {
                       handleSubmit();
                       //window.location.reload();
                     }}
                   >
                     <CheckIcon />
-                  </div>
+                  </Button>
                   {/* </div> */}
                 </form>
               </div>

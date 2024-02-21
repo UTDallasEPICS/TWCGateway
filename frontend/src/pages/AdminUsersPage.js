@@ -8,6 +8,12 @@ import AddUserButton from '../components/AddNewUser';
 import AddUserIcon from '../icons/AddUserIcon';
 import Divider from '../components/Divider';
 import Cookies from 'js-cookie';
+import Button from '../components/Button';
+import UsersIcon from '../icons/UsersIcon';
+import Section from '../components/Section';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import '../styles/AdminUsersPage.css';
 
 const SendToArchiveBoxButton = ({ userId, currUserId }) => {
   const [isArchiving, setIsArchiving] = useState(false);
@@ -17,13 +23,11 @@ const SendToArchiveBoxButton = ({ userId, currUserId }) => {
   }
 
   return (
-    <button
-      className={`flex text-white justify-center items-center w-10 h-7 bg-gray-500 rounded-lg cursor-pointer select-none ${
-        isArchiving
-          ? 'opacity-50 cursor-not-allowed'
-          : 'active:translate-y-2 active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400'
-      }`}
-      onClick={async (event) => {
+    <Button
+      extraStyling="py-1 px-1"
+      tooltip="Send to Archive"
+      color="gray"
+      onClick={async event => {
         event.stopPropagation();
         setIsArchiving(true);
         await axios.put(`http://localhost:5010/user/archive/${userId}`);
@@ -32,7 +36,7 @@ const SendToArchiveBoxButton = ({ userId, currUserId }) => {
       }}
     >
       <SendToArchiveBoxIcon />
-    </button>
+    </Button>
   );
 };
 
@@ -117,12 +121,13 @@ const AdminUsersPage = () => {
         }));
 
   return (
+    document.title = 'TWCGateway | Users',
     <div className="flex">
       <Navbar />
 
       <div className="flex flex-col flex-grow">
         {/*Search Bar*/}
-        <div className="ml-20 mt-2 mr-2 p-2 rounded-lg bg-gray-900">
+        <Section>
           <input
             className="w-full border-2 border-gray-300 focus:outline-none focus:border-warrenBlue rounded"
             type="text"
@@ -130,71 +135,107 @@ const AdminUsersPage = () => {
             onFocus={e => e.target.select()}
             onChange={handleSearchTermChange}
           />
-        </div>
+        </Section>
 
         {/*Onboarding Employees*/}
-        <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
+        {/* <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900"> */}
+        <Section>
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Onboarding Employees</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
             <AddUserButton userRole={'Employee'} />
-            <button
-              className={`flex mb-8 w-52 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none ${
-                isArchivingEmployees
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'active:translate-y-2 active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400'
-              }`}
-              onClick={async () => {
-                console.log('clicked');
-                setIsArchivingEmployees(true);
-                await axios.put(`http://localhost:5010/users/archive/employees`);
-                window.location.reload();
-                setIsArchivingEmployees(false);
+            <Button
+              extraStyling={'py-3 px-3 mb-1'}
+              tooltip={'Archive All Onboarding Employees'}
+              color={'gray'}
+              onClick={() => {
+                confirmAlert({
+                  customUI: ({ onClose }) => {
+                    return (
+                      <div className='custom-ui'>
+                        <h1 className="text-center">Confirm to archive all Onboarding Employees</h1>
+                        <p>Are you sure you want to do this?</p>
+                        <button onClick={onClose}>No</button>
+                        <button
+                          onClick={async () => {
+                            console.log('clicked');
+                            setIsArchivingEmployees(true);
+                            await axios.put(`http://localhost:5010/users/archive/employees`);
+                            window.location.reload();
+                            setIsArchivingEmployees(false);
+                            onClose();
+                          }}
+                        >
+                          Yes
+                        </button>
+                      </div>
+                    );
+                  }
+                });
               }}
             >
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
-                <span>Archive All Employees</span>
+                <UsersIcon />
               </div>
-            </button>
+            </Button>
           </div>
           {/*Table*/}
           <Table data={employeeData} headings={employeeHeadings} isLoading={isLoading} />
-        </div>
+          {/* </div> */}
+        </Section>
 
         {/*Supervisors*/}
-        <div className="ml-20 mr-2 mt-2 p-6 rounded-lg bg-gray-900">
+        <Section>
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Supervisors</h1>
           {/*Add and Archive buttons*/}
           <div className="flex justify-between items-center">
             <AddUserButton userRole={'Supervisor'} />
-            <button
-              className={`flex mb-8 w-56 h-10 text-white justify-between items-center bg-gray-500 rounded-lg cursor-pointer select-none ${
-                isArchivingSupervisors
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'active:translate-y-2 active:[box-shadow:0_0px_0_0_#4B5563,0_0px_0_0_#4B556341] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#4B5563,0_15px_0_0_#4B556341] border-b-[1px] border-gray-400'
-              }`}
-              onClick={async () => {
-                setIsArchivingSupervisors(true);
-                await axios.put(`http://localhost:5010/users/archive/supervisors`);
-                window.location.reload();
-                setIsArchivingSupervisors(false);
+            <Button
+              extraStyling={'py-3 px-3 mb-1'}
+              tooltip={'Archive All Supervisors'}
+              color={'gray'}
+              onClick={() => {
+                confirmAlert({
+                  customUI: ({ onClose }) => {
+                    return (
+                      <div className='custom-ui'>
+                        <h1 className="text-center">Confirm to archive all Supervisors</h1>
+                        <p>Are you sure you want to do this?</p>
+                        <button onClick={onClose}>No</button>
+                        <button
+                          onClick={async () => {
+                            console.log('clicked');
+                            setIsArchivingEmployees(true);
+                            await axios.put(`http://localhost:5010/users/archive/employees`);
+                            window.location.reload();
+                            setIsArchivingEmployees(false);
+                            onClose();
+                          }}
+                          
+                        >
+                          Yes
+                        </button>
+                      </div>
+                    );
+                  }
+                });
               }}
             >
               <div className="flex items-center space-x-2 px-2">
                 <SendToArchiveBoxIcon />
-                <span>Archive All Supervisors</span>
+                <UsersIcon />
               </div>
-            </button>
+            </Button>
           </div>
           {/*Table*/}
           <Table data={supervisorData} headings={supervisorHeadings} isLoading={isLoading} />
-        </div>
+        </Section>
 
         {/*Admins*/}
-        <div className="ml-20 mr-2 mt-2 mb-2 p-6 rounded-lg bg-gray-900">
+        <Section>
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Admins</h1>
           {/*Add and Archive buttons*/}
@@ -203,7 +244,7 @@ const AdminUsersPage = () => {
           </div>
           {/*Table*/}
           <Table data={adminData} headings={adminHeadings} isLoading={isLoading} />
-        </div>
+        </Section>
       </div>
     </div>
   );

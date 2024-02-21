@@ -3,8 +3,17 @@
 @import 'tailwindcss/utilities';
 
 body {
-  background-color: #7f3f98;
+  /* background: linear-gradient(270deg, #7f3f98, #c35eeb, #3c1c48); */
+  background: #7f3f98;
+  /* background-size: 600% 600%; */
+  /* animation: Gradient 2s linear infinite; */
 }
+
+/* @keyframes Gradient {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+} */
 
 /* width */
 ::-webkit-scrollbar {
