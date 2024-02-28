@@ -1,83 +1,68 @@
 const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
+const axios = require('axios');
+
+const isRoleAdmin = async token => {
+  let userRole = '';
+  try {
+    const decodedToken = jwt.decode(token);
+    const userEmail = decodedToken.email;
+    await axios.post('http://localhost:5010/checkEmail/', { email: userEmail }).then(response => {
+      if (response.data.role === 'ADMIN') {
+        userRole = 'ADMIN';
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  return userRole === 'ADMIN';
+};
 
 module.exports = {
   //POST
   addUser: async (req, res) => {
     const { name, email, departmentName, role } = req.body;
-
-    try {
-      const user = await prisma.user.create({
-        data: {
-          name,
-          email,
-          role,
-          archived: false,
-        },
-      });
-
-      const departmentIds = await Promise.all(
-        departmentName.map(async name => {
-          const department = await prisma.department.findFirst({
-            where: {
-              name,
-            },
-          });
-          return department.id;
-        })
-      );
-      const userDepartment = await prisma.departmentUserMapping.createMany({
-        data: departmentIds.map(departmentId => {
-          return {
-            userId: user.id,
-            departmentId: departmentId,
-          };
-        }),
-      });
-
-      res.status(200).json({ message: 'User added successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error adding user' });
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
     }
-  },
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            name,
+            email,
+            role,
+            archived: false,
+          },
+        });
 
-  //GET
-  getUserById: async (req, res) => {
-    try {
-      const user = await prisma.user.findUnique({
-        where: {
-          archived: false,
-          id: parseInt(req.params.id),
-        },
-      });
+        const departmentIds = await Promise.all(
+          departmentName.map(async name => {
+            const department = await prisma.department.findFirst({
+              where: {
+                name,
+              },
+            });
+            return department.id;
+          })
+        );
+        const userDepartment = await prisma.departmentUserMapping.createMany({
+          data: departmentIds.map(departmentId => {
+            return {
+              userId: user.id,
+              departmentId: departmentId,
+            };
+          }),
+        });
 
-      if (!user) {
-        return res.status(404).json({ message: 'User not found or is archived' });
+        res.status(200).json({ message: 'User added successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error adding user' });
       }
-
-      const userDepartment = await prisma.departmentUserMapping.findMany({
-        where: {
-          userId: parseInt(req.params.id),
-        },
-      });
-      const departments = await Promise.all(
-        userDepartment.map(async mapping => {
-          const department = await prisma.department.findUnique({
-            where: {
-              id: mapping.departmentId,
-            },
-          });
-          return department.name;
-        })
-      );
-      user.departmentName = departments;
-
-      res.status(200).json(user);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error retrieving user by ID' });
+    } else {
+      res.status(403).json({ message: 'You are not authorized to add a user' });
     }
   },
 
@@ -102,6 +87,7 @@ module.exports = {
     }
   },
 
+  //GET
   getAllUsers: async (req, res) => {
     try {
       const users = await prisma.user.findMany({
@@ -269,12 +255,48 @@ module.exports = {
     }
   },
 
+  getUserById: async (req, res) => {
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          archived: false,
+          id: parseInt(req.params.id),
+        },
+      });
+
+      if (!user) {
+        return res.status(404).json({ message: 'User not found or is archived' });
+      }
+
+      const userDepartment = await prisma.departmentUserMapping.findMany({
+        where: {
+          userId: parseInt(req.params.id),
+        },
+      });
+      const departments = await Promise.all(
+        userDepartment.map(async mapping => {
+          const department = await prisma.department.findUnique({
+            where: {
+              id: mapping.departmentId,
+            },
+          });
+          return department.name;
+        })
+      );
+      user.departmentName = departments;
+
+      res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving user by ID' });
+    }
+  },
+
   getAllArchivedUsers: async (req, res) => {
     try {
       const users = await prisma.user.findMany({
         where: {
           archived: true,
-          
         },
       });
 
@@ -308,6 +330,60 @@ module.exports = {
     } catch {
       console.log(error);
       res.status(500).json({ message: 'Error retrieving all archived users' });
+    }
+  },
+
+  getAllArchivedEmployees: async (req, res) => {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          role: 'EMPLOYEE',
+          archived: true,
+        },
+      });
+
+      if (!users) {
+        return res.status(404).json({ message: 'No employees found or all employees unarchived' });
+      }
+    } catch {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving all archived employees' });
+    }
+  },
+
+  getAllArchivedSupervisors: async (req, res) => {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          role: 'SUPERVISOR',
+          archived: true,
+        },
+      });
+
+      if (!users) {
+        return res.status(404).json({ message: 'No supervisors found or all supervisors unarchived' });
+      }
+    } catch {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving all archived supervisors' });
+    }
+  },
+
+  getAllArchivedAdmins: async (req, res) => {
+    try {
+      const users = await prisma.user.findMany({
+        where: {
+          role: 'ADMIN',
+          archived: true,
+        },
+      });
+
+      if (!users) {
+        return res.status(404).json({ message: 'No admins found or all admins unarchived' });
+      }
+    } catch {
+      console.log(error);
+      res.status(500).json({ message: 'Error retrieving all archived admins' });
     }
   },
 
@@ -350,233 +426,240 @@ module.exports = {
 
   //PUT
   updateUser: async (req, res) => {
-    //TODO:
-    // nested writes and nester reads
-    // atomicity - transaction (not needed with one query)
     const { id } = req.params;
-    const { name, departmentName, role } = req.body;
+    const { name, departmentName, role, archive } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const dataToUpdate = {};
+        if (name !== undefined) dataToUpdate.name = name;
+        if (role !== undefined) dataToUpdate.role = role;
 
-    try {
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: parseInt(id),
-        },
-        data: {
-          name,
-          role,
-        },
-      });
+        const updatedUser = await prisma.user.update({
+          where: {
+            id: parseInt(id),
+          },
+          data: dataToUpdate,
+        });
 
-      if (!updatedUser) {
-        return res.status(404).json({ message: 'User not found or is archived' });
-      }
+        if (!updatedUser) {
+          return res.status(404).json({ message: 'User not found or is archived' });
+        }
 
-      await prisma.departmentUserMapping.deleteMany({
-        where: {
-          userId: parseInt(id),
-        },
-      });
-
-      const departmentIds = await Promise.all(
-        departmentName.map(async name => {
-          const department = await prisma.department.findFirst({
+        if (departmentName !== undefined) {
+          await prisma.departmentUserMapping.deleteMany({
             where: {
-              name,
+              userId: parseInt(id),
             },
           });
 
-          if (!department) {
-            throw new Error(`Department with name ${name} does not exist`);
+          const departmentIds = await Promise.all(
+            departmentName.map(async name => {
+              const department = await prisma.department.findFirst({
+                where: {
+                  name,
+                },
+              });
+
+              if (!department) {
+                throw new Error(`Department with name ${name} does not exist`);
+              }
+
+              return department.id;
+            })
+          );
+
+          await prisma.departmentUserMapping.createMany({
+            data: departmentIds.map(departmentId => {
+              return {
+                userId: parseInt(id),
+                departmentId,
+              };
+            }),
+          });
+        }
+
+        if (archive !== undefined) {
+          if (archive) {
+            await prisma.user.update({
+              where: {
+                id: parseInt(id),
+              },
+              data: {
+                archived: archive === 'true',
+              },
+            });
           }
+        }
 
-          return department.id;
-        })
-      );
-      const userDepartment = await prisma.departmentUserMapping.createMany({
-        data: departmentIds.map(departmentId => {
-          return {
-            userId: parseInt(id),
-            departmentId,
-          };
-        }),
-      });
-
-      res.status(200).json({ message: 'User updated successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error updating user' });
-    }
-  },
-
-  archiveUser: async (req, res) => {
-    try {
-      const archivedUser = await prisma.user.update({
-        where: {
-          id: parseInt(req.params.id),
-        },
-        data: {
-          archived: true,
-        },
-      });
-      if (!archivedUser) {
-        return res.status(404).json({ message: 'User not found or is already archived' });
+        res.status(200).json({ message: 'User updated successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error updating user' });
       }
-      res.status(200).json({ message: 'User archived successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error archiving user' });
-    }
-  },
-
-  unarchiveUser: async (req, res) => {
-    try {
-      const unarchivedUser = await prisma.user.update({
-        where: {
-          id: parseInt(req.params.id),
-        },
-        data: {
-          archived: false,
-        },
-      });
-      if (!unarchivedUser) {
-        return res.status(404).json({ message: 'User not found or is not archived' });
-      }
-      res.status(200).json({ message: 'User unarchived successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error unarchiving user' });
+    } else {
+      res.status(403).json({ message: 'You are not authorized to update a user' });
     }
   },
 
   archiveAllEmployees: async (req, res) => {
-    try {
-      const employees = await prisma.user.findMany({
-        where: {
-          role: 'EMPLOYEE',
-          archived: false,
-        },
-      });
-
-      if (!employees) {
-        return res.status(404).json({ message: 'No employees found or all employees archived' });
-      }
-
-      const archiveAllEmployees = employees.map(async employee => {
-        await prisma.user.update({
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const employees = await prisma.user.findMany({
           where: {
-            id: employee.id,
-          },
-          data: {
-            archived: true,
+            role: 'EMPLOYEE',
+            archived: false,
           },
         });
-      });
 
-      res.status(200).json({ message: 'All employees archived successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error archiving all employees' });
+        if (!employees) {
+          return res.status(404).json({ message: 'No employees found or all employees archived' });
+        }
+
+        const archiveAllEmployees = employees.map(async employee => {
+          await prisma.user.update({
+            where: {
+              id: employee.id,
+            },
+            data: {
+              archived: true,
+            },
+          });
+        });
+
+        res.status(200).json({ message: 'All employees archived successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error archiving all employees' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to archive all employees' });
     }
   },
 
   archiveAllSupervisors: async (req, res) => {
-    try {
-      const supervisors = await prisma.user.findMany({
-        where: {
-          role: 'SUPERVISOR',
-          archived: false,
-        },
-      });
-
-      if (!supervisors) {
-        return res.status(404).json({ message: 'No supervisors found or all supervisors archived' });
-      }
-
-      const archiveAllSupervisors = supervisors.map(async supervisor => {
-        await prisma.user.update({
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const supervisors = await prisma.user.findMany({
           where: {
-            id: supervisor.id,
-          },
-          data: {
-            archived: true,
+            role: 'SUPERVISOR',
+            archived: false,
           },
         });
-      });
 
-      res.status(200).json({ message: 'All supervisors archived successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error archiving all supervisors' });
+        if (!supervisors) {
+          return res.status(404).json({ message: 'No supervisors found or all supervisors archived' });
+        }
+
+        const archiveAllSupervisors = supervisors.map(async supervisor => {
+          await prisma.user.update({
+            where: {
+              id: supervisor.id,
+            },
+            data: {
+              archived: true,
+            },
+          });
+        });
+
+        res.status(200).json({ message: 'All supervisors archived successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error archiving all supervisors' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to archive all supervisors' });
     }
   },
 
   //DELETE
+  deleteAllArchivedUsers: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const archivedUsers = await prisma.user.findMany({
+          where: {
+            archived: true,
+          },
+        });
 
-  deleteArchivedUser: async (req, res) => {
-    try {
-      const { id } = req.params;
+        if (archivedUsers.length === 0) {
+          return res.status(404).json({ message: 'No users found or no archived users' });
+        }
 
-      const user = await prisma.user.findUnique({
-        where: {
-          id: id,
-          archived: true,
-        },
-      });
+        await Promise.all(
+          archivedUsers.map(async user => {
+            await prisma.departmentUserMapping.deleteMany({
+              where: {
+                userId: user.id,
+              },
+            });
+            await prisma.user.delete({
+              where: {
+                id: user.id,
+              },
+            });
+          })
+        );
 
-      if (!user) {
-        return res.status(404).json({ message: 'User not found or is not archived' });
+        res.status(200).json({ message: 'All users deleted successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error deleting all archived users' });
       }
-
-      await prisma.departmentUserMapping.deleteMany({
-        where: {
-          userId: id,
-        },
-      });
-
-      await prisma.user.delete({
-        where: {
-          id: id,
-        },
-      });
-
-      res.status(200).json({ message: 'User deleted successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error deleting user' });
+    } else {
+      res.status(403).json({ message: 'You are not authorized to delete all archived users' });
     }
   },
 
-  deleteAllArchivedUsers: async (req, res) => {
-    try {
-      const archivedUsers = await prisma.user.findMany({
-        where: {
-          archived: true,
-        },
-      });
+  deleteArchivedUser: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const { id } = req.params;
 
-      if (archivedUsers.length === 0) {
-        return res.status(404).json({ message: 'No users found or no archived users' });
+        const user = await prisma.user.findUnique({
+          where: {
+            id: id,
+            archived: true,
+          },
+        });
+
+        if (!user) {
+          return res.status(404).json({ message: 'User not found or is not archived' });
+        }
+
+        await prisma.departmentUserMapping.deleteMany({
+          where: {
+            userId: id,
+          },
+        });
+
+        await prisma.user.delete({
+          where: {
+            id: id,
+          },
+        });
+
+        res.status(200).json({ message: 'User deleted successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error deleting user' });
       }
-
-      await Promise.all(
-        archivedUsers.map(async user => {
-          await prisma.departmentUserMapping.deleteMany({
-            where: {
-              userId: user.id,
-            },
-          });
-          await prisma.user.delete({
-            where: {
-              id: user.id,
-            },
-          });
-        })
-      );
-
-      res.status(200).json({ message: 'All users deleted successfully' });
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ message: 'Error deleting all archived users' });
+    } else {
+      res.status(403).json({ message: 'You are not authorized to delete a user' });
     }
   },
 };

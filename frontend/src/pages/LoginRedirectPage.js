@@ -14,9 +14,15 @@ const LoginRedirectPage = () => {
   useEffect(() => {
     if (isAuthenticated) {
       getAccessTokenSilently().then(token => {
+        console.log("token", token);
         axios
           .post(`http://localhost:5010/checkEmail/`, { email: user.email }, { headers: { Authorization: `Bearer ${token}` } })
           .then(response => {
+            console.log("response in redirect-page", response);
+            //wait for 2 seconds
+            setTimeout(() => {
+              console.log("waited for 2 seconds");
+            }, 2000);
             const caseChangedRole = (response.data.role.charAt(0).toUpperCase() + response.data.role.slice(1).toLowerCase());
             Cookies.set('role', caseChangedRole);
             Cookies.set('email', response.data.email);
@@ -27,7 +33,7 @@ const LoginRedirectPage = () => {
           })
           .catch(error => {
             console.log("error in redirect-page", error);
-            navigate('/login' , { state: { error: error.response.data.message} });
+            navigate('/login' , { state: { error: error.response} });
           });
       });
     }

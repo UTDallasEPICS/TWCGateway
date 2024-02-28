@@ -12,6 +12,7 @@ import EmployeePage from './pages/EmployeePage';
 import PageNotFound from './pages/PageNotFound';
 import RedirectPage from './pages/RedirectPage';
 import UserPage from './pages/UserPage';
+import UserLogoutPage from './pages/UserLogoutPage';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,6 +37,7 @@ const App = () => {
       {/*This route because for some reason when the app first loads, it tries to access the root '/'. Since, it wasn't defined before, it flashed the PageNotFound component for a second, and that looks weird.*/}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/login-redirect" element={<LoginRedirectPage />} />
+      <Route path="/user-logout" element={<UserLogoutPage />} />
       <Route path="/admin/users" element={<AdminUsersPage />} />
       <Route path="/admin/departments" element={<AdminDepartmentsPage />} />
       <Route path="/admin/archive" element={<AdminArchivePage />} />
