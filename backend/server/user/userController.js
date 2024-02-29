@@ -56,6 +56,20 @@ module.exports = {
           }),
         });
 
+        //make mappings for all the tasks based on the department they are assigned to
+        const taskIds = await prisma.departmentTaskMapping.findMany({
+          where: {
+            departmentId: {
+              in: departmentIds,
+            },
+          },
+        });
+        const employeeTaskMapping = await prisma.onboardingEmployeeTaskMapping.createMany({
+          data: taskIds.map(task => {
+            return { taskId: task.taskId, userId: user.id };
+          }),
+        });
+
         res.status(200).json({ message: 'Onboarding employee added successfully' });
       } catch (error) {
         console.log(error);
