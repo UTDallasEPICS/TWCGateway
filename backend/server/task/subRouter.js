@@ -1,30 +1,24 @@
-
-// const taskController = require('./taskController');
-
-// module.exports = {
-//     getTaskRoutes: function(router) {
-//         router.get('/getAllTasks', taskController.getAllTasks);
-//     }
-// };
-
 const controller = require('./taskController');
-const addRoutes = (router) => {
-    router.post('/task', controller.addTask);
-    router.get('/tasks', controller.getAllTasks);
 
-    router.get('/task/:id', controller.getTaskByID);
-    router.delete('/task/:id', controller.deleteTask);
+const addRoutes = router => {
+  //POST
+  router.post('/task/new-task-department', controller.addTaskForDepartment);
+  router.post('/task/new-task-user', controller.addTaskForUser);
 
-    router.put('/updateTask/:id', controller.updateTask);
+  //GET
+  router.get('/task/user-employee/:id', controller.getTasksForUserEmployeeId);
+  router.get('/task/user-supervisor/:id', controller.getTasksForUserSupervisorId);
+  router.get('/task/department/:id', controller.getTasksForDepartmentId);
 
+  //PUT
+  router.put('/task/update-employee-task/:id', controller.updateEmployeeTask);
+  router.put('/task/update-department-task/:id', controller.updateDepartmentTask);
 
+  //DELETE
+  router.delete('/task/delete-user-task/:id', controller.deleteUserTask);
+  router.delete('/task/delete-department-task/:id', controller.deleteDepartmentTask);
+};
 
-   // router.get('/departments/tasks', controller.getAllDepartmentsTasks)
-   // router.get('/department/tasks', controller.getAllDepartmentTasks)
-   // router.get('/users/tasks', controller.getAllUsersTasks)
-   // router.get('/user/tasks', controller.getAllUserTasks)
-}
 module.exports = {
-    addRoutes,
-  };
-
+  addRoutes,
+};

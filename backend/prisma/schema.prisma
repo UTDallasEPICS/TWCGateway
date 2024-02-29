@@ -7,13 +7,10 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Task {
-  id                            Int                             @id @default(autoincrement())
-  description                   String
-  DepartmentTaskMapping         DepartmentTaskMapping[]
-  ApproverTaskMapping           ApproverTaskMapping[]
-  OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
-  archived                      Boolean                         @default(false)
+enum UserRole {
+  ADMIN
+  SUPERVISOR
+  EMPLOYEE
 }
 
 model User {
@@ -22,15 +19,18 @@ model User {
   email                         String                          @unique
   role                          UserRole                        @default(EMPLOYEE)
   DepartmentUserMapping         DepartmentUserMapping[]
-  ApproverTaskMapping           ApproverTaskMapping[]
+  SupervisorTaskMapping         SupervisorTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
   archived                      Boolean                         @default(false)
 }
 
-enum UserRole {
-  ADMIN
-  SUPERVISOR
-  EMPLOYEE
+model Task {
+  id                            Int                             @id @default(autoincrement())
+  description                   String
+  DepartmentTaskMapping         DepartmentTaskMapping[]
+  SupervisorTaskMapping         SupervisorTaskMapping[]
+  OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
+  archived                      Boolean                         @default(false)
 }
 
 model Department {
@@ -47,7 +47,6 @@ model DepartmentTaskMapping {
   taskId       Int
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId Int
-  dueDate      DateTime
 }
 
 model DepartmentUserMapping {
@@ -58,7 +57,7 @@ model DepartmentUserMapping {
   departmentId Int
 }
 
-model ApproverTaskMapping {
+model SupervisorTaskMapping {
   id     Int  @id @default(autoincrement())
   user   User @relation(fields: [userId], references: [id])
   userId Int

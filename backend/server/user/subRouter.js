@@ -1,7 +1,9 @@
 const controller = require('./userController');
 
 const addRoutes = router => {
-  router.post('/user', controller.addUser);
+  router.post('/user/new-employee-user', controller.addUserEmployee);
+  router.post('/user/new-supervisor-user', controller.addUserSupervisor);
+  router.post('/user/new-admin-user', controller.addUserAdmin);
   router.post('/checkEmail/', controller.getUserByEmail); //Why is this a post request? -> https://stackoverflow.com/questions/46404051/send-object-with-axios-get-request
 
   router.get('/users', controller.getAllUsers);
@@ -15,13 +17,16 @@ const addRoutes = router => {
   router.get('/users/archived/admins', controller.getAllArchivedAdmins);
   router.get('/user/archived/:id', controller.getArchivedUserById);
 
-  router.put('/user/:id', controller.updateUser);
+  router.put('/update-user-employee/:id', controller.updateUserEmployee);
+  router.put('/update-user-supervisor/:id', controller.updateUserSupervisor);
+  router.put('/update-user-admin/:id', controller.updateUserAdmin);
   router.put('/users/archive/employees', controller.archiveAllEmployees);
   router.put('/users/archive/supervisors', controller.archiveAllSupervisors);
 
   router.delete('/users/archived', controller.deleteAllArchivedUsers);
   router.delete('/user/archived/:id', controller.deleteArchivedUser);
 };
+
 module.exports = {
   addRoutes,
 };

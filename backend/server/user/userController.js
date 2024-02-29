@@ -21,8 +21,8 @@ const isRoleAdmin = async token => {
 
 module.exports = {
   //POST
-  addUser: async (req, res) => {
-    const { name, email, departmentName, role } = req.body;
+  addUserEmployee: async (req, res) => {
+    const { name, email, departmentName } = req.body;
     if (!req.headers.authorization) {
       return res.status(403).json({ message: 'No authorization header found' });
     }
@@ -32,7 +32,7 @@ module.exports = {
           data: {
             name,
             email,
-            role,
+            role: 'EMPLOYEE',
             archived: false,
           },
         });
@@ -56,10 +56,71 @@ module.exports = {
           }),
         });
 
-        res.status(200).json({ message: 'User added successfully' });
+        res.status(200).json({ message: 'Onboarding employee added successfully' });
       } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Error adding user' });
+        res.status(500).json({ message: 'Error adding onboarding employee' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to add a user' });
+    }
+  },
+
+  addUserSupervisor: async (req, res) => {
+    const { name, email, assignedTaskIds } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            name,
+            email,
+            role: 'SUPERVISOR',
+            archived: false,
+          },
+        });
+
+        const assignedTasks = await prisma.supervisorTaskMapping.createMany({
+          data: assignedTaskIds.map(taskId => {
+            return {
+              userId: user.id,
+              taskId,
+            };
+          }),
+        });
+
+        res.status(200).json({ message: 'Supervisor added successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error adding supervisor' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to add a user' });
+    }
+  },
+
+  addUserAdmin: async (req, res) => {
+    const { name, email } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            name,
+            email,
+            role: 'ADMIN',
+            archived: false,
+          },
+        });
+
+        res.status(200).json({ message: 'Admin added successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error adding admin' });
       }
     } else {
       res.status(403).json({ message: 'You are not authorized to add a user' });
@@ -425,7 +486,7 @@ module.exports = {
   },
 
   //PUT
-  updateUser: async (req, res) => {
+  updateUserEmployee: async (req, res) => {
     const { id } = req.params;
     const { name, departmentName, role, archive } = req.body;
     if (!req.headers.authorization) {
@@ -445,7 +506,7 @@ module.exports = {
         });
 
         if (!updatedUser) {
-          return res.status(404).json({ message: 'User not found or is archived' });
+          return res.status(404).json({ message: 'Employee not found or is archived' });
         }
 
         if (departmentName !== undefined) {
@@ -494,10 +555,117 @@ module.exports = {
           }
         }
 
-        res.status(200).json({ message: 'User updated successfully' });
+        res.status(200).json({ message: 'Employee updated successfully' });
       } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Error updating user' });
+        res.status(500).json({ message: 'Error updating employee' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to update a user' });
+    }
+  },
+
+  updateUserSupervisor: async (req, res) => {
+    const { id } = req.params;
+    const { name, role, archive, assignedTasks } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const dataToUpdate = {};
+        if (name !== undefined) dataToUpdate.name = name;
+        if (role !== undefined) dataToUpdate.role = role;
+
+        const updateUser = await prisma.user.update({
+          where: {
+            id: parseInt(id),
+          },
+          data: dataToUpdate,
+        });
+
+        if (!updateUser) {
+          return res.status(404).json({ message: 'Supervisor not found or is archived' });
+        }
+
+        if (assignedTasks !== undefined) {
+          await prisma.supervisorTaskMapping.deleteMany({
+            where: {
+              userId: parseInt(id),
+            },
+          });
+
+          const assignedTasks = await prisma.supervisorTaskMapping.createMany({
+            data: assignedTasks.map(taskId => {
+              return {
+                userId: parseInt(id),
+                taskId,
+              };
+            }),
+          });
+        }
+
+        if (archive !== undefined) {
+          if (archive) {
+            await prisma.user.update({
+              where: {
+                id: parseInt(id),
+              },
+              data: {
+                archived: archive === 'true',
+              },
+            });
+          }
+        }
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error updating supervisor' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to update a user' });
+    }
+  },
+
+  updateUserAdmin: async (req, res) => {
+    const { id } = req.params;
+    const { name, role, archive } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const dataToUpdate = {};
+        if (name !== undefined) dataToUpdate.name = name;
+        if (role !== undefined) dataToUpdate.role = role;
+
+        const updatedUser = await prisma.user.update({
+          where: {
+            id: parseInt(id),
+          },
+          data: dataToUpdate,
+        });
+
+        if (!updatedUser) {
+          return res.status(404).json({ message: 'Admin not found or is archived' });
+        }
+
+        if (archive !== undefined) {
+          if (archive) {
+            await prisma.user.update({
+              where: {
+                id: parseInt(id),
+              },
+              data: {
+                archived: archive === 'true',
+              },
+            });
+          }
+        }
+
+        res.status(200).json({ message: 'Admin updated successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error updating admin' });
       }
     } else {
       res.status(403).json({ message: 'You are not authorized to update a user' });
