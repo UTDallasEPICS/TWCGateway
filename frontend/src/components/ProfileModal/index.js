@@ -82,14 +82,20 @@ const ProfileModal = ({ isExpanded }) => {
                   </div>
                 </div>
 
-                <div className="flex flex-row mt-4">
-                  <button
+                <div className="flex flex-row mt-4 justify-center">
+                  {/* <button
                     type="button"
                     className="flex button my-10 text-white justify-center items-center w-20 h-10 bg-red-500 rounded-lg cursor-pointer select-none active:translate-y-2  active:[box-shadow:0_0px_0_0_#b91c1c,0_0px_0_0_#b91c1c41] active:border-b-[0px] transition-all duration-100 [box-shadow:0_10px_0_0_#b91c1c,0_15px_0_0_#b91c1c41] border-b-[1px] border-red-400 mx-auto"
                     onClick={() => logout()}
                   >
                     Logout
-                  </button>
+                  </button> */}
+                  <Button 
+                    extraStyling="w-20 h-10"
+                    color="red"
+                  >
+                    Logout
+                  </Button>
                 </div>
               </div>
             </Transition.Child>

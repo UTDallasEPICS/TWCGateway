@@ -106,12 +106,19 @@ module.exports = {
   //GET
   getTasksForUserEmployeeId: async (req, res) => {
     const { id } = req.params;
+    const { page, pageSize } = req.query;
+
+    const skip = page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+    const take = pageSize ? parseInt(pageSize) : 10;
     try {
       const taskIds = await prisma.onboardingEmployeeTaskMapping.findMany({
         where: {
           userId: parseInt(id),
         },
+        skip,
+        take,
       });
+
       const tasksPromises = taskIds.map(taskId => {
         return prisma.task.findMany({
           where:{
@@ -119,6 +126,7 @@ module.exports = {
           },
         })
       });
+
       const tasks = await Promise.all(tasksPromises);
       res.status(200).json(tasks);
     } catch (err) {
@@ -129,12 +137,19 @@ module.exports = {
 
   getTasksForUserSupervisorId: async (req, res) => {
     const { id } = req.params;
-    try{
+    const { page, pageSize } = req.query;
+
+    const skip = page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+    const take = pageSize ? parseInt(pageSize) : 10;
+    try {
       const taskIds = await prisma.supervisorTaskMapping.findMany({
-        where:{
+        where: {
           userId: parseInt(id),
         },
+        skip,
+        take,
       });
+
       const tasksPromises = taskIds.map(taskId => {
         return prisma.task.findMany({
           where:{
@@ -142,21 +157,32 @@ module.exports = {
           },
         })
       });
+
       const tasks = await Promise.all(tasksPromises);
       res.status(200).json(tasks);
     } catch (err) {
       console.log(err);
-      res.status(400).json({ error: 'Error getting tasks for supervisors'});
+      res.status(400).json({ error: 'Error getting tasks for supervisors' });
     }
   },
 
   getTasksForDepartmentId: async (req, res) => {
     const { id } = req.params;
+    const { page, pageSize } = req.query;
+
+    const skip = page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+    const take = pageSize ? parseInt(pageSize) : 10;
+
     try {
       const tasks = await prisma.departmentTaskMapping.findMany({
         where: {
           departmentId: parseInt(id),
         },
+        include: {
+          task: true,
+        },
+        skip,
+        take,
       });
       res.status(200).json(tasks);
     } catch (err) {

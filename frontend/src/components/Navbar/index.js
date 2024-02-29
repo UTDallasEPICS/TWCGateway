@@ -10,6 +10,7 @@ import { animated, useSpring } from 'react-spring';
 import ProfileModal from '../ProfileModal';
 import Cookies from 'js-cookie';
 import '../../styles/Navbar.css';
+import clsx from 'clsx'
 
 const Navbar = () => {
   const navigate = useNavigate();
