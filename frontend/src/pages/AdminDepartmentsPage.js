@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import axios from 'axios';
-import Table from '../components/Table';
+// import Table from '../components/Table';
 import Section from '../components/Section';
 import TableRowSkeleton from '../components/TableRowSkeleton';
-import { useReactTable } from '@tanstack/react-table'
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from '../components/Table';
+
 
 const AdminDepartmentsPage = () => {
   const [departments, setDepartments] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -17,29 +28,9 @@ const AdminDepartmentsPage = () => {
     setIsLoading(false);
   }, []);
 
-  const data = React.useMemo(() => departments, [departments]);
-  const columns = React.useMemo(() => [
-    {
-      Header: 'Name',
-      accessor: 'name', // replace 'name' with the actual property name in your data
-    },
-    {
-      Header: 'Edit Name',
-      accessor: 'editName', // replace 'editName' with the actual property name in your data
-    },
-    {
-      Header: 'Archive',
-      accessor: 'archive', // replace 'archive' with the actual property name in your data
-    },
-  ], []);
-
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useReactTable({ columns, data });
+  const handleSearchTermChange = event => {
+    setSearchTerm(event.target.value);
+  };
 
   return (
     (document.title = 'TWCGateway | Departments'),
@@ -48,9 +39,50 @@ const AdminDepartmentsPage = () => {
         <div className="flex">
           <Navbar />
         </div>
-        <Section title={'Departments'}>
+        {/*Search Bar*/}
+        <Section extraStyling="">
+          <input
+            className="w-full border-2 border-gray-300 focus:outline-none focus:border-warrenBlue rounded"
+            type="text"
+            placeholder=" Search Departments"
+            onFocus={e => e.target.select()}
+            onChange={handleSearchTermChange}
+          />
+        </Section>
+        <Section title={''}>
           <div style={{ overflowX: 'auto' }}>
-            {/* <Table data={departments} headings={tableHeading} isLoading={isLoading} /> */}
+            <Table
+              className="bg-white bg-opacity-50 rounded-lg"
+            >
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Edit</TableHead>
+                  <TableHead>Archive</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {isLoading ? (
+                  <TableRowSkeleton columns={3} />
+                ) : (
+                  departments.map(department => (
+                    <TableRow key={department.id}>
+                      <TableCell>{department.name}</TableCell>
+                      <TableCell>
+                        <a href={`/admin/departments/edit/${department.id}`}>
+                          Edit
+                        </a>
+                      </TableCell>
+                      <TableCell>
+                        <a href={`/admin/departments/archive/${department.id}`}>
+                          Archive
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
           </div>
         </Section>
       </div>

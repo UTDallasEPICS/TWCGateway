@@ -93,6 +93,7 @@ const ProfileModal = ({ isExpanded }) => {
                   <Button 
                     extraStyling="w-20 h-10"
                     color="red"
+                    onClick={() => logout()}
                   >
                     Logout
                   </Button>

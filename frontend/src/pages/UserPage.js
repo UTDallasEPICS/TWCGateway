@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Section from '../components/Section';
 import axios from 'axios';
-import Table from '../components/Table';
+// import Table from '../components/Table';
 
 function UserPage() {
   const { id } = useParams();
@@ -72,7 +72,7 @@ function UserPage() {
               <h1 className="mb-2 text-white text-2xl font-bold">{userData.name}</h1>
               <span className="ml-4 mb-2 text-black font-bold">{userData.email}</span>
             </div>
-            <Table data={data} headings={headings} isLoading={isLoading} />
+            {/* <Table data={data} headings={headings} isLoading={isLoading} /> */}
           </Section>
         </div>
       </div>

@@ -69,7 +69,7 @@ const Navbar = () => {
           </Button>
 
           {/* Archive */}
-          <Button
+          {/* <Button
             extraStyling={`py-3 px-3`}
             onClick={() => {
               if (Cookies.get('role') === 'Admin') {
@@ -83,7 +83,7 @@ const Navbar = () => {
             tooltip="Archive"
           >
             <ArchiveBoxIcon className="h-6 w-6" />
-          </Button>
+          </Button> */}
         </div>
 
         {/* Profile */}
@@ -131,7 +131,7 @@ const Navbar = () => {
             </Button>
 
             {/* Archive */}
-            <Button
+            {/* <Button
               extraStyling={`py-3 px-3`}
               onClick={() => {
                 if (Cookies.get('role') === 'Admin') {
@@ -145,7 +145,7 @@ const Navbar = () => {
               tooltip="Archive"
             >
               <ArchiveBoxIcon className="h-6 w-6" />
-            </Button>
+            </Button> */}
           </div>
 
           {/* Profile */}

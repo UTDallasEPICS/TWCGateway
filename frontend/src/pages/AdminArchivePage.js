@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import RestoreIcon from '../icons/RestoreIcon';
 import Navbar from '../components/Navbar';
-import Table from '../components/Table';
+// import Table from '../components/Table';
 import axios from 'axios';
 
 const RestoreUserButton = ({ id }) => {
@@ -87,7 +87,7 @@ function AdminArchivePage() {
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Users</h1>
           <div>
-            {<Table data={userData} headings={['Name', 'Department', 'Role', 'Status', 'Restore']} isLoading={false} />}
+            {/* {<Table data={userData} headings={['Name', 'Department', 'Role', 'Status', 'Restore']} isLoading={false} />} */}
           </div>
         </div>
 
@@ -96,7 +96,7 @@ function AdminArchivePage() {
           {/*Section Heading*/}
           <h1 className="mb-4 text-white text-2xl font-bold">Departments</h1>
           <div>
-            <Table data={departmentData} headings={['Department', 'Restore']} isLoading={false} />
+            {/* <Table data={departmentData} headings={['Department', 'Restore']} isLoading={false} /> */}
           </div>
         </div>
       </div>

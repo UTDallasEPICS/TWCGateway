@@ -6,9 +6,9 @@ const addRoutes = router => {
   router.post('/task/new-task-user', controller.addTaskForUser);
 
   //GET
-  router.get('/task/user-employee/:id', controller.getTasksForUserEmployeeId);
-  router.get('/task/user-supervisor/:id', controller.getTasksForUserSupervisorId);
-  router.get('/task/department/:id', controller.getTasksForDepartmentId);
+  router.get('/tasks/user-employee/:id', controller.getTasksForUserEmployeeId);
+  router.get('/tasks/user-supervisor/:id', controller.getTasksForUserSupervisorId);
+  router.get('/tasks/department/:id', controller.getTasksForDepartmentId);
 
   //PUT
   router.put('/task/update-employee-task/:id', controller.updateEmployeeTask);

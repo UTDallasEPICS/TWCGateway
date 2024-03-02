@@ -7,6 +7,7 @@ const isRoleAdmin = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
+    console.log("decodedToken: ", decodedToken);
     const userEmail = decodedToken.email;
     await axios.post('http://localhost:5010/checkEmail/', { email: userEmail }).then(response => {
       if (response.data.role === 'ADMIN') {

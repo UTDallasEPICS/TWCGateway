@@ -17,9 +17,9 @@ const addRoutes = router => {
   router.get('/users/archived/admins', controller.getAllArchivedAdmins);
   router.get('/user/archived/:id', controller.getArchivedUserById);
 
-  router.put('/update-user-employee/:id', controller.updateUserEmployee);
-  router.put('/update-user-supervisor/:id', controller.updateUserSupervisor);
-  router.put('/update-user-admin/:id', controller.updateUserAdmin);
+  router.put('/user/update-user-employee/:id', controller.updateUserEmployee);
+  router.put('/user/update-user-supervisor/:id', controller.updateUserSupervisor);
+  router.put('/user/update-user-admin/:id', controller.updateUserAdmin);
   router.put('/users/archive/employees', controller.archiveAllEmployees);
   router.put('/users/archive/supervisors', controller.archiveAllSupervisors);
 
