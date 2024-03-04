@@ -11,7 +11,7 @@ import SupervisorArchivePage from './pages/SupervisorArchivePage';
 import EmployeePage from './pages/EmployeePage';
 import PageNotFound from './pages/PageNotFound';
 import RedirectPage from './pages/RedirectPage';
-import UserPage from './pages/UserPage';
+import AdminUserPage from './pages/AdminUserPage';
 import UserLogoutPage from './pages/UserLogoutPage';
 import { useAuth0 } from '@auth0/auth0-react';
 import { ToastContainer } from 'react-toastify';
@@ -45,8 +45,8 @@ const App = () => {
       <Route path="/supervisor/departments" element={<SupervisorDepartmentsPage />} />
       <Route path="/supervisor/archive" element={<SupervisorArchivePage />} />
       <Route path="/employee" element={<EmployeePage />} />
-      <Route path="admin/user/:id" element={<UserPage />} />
-      <Route path="supervisor/user/:id" element={<UserPage />} />
+      <Route path="admin/user/:id" element={<AdminUserPage />} />
+      <Route path="supervisor/user/:id" element={<AdminUserPage />} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
     </>

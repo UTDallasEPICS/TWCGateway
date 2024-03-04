@@ -25,6 +25,7 @@ const addRoutes = router => {
 
   router.delete('/users/archived', controller.deleteAllArchivedUsers);
   router.delete('/user/archived/:id', controller.deleteArchivedUser);
+  router.delete('/user/delete/:id', controller.deleteUser);
 };
 
 module.exports = {

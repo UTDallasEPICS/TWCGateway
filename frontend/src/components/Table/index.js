@@ -1,95 +1,196 @@
-import React from "react";
-import { cn } from "../../lib/utils";
+import React, { useMemo } from 'react';
+import { useTable, useRowSelect } from 'react-table';
+import { useNavigate } from 'react-router-dom';
+import { isEqual } from 'lodash';
 
-const Table = React.forwardRef(({ className, ...props }, ref) => (
-  <div className="relative w-full overflow-auto">
-    <table
-      ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
-      {...props}
-    />
-  </div>
-));
-Table.displayName = "Table";
+export const Table = ({ columns, data, onRowSelect }) => {
+  const navigate = useNavigate();
 
-const TableHeader = React.forwardRef(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
-));
-TableHeader.displayName = "TableHeader";
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    // state: { selectedRowIds },
+  } = useTable({ columns, data }, useRowSelect, hooks => {
+    hooks.visibleColumns.push(columns => [
+      {
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            <input
+              type="checkbox"
+              {...getToggleAllRowsSelectedProps()}
+              className="form-checkbox h-5 w-5 accent-red-500"
+              onClick={e => {
+                e.stopPropagation();
+                console.log("e.target.checked",e.target.checked);
+                onRowSelect('all', e.target.checked);
+              }}
+            />
+          </div>
+        ),
+        Cell: ({ row }) => (
+          <div>
+            <input
+              type="checkbox"
+              {...row.getToggleRowSelectedProps()}
+              className="form-checkbox h-5 w-5 accent-red-500"
+              onClick={e => {
+                e.stopPropagation();
+                console.log("e.target.checked_single",e.target.checked);
+                onRowSelect(row.id, e.target.checked);
+              }}
+            />
+          </div>
+        ),
+      },
+      ...columns,
+    ]);
+  });
 
-const TableBody = React.forwardRef(({ className, ...props }, ref) => (
-  <tbody
-    ref={ref}
-    className={cn("[&_tr:last-child]:border-0", className)}
-    {...props}
-  />
-));
-TableBody.displayName = "TableBody";
+  // React.useEffect(() => {
+  //   console.log('selectedRowOriginal', selectedRowOriginal);
+  // }, [selectedRowOriginal]);
 
-const TableFooter = React.forwardRef(({ className, ...props }, ref) => (
-  <tfoot
-    ref={ref}
-    className={cn(
-      "border-t bg-muted/50 font-medium [&>tr]:last:border-b-0",
-      className
-    )}
-    {...props}
-  />
-));
-TableFooter.displayName = "TableFooter";
+  return (
+    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+      <thead className="bg-purple-600">
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th
+                {...column.getHeaderProps()}
+                className="px-2 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+              >
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody
+        {...getTableBodyProps()}
+        className="bg-white divide-y divide-gray-200"
+      >
+        {rows.map(row => {
+          prepareRow(row);
+          return (
+            <tr
+              {...row.getRowProps({
+                onClick: e => {
+                  if (e.target.type !== 'checkbox') {
+                    navigate(`/admin/user/${row.original.id}`);
+                  }
+                },
+              })}
+              className="hover:bg-gray-100 cursor-pointer"
+            >
+              {row.cells.map(cell => (
+                <td
+                  {...cell.getCellProps()}
+                  className="px-2 py-4 whitespace-nowrap"
+                >
+                  {cell.render('Cell')}
+                </td>
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
+};
 
-const TableRow = React.forwardRef(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      "border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      className
-    )}
-    {...props}
-  />
-));
-TableRow.displayName = "TableRow";
+export const TaskTable = ({ columns, data, setSelectedTaskIds }) => {
+  const navigate = useNavigate();
 
-const TableHead = React.forwardRef(({ className, ...props }, ref) => (
-  <th
-    ref={ref}
-    className={cn(
-      "h-10 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-      className
-    )}
-    {...props}
-  />
-));
-TableHead.displayName = "TableHead";
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    state: { selectedRowIds },
+  } = useTable({ columns, data }, useRowSelect, hooks => {
+    hooks.visibleColumns.push(columns => [
+      {
+        Header: ({ getToggleAllRowsSelectedProps }) => (
+          <div>
+            <input
+              type="checkbox"
+              {...getToggleAllRowsSelectedProps()}
+              className="form-checkbox h-5 w-5 text-green-500"
+              onClick={e => e.stopPropagation()}
+            />
+          </div>
+        ),
+        Cell: ({ row }) => (
+          <div>
+            <input
+              type="checkbox"
+              {...row.getToggleRowSelectedProps()}
+              className="form-checkbox h-5 w-5 text-green-500"
+              onClick={e => e.stopPropagation()}
+            />
+          </div>
+        ),
+      },
+      ...columns,
+    ]);
+  });
 
-const TableCell = React.forwardRef(({ className, ...props }, ref) => (
-  <td
-    ref={ref}
-    className={cn(
-      "p-2 align-middle [&:has([role=checkbox])]:pr-0 [&>[role=checkbox]]:translate-y-[2px]",
-      className
-    )}
-    {...props}
-  />
-));
-TableCell.displayName = "TableCell";
+  const prevDataRef = React.useRef();
+  React.useEffect(() => {
+    prevDataRef.current = data;
+  }, []);
+  const prevData = prevDataRef.current;
 
-const TableCaption = React.forwardRef(({ className, ...props }, ref) => (
-  <caption
-    ref={ref}
-    className={cn("mt-4 text-sm text-muted-foreground", className)}
-    {...props}
-  />
-));
-TableCaption.displayName = "TableCaption";
+  React.useEffect(() => {
+    if (!isEqual(prevData, data)) {
+      const selectedTaskIds = Object.keys(selectedRowIds).map(
+        rowId => data[rowId].id
+      );
+      setSelectedTaskIds(selectedTaskIds);
+    }
+  }, [selectedRowIds, data, setSelectedTaskIds]);
 
-export {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableCaption,
+  return (
+    <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
+      <thead className="bg-purple-600">
+        {headerGroups.map(headerGroup => (
+          <tr {...headerGroup.getHeaderGroupProps()}>
+            {headerGroup.headers.map(column => (
+              <th
+                {...column.getHeaderProps()}
+                className="px-2 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+              >
+                {column.render('Header')}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
+      <tbody
+        {...getTableBodyProps()}
+        className="bg-white divide-y divide-gray-200"
+      >
+        {rows.map(row => {
+          prepareRow(row);
+          return (
+            <tr {...row.getRowProps({})} className="hover:bg-gray-100">
+              {row.cells.map(cell => (
+                <td
+                  {...cell.getCellProps()}
+                  className="px-2 py-4 whitespace-nowrap"
+                >
+                  {cell.render('Cell')}
+                </td>
+              ))}
+            </tr>
+          );
+        })}
+      </tbody>
+    </table>
+  );
 };

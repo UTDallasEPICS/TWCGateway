@@ -240,6 +240,9 @@ module.exports = {
         })
       );
 
+      //include a status value which is completed tasks/assigned tasks
+    
+
       res.status(200).json(usersWithDepartments);
     } catch (error) {
       console.log(error);
@@ -825,6 +828,59 @@ module.exports = {
         }
 
         await prisma.departmentUserMapping.deleteMany({
+          where: {
+            userId: id,
+          },
+        });
+
+        await prisma.user.delete({
+          where: {
+            id: id,
+          },
+        });
+
+        res.status(200).json({ message: 'User deleted successfully' });
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Error deleting user' });
+      }
+    } else {
+      res.status(403).json({ message: 'You are not authorized to delete a user' });
+    }
+  },
+
+  deleteUser: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(403).json({ message: 'No authorization header found' });
+    }
+    if (isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const id = parseInt(req.params.id);
+
+        const user = await prisma.user.findUnique({
+          where: {
+            id: id,
+            archived: false,
+          },
+        });
+
+        if (!user) {
+          return res.status(404).json({ message: 'User not found or is archived' });
+        }
+
+        await prisma.departmentUserMapping.deleteMany({
+          where: {
+            userId: id,
+          },
+        });
+
+        await prisma.onboardingEmployeeTaskMapping.deleteMany({
+          where: {
+            userId: id,
+          },
+        });
+
+        await prisma.supervisorTaskMapping.deleteMany({
           where: {
             userId: id,
           },

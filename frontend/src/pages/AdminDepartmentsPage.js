@@ -4,16 +4,16 @@ import axios from 'axios';
 // import Table from '../components/Table';
 import Section from '../components/Section';
 import TableRowSkeleton from '../components/TableRowSkeleton';
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableCaption,
-} from '../components/Table';
+// import {
+//   Table,
+//   TableHeader,
+//   TableBody,
+//   TableFooter,
+//   TableHead,
+//   TableRow,
+//   TableCell,
+//   TableCaption,
+// } from '../components/Table';
 
 
 const AdminDepartmentsPage = () => {
@@ -51,7 +51,7 @@ const AdminDepartmentsPage = () => {
         </Section>
         <Section title={''}>
           <div style={{ overflowX: 'auto' }}>
-            <Table
+            {/* <Table
               className="bg-white bg-opacity-50 rounded-lg"
             >
               <TableHeader>
@@ -82,7 +82,7 @@ const AdminDepartmentsPage = () => {
                   ))
                 )}
               </TableBody>
-            </Table>
+            </Table> */}
           </div>
         </Section>
       </div>

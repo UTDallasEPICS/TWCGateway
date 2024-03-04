@@ -1,5 +1,23 @@
-/* td {
-  height: 50px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-} */
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.styled-table th,
+.styled-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+.styled-table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  /* background-color: #4CAF50; */
+  background-color: #871eff;
+  color: white;
+}
+
+.checkbox {
+  transform: scale(1.5);
+}
