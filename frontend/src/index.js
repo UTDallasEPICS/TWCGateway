@@ -5,12 +5,14 @@ import App from './App';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { BrowserRouter } from 'react-router-dom';
 import { ChakraProvider } from '@chakra-ui/react';
+import '@mantine/core/styles.css';
+import { MantineProvider } from '@mantine/core';
 
 const root = createRoot(document.getElementById('root'));
 
 root.render(
   <React.StrictMode>
-    {/* <ChakraProvider > */}
+    <MantineProvider >
       <BrowserRouter>
         <Auth0Provider
           domain="dev-723z7f5wvs37uaci.us.auth0.com"
@@ -23,6 +25,6 @@ root.render(
           <App />
         </Auth0Provider>
       </BrowserRouter>
-    {/* </ChakraProvider> */}
+    </MantineProvider>
   </React.StrictMode>
 );

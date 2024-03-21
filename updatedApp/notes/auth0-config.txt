@@ -1,0 +1,8 @@
+Allowed Callback URLs
+http://localhost:5173/login-redirect
+
+Allowed Logout URLs
+http://localhost:5173/
+
+Allowed Web Origins
+http://localhost:5173/

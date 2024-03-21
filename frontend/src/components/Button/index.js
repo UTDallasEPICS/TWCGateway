@@ -12,12 +12,12 @@ const colorClasses = {
 };
 
 const Button = ({ children, onClick, extraStyling, tooltip, color }) => {
-  const colorClass = colorClasses[color] || colorClasses.blue; // Default to blue if color prop is not recognized
+  color = colorClasses[color] || colorClasses.blue; // Default to blue if color prop is not recognized
 
   return (
     <button 
       onClick={onClick}
-      className={`${colorClass} text-white font-bold rounded shadow-lg ${extraStyling}`}
+      className={`${color} text-white font-bold rounded shadow-lg ${extraStyling}`}
       title={tooltip}
     >
       {children}

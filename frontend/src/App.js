@@ -17,6 +17,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 const App = () => {
   const navigate = useNavigate();
   const { isLoading, user } = useAuth0();

@@ -44,7 +44,7 @@ const EmployeeAddTask = userId => {
         <PlusIcon />
       </Button>
       {isOpen && (
-        <Section extraStyling="z-10 absolute top-0 left-0" opacity={100}>
+        <Section extraStyling="z-10 absolute top-0 left-0">
           <div className="flex flex-col items-center justify-center">
             <form
               className="flex flex-col"
