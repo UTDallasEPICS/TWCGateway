@@ -1,7 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-node_modules/
+# node_modules/
 /.pnp
 .pnp.js
 
@@ -13,7 +13,6 @@ node_modules/
 
 # misc
 .DS_Store
-.env*
 npm-debug.log*
 
 # Ignore build directories
@@ -39,3 +38,19 @@ yarn.lock
 
 # Ignore OS-generated files
 Thumbs.db
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
