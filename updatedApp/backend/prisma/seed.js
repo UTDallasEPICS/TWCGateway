@@ -19,11 +19,11 @@ async function main() {
   });
 
   const userAdmin2 = await prisma.user.upsert({
-    where: { email: 'admin2@admin2.com' },
+    where: { email: 'samikshaa.saiprakash@gmail.com' },
     update: {},
     create: {
-      name: 'Admin2',
-      email: 'admin2@admin2.com',
+      name: 'Samikshaa Saiprakash',
+      email: 'samikshaa.saiprakash@gmail.com',
       role: UserRole.ADMIN,
     },
   });
@@ -89,7 +89,7 @@ async function main() {
     update: {},
     create: {
       desc: 'task1',
-      tag: ['Pre-Hire'],
+      tag: 'pre-hire',
     },
   });
 
@@ -98,7 +98,7 @@ async function main() {
     update: {},
     create: {
       desc: 'task2',
-      tag: ['First Day'],
+      tag: 'first day',
     },
   });
 
