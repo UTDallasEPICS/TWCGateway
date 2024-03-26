@@ -662,7 +662,7 @@ export default function Users() {
             setReloadData={setReloadData}
           />
         }
-        leftComp3={
+        rightComp2={
           <ArchiveSelectedUsers
             allSelectedRows={allSelectedRows}
             setAllSelectedRows={setAllSelectedRows}
@@ -670,14 +670,6 @@ export default function Users() {
             token={token}
           />
         }
-        // rightComp2={
-        //   <ArchiveSelectedUsers
-        //     allSelectedRows={allSelectedRows}
-        //     setAllSelectedRows={setAllSelectedRows}
-        //     setReloadData={setReloadData}
-        //     token={token}
-        //   />
-        // }
       />
       {/* ----------------------------------------------------- */}
       <div className="md:flex">

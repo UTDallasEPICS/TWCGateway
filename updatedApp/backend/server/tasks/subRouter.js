@@ -8,7 +8,7 @@ const addRoutes = router => {
   //POST
   router.post('/addTaskForDepartment', controller.addTaskForDepartment);
   router.post('/addTaskForSupervisor', controller.addTaskForSupervisor);
-  router.post('/addTaskForEmployee', controller.addTaskForEmployee); 
+  router.post('/addTaskForEmployee', controller.addTaskForEmployee);
 };
 
 module.exports = {
