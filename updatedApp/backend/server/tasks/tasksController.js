@@ -42,7 +42,6 @@ const isRoleAdminOrSupervisor = async (token) => {
 module.exports = {
 
   //GET
-
   getAllTasksForEmployee: async (req, res) => {
     const { id } = req.params;
     const { page, pageSize } = req.query;

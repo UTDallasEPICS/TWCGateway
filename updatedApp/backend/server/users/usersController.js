@@ -35,7 +35,7 @@ const isRoleAdminOrSupervisor = async (token) => {
       userRole = 'SUPERVISOR';
     }
   } catch (error) {
-    console.error('Error in usersController -> isRoleAdminOrSupervisor', error);
+    console.error('Error in usersController -> isRoleAdmin', error);
   }
   return userRole === 'ADMIN' || userRole === 'SUPERVISOR';
 };
@@ -104,14 +104,6 @@ module.exports = {
         },
       });
       departments.map(async (department) => {
-
-        const tasks = await prisma.departmentTaskMapping.findMany({
-          where: {
-            departmentId: parseInt(department),
-          },
-        });
-
-
         const userDepartmentMapping = await prisma.departmentUserMapping.create(
           {
             data: {
@@ -120,6 +112,13 @@ module.exports = {
             },
           }
         );
+
+        const tasks = await prisma.departmentTaskMapping.findMany({
+          where: {
+            departmentId: parseInt(department),
+          },
+        });
+
         tasks.forEach(async (task) => {
           await prisma.onboardingEmployeeTaskMapping.create({
             data: {
