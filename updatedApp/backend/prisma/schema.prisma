@@ -48,7 +48,7 @@ model DepartmentTaskMapping {
   task         Task       @relation(fields: [taskId], references: [id])
   taskId       Int        
   department   Department @relation(fields: [departmentId], references: [id])
-  departmentId Int        @unique
+  departmentId Int        
   archived     Boolean    @default(false)
 }
 
