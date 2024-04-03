@@ -16,6 +16,7 @@ export default function LoginRedirect() {
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/auth`,
         { email: user.email }
       );
+      console.log('response', response.data);
       return response.data;
     } catch (error) {
       console.error(error);
@@ -28,6 +29,7 @@ export default function LoginRedirect() {
       getAccessTokenSilently().then(async (token) => {
         Cookies.set('token', token);
         const loggedinUser = await fetchUser();
+        console.log('loggedinUser', loggedinUser);
         if (loggedinUser.role === 'ADMIN') {
           navigate('/admin/users');
         } else if (loggedinUser.role === 'SUPERVISOR') {

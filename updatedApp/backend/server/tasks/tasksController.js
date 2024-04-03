@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
 
-const isRoleAdmin = async (token) => {
+const isRoleAdmin = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
@@ -20,7 +20,7 @@ const isRoleAdmin = async (token) => {
   return userRole === 'ADMIN';
 };
 
-const isRoleAdminOrSupervisor = async (token) => {
+const isRoleAdminOrSupervisor = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
@@ -40,7 +40,6 @@ const isRoleAdminOrSupervisor = async (token) => {
 };
 
 module.exports = {
-
   //GET
   getAllTasksForEmployee: async (req, res) => {
     const { id } = req.params;
@@ -57,33 +56,34 @@ module.exports = {
       await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
     ) {
       try {
-
         const totalTasks = await prisma.onboardingEmployeeTaskMapping.count({
           where: {
             AND: {
               userId: parseInt(id),
-              archived: false
-            },
-          }
-        })
-
-        const employeeTasks = await prisma.onboardingEmployeeTaskMapping.findMany({
-          where: {
-            AND: {
-              userId: parseInt(id),
-              archived: false
+              archived: false,
             },
           },
-          include: {
-            task: true,
-            department: true
-          },
-          skip,
-          take,
-        })
+        });
 
         const totalPages = Math.ceil(totalTasks / take);
-        const result = { ...employeeTasks, totalPages, totalTasks }
+
+        const employeeTasks =
+          await prisma.onboardingEmployeeTaskMapping.findMany({
+            where: {
+              AND: {
+                userId: parseInt(id),
+                archived: false,
+              },
+            },
+            include: {
+              task: true,
+              department: true,
+            },
+            skip,
+            take,
+          });
+
+        const result = { ...employeeTasks, totalPages, totalTasks };
 
         res.status(200).json(result);
       } catch (err) {
@@ -92,8 +92,7 @@ module.exports = {
           .status(400)
           .json({ error: 'Error getting tasks for onboarding employee' });
       }
-    }
-    else {
+    } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
   },
@@ -113,43 +112,40 @@ module.exports = {
       await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
     ) {
       try {
-
         const totalTasks = await prisma.supervisorTaskMapping.count({
           where: {
             AND: {
               userId: parseInt(id),
-              archived: false
+              archived: false,
             },
-          }
-        })
+          },
+        });
+
+        const totalPages = Math.ceil(totalTasks / take);
 
         const employeeTasks = await prisma.supervisorTaskMapping.findMany({
           where: {
             AND: {
               userId: parseInt(id),
-              archived: false
+              archived: false,
             },
           },
           include: {
             task: true,
-            department: true
+            department: true,
           },
           skip,
           take,
-        })
+        });
 
-        const totalPages = Math.ceil(totalTasks / take);
-        const result = { ...employeeTasks, totalPages, totalTasks }
+        const result = { ...employeeTasks, totalPages, totalTasks };
 
         res.status(200).json(result);
       } catch (err) {
         console.log(err);
-        res
-          .status(400)
-          .json({ error: 'Error getting tasks for supervisor' });
+        res.status(400).json({ error: 'Error getting tasks for supervisor' });
       }
-    }
-    else {
+    } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
   },
@@ -170,41 +166,33 @@ module.exports = {
             desc: desc,
             tag: fixedTag,
           },
-
         });
         const taskDeptMap = await prisma.departmentTaskMapping.create({
           data: {
             departmentId: parseInt(deptId),
             taskId: task.id,
-          }
+          },
         });
 
         const taskSuperMap = await prisma.supervisorTaskMapping.create({
           data: {
             userId: parseInt(superId),
             taskId: task.id,
-            departmentId: parseInt(deptId)
-          }
+            departmentId: parseInt(deptId),
+          },
         });
-        res.status(200).json("Sucessfully added task to department");
-      }
-
-      catch (error) {
+        res.status(200).json('Sucessfully added task to department');
+      } catch (error) {
         console.log(error);
-        res
-          .status(500)
-          .json({ error: 'Error adding task for department' });
+        res.status(500).json({ error: 'Error adding task for department' });
       }
-
-    }
-
-    else {
+    } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
   },
 
   addTaskForSupervisor: async (req, res) => {
-    const {superId, deptId, taskId} = req.body;
+    const { superId, deptId, taskId } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
@@ -213,24 +201,18 @@ module.exports = {
     ) {
       try {
         const taskSuperMap = await prisma.supervisorTaskMapping.create({
-          data:{
-            userId : parseInt(superId),
-            departmentId : parseInt(deptId),
-            taskId : parseInt(taskId)
-          }
+          data: {
+            userId: parseInt(superId),
+            departmentId: parseInt(deptId),
+            taskId: parseInt(taskId),
+          },
         });
-        res.status(200).json("Sucessfully added task to supervisor");
-      }
-
-      catch (error) {
+        res.status(200).json('Sucessfully added task to supervisor');
+      } catch (error) {
         console.log(error);
-        res
-          .status(500)
-          .json({ error: 'Error adding task for supervisor' });
+        res.status(500).json({ error: 'Error adding task for supervisor' });
       }
-    }
-
-    else {
+    } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
   },
@@ -246,49 +228,43 @@ module.exports = {
     ) {
       try {
         const task = await prisma.task.create({
-          data:{
-            desc : desc,
-            tag : fixedTag
-          }
+          data: {
+            desc: desc,
+            tag: fixedTag,
+          },
         });
 
         const taskDeptMap = await prisma.departmentTaskMapping.create({
-          data:{
-            taskId : task.id,
-            departmentId : parseInt(deptId)
-          }
+          data: {
+            taskId: task.id,
+            departmentId: parseInt(deptId),
+          },
         });
 
         const taskSuperMap = await prisma.supervisorTaskMapping.create({
           data: {
-            userId : parseInt(superId),
-            departmentId : parseInt(deptId),
-            taskId : task.id
-          }
+            userId: parseInt(superId),
+            departmentId: parseInt(deptId),
+            taskId: task.id,
+          },
         });
 
-        const taskOnBoardMap = await prisma.onboardingEmployeeTaskMapping.create({
-          data:{
-            userId : parseInt(id),
-            departmentId : parseInt(deptId),
-            taskId : task.id,
-          }
-        });
+        const taskOnBoardMap =
+          await prisma.onboardingEmployeeTaskMapping.create({
+            data: {
+              userId: parseInt(id),
+              departmentId: parseInt(deptId),
+              taskId: task.id,
+            },
+          });
 
-        res.status(200).json("Sucessfully added task to employee");
-      }
-
-      catch (error) {
+        res.status(200).json('Sucessfully added task to employee');
+      } catch (error) {
         console.log(error);
-        res
-          .status(500)
-          .json({ error: 'Error adding task for employee' });
+        res.status(500).json({ error: 'Error adding task for employee' });
       }
-
-    }
-
-    else {
+    } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
-  }
-}
+  },
+};

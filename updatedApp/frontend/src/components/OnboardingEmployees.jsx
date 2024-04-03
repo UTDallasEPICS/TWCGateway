@@ -139,7 +139,7 @@ export default function OnboardingEmployees({
       </div>
       <div className="md:flex md:justify-center">
         <Table
-          horizontalSpacing=""
+          // horizontalSpacing=""
           withTableBorder
           withColumnBorders
           className="mt-4 bg-slate-100"

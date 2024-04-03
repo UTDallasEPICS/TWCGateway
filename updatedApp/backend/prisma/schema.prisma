@@ -27,7 +27,7 @@ model User {
 model Task {
   id                            Int                             @id @default(autoincrement())
   desc                          String                          @unique
-  tag                           String[]
+  tag                           String
   DepartmentTaskMapping         DepartmentTaskMapping[]
   SupervisorTaskMapping         SupervisorTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
@@ -47,9 +47,9 @@ model Department {
 model DepartmentTaskMapping {
   id           Int        @id @default(autoincrement())
   task         Task       @relation(fields: [taskId], references: [id])
-  taskId       Int        @unique
+  taskId       Int
   department   Department @relation(fields: [departmentId], references: [id])
-  departmentId Int        @unique
+  departmentId Int
   archived     Boolean    @default(false)
 }
 

@@ -55,11 +55,11 @@ module.exports = {
             archived: false,
           },
           include: {
-            DepartmentTaskMapping: {
-              include: {
-                task: true,
-              },
-            },
+            // DepartmentTaskMapping: {
+            //   include: {
+            //     task: true,
+            //   },
+            // },
             DepartmentUserMapping: {
               include: {
                 user: true,
