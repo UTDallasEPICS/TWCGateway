@@ -361,11 +361,17 @@ module.exports = {
           },
           include: {
             DepartmentUserMapping: {
+              where: {
+                archived: false,
+              },
               include: {
                 department: true,
               },
             },
             OnboardingEmployeeTaskMapping: {
+              where: {
+                archived: false,
+              },
               include: {
                 task: true,
               },

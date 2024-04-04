@@ -1,4 +1,4 @@
-const { PrismaClient, PrismaClientKnownRequestError } = require('@prisma/client');
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 module.exports = {
@@ -56,9 +56,11 @@ module.exports = {
     }
   },
 
-  updateDepartment: async (req, res) => {
-    const { id } = req.params;
-    const { name } = req.body;
+  updateDepartmentName: async (req, res) => {
+    const {id, name} = req.body
+    if (name === undefined || name === '') {
+      return res.status(400).json({ message: 'Name is required' });
+    }
     try {
       const updatedDepartment = await prisma.department.update({
         where: {

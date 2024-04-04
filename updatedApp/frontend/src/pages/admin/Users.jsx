@@ -662,7 +662,7 @@ export default function Users() {
             setReloadData={setReloadData}
           />
         }
-        rightComp2={
+        leftComp3={
           <ArchiveSelectedUsers
             allSelectedRows={allSelectedRows}
             setAllSelectedRows={setAllSelectedRows}

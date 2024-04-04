@@ -36,7 +36,7 @@ function App() {
           element={<Departments />}
         />
         <Route
-          path="/admin/department"
+          path="/admin/department/:id"
           element={<Department />}
         />
         <Route
