@@ -18,7 +18,7 @@ model User {
   name                          String
   email                         String                          @unique
   role                          UserRole                        @default(EMPLOYEE)
-  DepartmentUserMapping         DepartmentUserMapping?           
+  DepartmentUserMapping         DepartmentUserMapping?
   SupervisorTaskMapping         SupervisorTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
   archived                      Boolean                         @default(false)
@@ -26,7 +26,7 @@ model User {
 
 model Task {
   id                            Int                             @id @default(autoincrement())
-  desc                          String                          @unique
+  desc                          String
   tag                           String
   DepartmentTaskMapping         DepartmentTaskMapping[]
   SupervisorTaskMapping         SupervisorTaskMapping[]
@@ -46,7 +46,7 @@ model Department {
 model DepartmentTaskMapping {
   id           Int        @id @default(autoincrement())
   task         Task       @relation(fields: [taskId], references: [id])
-  taskId       Int
+  taskId       Int        @unique
   department   Department @relation(fields: [departmentId], references: [id])
   departmentId Int
   archived     Boolean    @default(false)
