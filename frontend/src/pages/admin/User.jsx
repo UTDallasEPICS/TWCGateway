@@ -14,16 +14,58 @@ import RightAngle from '../../assets/icons/RightAngle';
 TaskTable.propTypes = {
   tasks: PropTypes.array.isRequired,
   searchTerm: PropTypes.string,
+  userId: PropTypes.string.isRequired,
+  setReload: PropTypes.func,
 };
 
-export function TaskTable({ tasks, searchTerm }) {
+export function TaskTable({ tasks, searchTerm, userId, setReload }) {
   const [opened, { open, close }] = useDisclosure();
   const [selectedSupervisor, setSelectedSupervisor] = useState(null);
+  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
   const handleSupervisorClick = supervisor => {
     setSelectedSupervisor(supervisor);
     console.log('supervisor', supervisor);
     open();
   };
+
+  const completeTask = async taskId => {
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/completeTask`,
+        {
+          taskId: taskId,
+          userId: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error in completing task', error);
+    }
+  };
+
+  const uncompleteTask = async taskId => {
+    try {
+      await axios.patch(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/uncompleteTask`,
+        {
+          taskId: taskId,
+          userId: userId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    } catch (error) {
+      console.error('Error in uncompleting task', error);
+    }
+  };
+
   const rows =
     tasks.length > 0 ? (
       tasks
@@ -33,9 +75,36 @@ export function TaskTable({ tasks, searchTerm }) {
         .map(task => (
           <Table.Tr key={task.id}>
             <Table.Td style={{}}>
-              <Checkbox checked={task.taskCompleted}  />
+              <div>
+                <Checkbox
+                  checked={task.taskCompleted}
+                  onChange={() => {
+                    setReload(true);
+                    task.taskCompleted
+                      ? uncompleteTask(task.id)
+                      : completeTask(task.id);
+                  }}
+                />
+              </div>
             </Table.Td>
-            <Table.Td>{task.dateCompleted || 'N/A'}</Table.Td>
+            {/* <Table.Td>{task.dateCompleted || 'N/A'}</Table.Td> */}
+            <Table.Td>
+              {task.dateCompleted
+                ? (() => {
+                    const date = new Date(task.dateCompleted);
+                    const formattedDate = date.toLocaleDateString('en-US', {
+                      year: 'numeric',
+                      month: 'long',
+                      day: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      timeZoneName: 'short',
+                    });
+                    console.log('formattedDate', formattedDate);
+                    return formattedDate;
+                  })()
+                : 'N/A'}
+            </Table.Td>
             <Table.Td>{task.task.desc}</Table.Td>
             <Table.Td
               className="hover:cursor-pointer hover:bg-purple-500"
@@ -88,6 +157,8 @@ export default function User() {
     tags && tags.length > 0 ? `${tags[0]}` : ''
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+
   useEffect(() => {
     const getUser = async () => {
       setIsLoading(true);
@@ -138,7 +209,8 @@ export default function User() {
       setIsLoading(false);
     };
     getUser();
-  }, [id, selectedTab, page]);
+    setReload(false);
+  }, [id, selectedTab, page, reload]);
 
   useEffect(() => {
     setPage(1);
@@ -207,6 +279,8 @@ export default function User() {
                           <TaskTable
                             tasks={tasks.tasks}
                             searchTerm={searchTerm}
+                            userId={id}
+                            setReload={setReload}
                           />
                         )}
                         <div className="flex justify-center mt-10 items-center bg-white bg-opacity-50 p-2 ">
