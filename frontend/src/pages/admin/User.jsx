@@ -6,7 +6,6 @@ import { Table, Checkbox, Loader, Modal, ActionIcon } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import SearchBar from '../../components/SearchBar';
 import { Tabs } from '@mantine/core';
-import '../../styles/User.css';
 import PropTypes from 'prop-types';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
