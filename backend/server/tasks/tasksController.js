@@ -43,6 +43,7 @@ module.exports = {
   //GET
   getAllTasksForEmployee: async (req, res) => {
     const { id } = req.params;
+    const { tag } = req.body;
     const { page, pageSize } = req.query;
 
     const skip =
@@ -60,6 +61,9 @@ module.exports = {
           where: {
             AND: {
               userId: parseInt(id),
+              task: {
+                tag: tag,
+              },
               archived: false,
             },
           },
@@ -72,6 +76,9 @@ module.exports = {
             where: {
               AND: {
                 userId: parseInt(id),
+                task: {
+                  tag: tag,
+                },
                 archived: false,
               },
             },
@@ -83,7 +90,20 @@ module.exports = {
             take,
           });
 
-        const result = { ...employeeTasks, totalPages, totalTasks };
+        for (let i = 0; i < employeeTasks.length; i++) {
+          const supervisor = await prisma.supervisorTaskMapping.findUnique({
+            where: {
+              archived: false,
+              taskId: employeeTasks[i].taskId,
+            },
+            include: {
+              user: true,
+            },
+          });
+          employeeTasks[i].supervisor = supervisor.user;
+        }
+
+        const result = { tasks: employeeTasks, totalPages, totalTasks };
 
         res.status(200).json(result);
       } catch (err) {
@@ -197,6 +217,47 @@ module.exports = {
       } catch (err) {
         console.log(err);
         res.status(400).json({ error: 'Error getting tasks for department' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  getAllTaskTagsForEmployee: async (req, res) => {
+    const { id } = req.params;
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
+      try {
+        const employeeTasks =
+          await prisma.onboardingEmployeeTaskMapping.findMany({
+            where: {
+              AND: {
+                userId: parseInt(id),
+                archived: false,
+              },
+            },
+            include: {
+              task: true,
+              department: true,
+            },
+          });
+
+        const tags = [
+          ...new Set(employeeTasks.map(taskMapping => taskMapping.task.tag)),
+        ];
+
+        const result = tags;
+
+        res.status(200).json(result); //returns an array of unique tags
+      } catch (err) {
+        console.log(err);
+        res
+          .status(400)
+          .json({ error: 'Error getting tasks for onboarding employee' });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });

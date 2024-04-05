@@ -4,7 +4,7 @@ const axios = require('axios');
 
 const prisma = new PrismaClient();
 
-const isRoleAdmin = async (token) => {
+const isRoleAdmin = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
@@ -21,7 +21,7 @@ const isRoleAdmin = async (token) => {
   return userRole === 'ADMIN';
 };
 
-const isRoleAdminOrSupervisor = async (token) => {
+const isRoleAdminOrSupervisor = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
@@ -90,36 +90,32 @@ module.exports = {
   },
 
   addEmployee: async (req, res) => {
-    const { name, email, departments, role } = req.body;
-    // if (!req.headers.authorization) {
-    //   return res.status(400).json({ message: 'No Authorization Header Found' });
-    // }
-    // if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
-    try {
-      const user = await prisma.user.create({
-        data: {
-          name: name,
-          role: role,
-          email: email,
-        },
-      });
-      departments.map(async (department) => {
-        const userDepartmentMapping = await prisma.departmentUserMapping.create(
-          {
-            data: {
-              userId: user.id,
-              departmentId: parseInt(department),
-            },
-          }
-        );
-
+    const { name, email, department, role } = req.body;
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            name: name,
+            role: role,
+            email: email,
+          },
+        });
+        console.log('department', department);
+        const userDepMap = await prisma.departmentUserMapping.create({
+          data: {
+            userId: user.id,
+            departmentId: parseInt(department),
+          },
+        });
         const tasks = await prisma.departmentTaskMapping.findMany({
           where: {
             departmentId: parseInt(department),
           },
         });
-
-        tasks.forEach(async (task) => {
+        tasks.forEach(async task => {
           await prisma.onboardingEmployeeTaskMapping.create({
             data: {
               userId: user.id,
@@ -128,79 +124,78 @@ module.exports = {
             },
           });
         });
-      });
-      res.status(201).send();
-    } catch (error) {
-      console.error('Error Adding Employee', error);
-      res.status(500).json({ message: 'Error Adding Employee' });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Error Adding Employee', error);
+        res.status(500).json({ message: 'Error Adding Employee' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
     }
-    // } else {
-    //   res.status(401).json({ message: 'Not Authorized for this Data' });
-    // }
   },
 
   addSupervisor: async (req, res) => {
     const { name, email, tasks, role } = req.body;
-    // if (!req.headers.authorization) {
-    //   return res.status(400).json({ message: 'No Authorization Header Found' });
-    // }
-    // if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
-    try {
-      const user = await prisma.user.create({
-        data: {
-          name: name,
-          email: email,
-          role: role,
-        },
-      });
-      const id = user.id;
-      tasks.map(async (task) => {
-        const depTaskMapping = await prisma.departmentTaskMapping.findUnique({
-          where: {
-            taskId: parseInt(task),
-          },
-        });
-
-        await prisma.supervisorTaskMapping.create({
-          data: {
-            userId: id,
-            taskId: parseInt(task),
-            departmentId: depTaskMapping.departmentId,
-          },
-        });
-      });
-      res.status(201).send();
-    } catch (error) {
-      console.error('Errored creating a new supervisor', error);
-      res.status(500).json({ message: 'Errored creating a new supervisor' });
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    // } else {
-    //   res.status(401).json({ message: 'Not Authorized for this Data' });
-    // }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            name: name,
+            email: email,
+            role: role,
+          },
+        });
+        const id = user.id;
+        tasks.map(async task => {
+          const depTaskMapping = await prisma.departmentTaskMapping.findUnique({
+            where: {
+              taskId: parseInt(task),
+            },
+          });
+
+          await prisma.supervisorTaskMapping.create({
+            data: {
+              userId: id,
+              taskId: parseInt(task),
+              departmentId: depTaskMapping.departmentId,
+            },
+          });
+        });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Errored creating a new supervisor', error);
+        res.status(500).json({ message: 'Errored creating a new supervisor' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
   },
 
   addAdmin: async (req, res) => {
     const { name, email, role } = req.body;
-    // if (!req.headers.authorization) {
-    //   return res.status(400).json({ message: 'No Authorization Header Found' });
-    // }
-    // if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
-    try {
-      const user = await prisma.user.create({
-        data: {
-          name: name,
-          email: email,
-          role: role,
-        },
-      });
-      res.status(201).send();
-    } catch (error) {
-      console.error('Errored creating a new admin', error);
-      res.status(500).json({ message: 'Errored creating a new admin' });
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    // } else {
-    //   res.status(401).json({ message: 'Not Authorized for this Data' });
-    // }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const user = await prisma.user.create({
+          data: {
+            name: name,
+            email: email,
+            role: role,
+          },
+        });
+        res.status(201).send();
+      } catch (error) {
+        console.error('Errored creating a new admin', error);
+        res.status(500).json({ message: 'Errored creating a new admin' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
   },
 
   //GET

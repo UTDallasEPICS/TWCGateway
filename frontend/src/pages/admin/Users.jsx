@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 //Imports
 import Navbar from '@/components/Navbar';
@@ -37,7 +38,7 @@ export function AddUser({ token, setReloadData }) {
     name: '',
     email: '',
     role: '',
-    departments: [],
+    department: 0,
     tasks: [],
   });
 
@@ -78,20 +79,19 @@ export function AddUser({ token, setReloadData }) {
     }
   };
 
-  const handleDepartmentChange = (selectedOptions) => {
+  const handleDepartmentChange = selectedOptions => {
     setFormData({
       ...formData,
-      departments: selectedOptions
-        ? selectedOptions.map((option) => option)
-        : [],
+      // departments: selectedOptions ? selectedOptions.map(option => option) : [],
+      department: selectedOptions || [],
     });
   };
 
-  const handleTaskChange = (selectedOptions) => {
+  const handleTaskChange = selectedOptions => {
     console.log('selectedOptions', selectedOptions);
     setFormData({
       ...formData,
-      tasks: selectedOptions ? selectedOptions.map((option) => option) : [],
+      tasks: selectedOptions ? selectedOptions.map(option => option) : [],
     });
   };
 
@@ -161,22 +161,14 @@ export function AddUser({ token, setReloadData }) {
     }
 
     close();
-    setFormData({ name: '', email: '', role: '', departments: [], tasks: [] });
+    setFormData({ name: '', email: '', role: '', department: 0, tasks: [] });
     setReloadData(true);
   };
 
   return (
     <>
-      <Tooltip
-        label="Add User"
-        openDelay="700"
-        onClick={open}
-      >
-        <ActionIcon
-          variant="filled"
-          size="xl"
-          color="green"
-        >
+      <Tooltip label="Add User" openDelay="700" onClick={open}>
+        <ActionIcon variant="filled" size="xl" color="green">
           <AddUserIcon />
         </ActionIcon>
       </Tooltip>
@@ -193,12 +185,12 @@ export function AddUser({ token, setReloadData }) {
         <TextInput
           label="Name"
           withAsterisk
-          onChange={(e) => handleChange(e, 'name')}
+          onChange={e => handleChange(e, 'name')}
         />
         <TextInput
           label="Email"
           withAsterisk
-          onChange={(e) => handleChange(e, 'email')}
+          onChange={e => handleChange(e, 'email')}
         />
         <Select
           label="Role"
@@ -213,20 +205,23 @@ export function AddUser({ token, setReloadData }) {
           onChange={handleRoleChange}
         />
         {formData.role === 'EMPLOYEE' ? (
-          <MultiSelect
+          <Select
             label="Departments"
             withAsterisk
             searchable
             nothingFoundMessage="No such department. Create one in the Departments page."
             hidePickedOptions
             clearable
-            data={departments.map((department) => {
+            data={departments.map(department => {
               return {
                 value: department.id.toString(),
                 label: department.name,
               };
             })}
-            onChange={handleDepartmentChange}
+            onChange={selectedOptions => {
+              console.log('selectedOptions', selectedOptions);
+              handleDepartmentChange(selectedOptions);
+            }}
           />
         ) : formData.role === 'SUPERVISOR' ? (
           <MultiSelect
@@ -236,10 +231,10 @@ export function AddUser({ token, setReloadData }) {
             nothingFoundMessage="No such task. Create one in the Departments page."
             hidePickedOptions
             clearable
-            data={departments.map((department) => {
+            data={departments.map(department => {
               return {
                 group: department.name,
-                items: department.DepartmentTaskMapping.map((taskMapping) => {
+                items: department.DepartmentTaskMapping.map(taskMapping => {
                   return {
                     value: taskMapping.task.id.toString(),
                     label: taskMapping.task.desc,
@@ -250,7 +245,7 @@ export function AddUser({ token, setReloadData }) {
             onChange={handleTaskChange}
           />
         ) : null}
-        {formData.departments.length !== 0 || formData.tasks.length !== 0 ? (
+        {formData.department !== 0 || formData.tasks.length !== 0 ? (
           <div className="flex justify-center mt-10">
             <Button onClick={handleSubmit}>Submit</Button>
           </div>
@@ -322,7 +317,7 @@ export function EditUser({ token }) {
     }
   };
 
-  const fetchUserData = async (userId) => {
+  const fetchUserData = async userId => {
     if (userId === null) {
       setFormData({
         name: '',
@@ -346,7 +341,7 @@ export function EditUser({ token }) {
           name: res.data.name,
           email: res.data.email,
           role: res.data.role,
-          departments: res.data.DepartmentUserMapping.map((dep) => {
+          departments: res.data.DepartmentUserMapping.map(dep => {
             return { value: dep.department.id.toString() };
           }),
         });
@@ -409,10 +404,7 @@ export function EditUser({ token }) {
 
   return (
     <>
-      <Tooltip
-        label="Edit User"
-        openDelay="700"
-      >
+      <Tooltip label="Edit User" openDelay="700">
         <ActionIcon
           variant="filled"
           size="xl"
@@ -457,13 +449,13 @@ export function EditUser({ token }) {
             placeholder="Pick User"
             searchable
             nothingFoundMessage="No such user"
-            data={allUsers.map((user) => {
+            data={allUsers.map(user => {
               return {
                 value: user.id.toString(),
                 label: user.name,
               };
             })}
-            onChange={(value) => fetchUserData(value)}
+            onChange={value => fetchUserData(value)}
             clearable
           />
 
@@ -472,15 +464,13 @@ export function EditUser({ token }) {
               label="Name"
               defaultValue={formData.name}
               disabled={formData.name.length === 0 ? true : false}
-              onChange={(e) =>
-                setFormData({ ...formData, name: e.target.value })
-              }
+              onChange={e => setFormData({ ...formData, name: e.target.value })}
             />
             <TextInput
               label="Email"
               defaultValue={formData.email}
               disabled={formData.email.length === 0 ? true : false}
-              onChange={(e) =>
+              onChange={e =>
                 setFormData({ ...formData, email: e.target.value })
               }
             />
@@ -505,23 +495,23 @@ export function EditUser({ token }) {
             {formData.role === 'EMPLOYEE' && formData.departments ? (
               <MultiSelect
                 label="Departments"
-                data={allDeps.map((dep) => {
+                data={allDeps.map(dep => {
                   return {
                     value: dep.id.toString(),
                     label: dep.name,
                   };
                 })}
-                defaultValue={formData.departments.map((dep) => dep.value)}
+                defaultValue={formData.departments.map(dep => dep.value)}
                 searchable
                 nothingFoundMessage="No such department. Create it in the Departments page."
                 hidePickedOptions
                 clearable
                 disabled={formData.departments === null ? true : false}
-                onChange={(selectedOptions) => {
+                onChange={selectedOptions => {
                   setFormData({
                     ...formData,
                     departments: {
-                      value: selectedOptions.map((option) => option),
+                      value: selectedOptions.map(option => option),
                     },
                   });
                 }}
@@ -529,10 +519,7 @@ export function EditUser({ token }) {
             ) : null}
           </div>
           <div className="flex justify-center">
-            <Button
-              color="green"
-              onClick={handleUpdate}
-            >
+            <Button color="green" onClick={handleUpdate}>
               Update
             </Button>
           </div>
@@ -609,10 +596,7 @@ export function ArchiveSelectedUsers({
         <span className="font-bold">archive </span>
         <span>all selected users?</span>
         <div className="flex mt-3 justify-between">
-          <Button
-            onClick={handleClick}
-            color="red"
-          >
+          <Button onClick={handleClick} color="red">
             Yes
           </Button>
           <Button onClick={close}>No</Button>
@@ -650,18 +634,8 @@ export default function Users() {
       {/* ----------------------------------------------------- */}
       <SearchBar
         setSearchTerm={setSearchTerm}
-        leftComp1={
-          <AddUser
-            token={token}
-            setReloadData={setReloadData}
-          />
-        }
-        leftComp2={
-          <EditUser
-            token={token}
-            setReloadData={setReloadData}
-          />
-        }
+        leftComp1={<AddUser token={token} setReloadData={setReloadData} />}
+        leftComp2={<EditUser token={token} setReloadData={setReloadData} />}
         leftComp3={
           <ArchiveSelectedUsers
             allSelectedRows={allSelectedRows}

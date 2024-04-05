@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Table, Checkbox } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -75,19 +76,20 @@ export default function OnboardingEmployees({
     navigate(`/admin/user/${rowData.id}`)
   };
 
+  console.log("emps", emps)
   const rows =
     emps.length > 0 ? (
       emps
-        .filter(
-          (emp) =>
-            emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            emp.DepartmentUserMapping.some((departmentUserMapping) =>
-              departmentUserMapping.department.name
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase())
-            )
-        )
-        .map((emp) => (
+        // .filter(
+        //   emp =>
+        //     emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        //     emp.DepartmentUserMapping.some(departmentUserMapping =>
+        //       departmentUserMapping.department.name
+        //         .toLowerCase()
+        //         .includes(searchTerm.toLowerCase())
+        //     )
+        // )
+        .map(emp => (
           <Table.Tr
             key={emp.id}
             bg={
@@ -96,13 +98,14 @@ export default function OnboardingEmployees({
                 : undefined
             }
           >
+            {console.log('emp', emp)}
             <Table.Td className="w-1/12">
               <Checkbox
-                onChange={(event) =>
+                onChange={event =>
                   setSelectedEmps(
                     event.currentTarget.checked
                       ? [...selectedEmps, emp.id]
-                      : selectedEmps.filter((id) => id !== emp.id)
+                      : selectedEmps.filter(id => id !== emp.id)
                   )
                 }
                 checked={selectedEmps.includes(emp.id)}
@@ -110,23 +113,18 @@ export default function OnboardingEmployees({
             </Table.Td>
             <Table.Td
               className="hover:cursor-pointer hover:bg-purple-500 w-5/12"
-              onClick={(event) => handleCellClick(event, emp)}
+              onClick={event => handleCellClick(event, emp)}
             >
               {emp.name}
             </Table.Td>
             <Table.Td className="w-6/12">
-              {emp.DepartmentUserMapping.map(
-                (mapping) => mapping.department.name
-              ).join(', ')}
+              {emp.DepartmentUserMapping.department.name}
             </Table.Td>
           </Table.Tr>
         ))
     ) : (
       <Table.Tr>
-        <Table.Td
-          colSpan={3}
-          className="text-center"
-        >
+        <Table.Td colSpan={3} className="text-center">
           No employees found
         </Table.Td>
       </Table.Tr>
