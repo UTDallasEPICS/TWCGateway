@@ -32,6 +32,7 @@ const addRoutes = router => {
   //PATCH
   router.patch('/completeTask', controller.completeTask);
   router.patch('/uncompleteTask', controller.uncompleteTask);
+  router.patch('/updateTask', controller.updateTask);
 };
 
 module.exports = {

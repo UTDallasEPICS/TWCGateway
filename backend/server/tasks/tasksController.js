@@ -332,7 +332,7 @@ module.exports = {
   },
 
   addTaskForEmployee: async (req, res) => {
-    const { id, deptId, desc, tag, superId } = req.body;
+    const { userId, deptId, desc, tag, superId } = req.body;
     const fixedTag = tag.toLowerCase();
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
@@ -366,7 +366,7 @@ module.exports = {
         const taskOnBoardMap =
           await prisma.onboardingEmployeeTaskMapping.create({
             data: {
-              userId: parseInt(id),
+              userId: parseInt(userId),
               departmentId: parseInt(deptId),
               taskId: task.id,
             },
@@ -488,12 +488,14 @@ module.exports = {
 
   //PATCH
 
-  completeTask: async(req, res) => {
+  completeTask: async (req, res) => {
     const { userId, taskId } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    if (await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])) {
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
       try {
         const task = await prisma.onboardingEmployeeTaskMapping.updateMany({
           where: {
@@ -516,12 +518,14 @@ module.exports = {
     }
   },
 
-  uncompleteTask: async(req, res) => {
+  uncompleteTask: async (req, res) => {
     const { userId, taskId } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    if (await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])) {
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
       try {
         const task = await prisma.onboardingEmployeeTaskMapping.updateMany({
           where: {
@@ -538,6 +542,52 @@ module.exports = {
       } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Error uncompleting task' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  updateTask: async (req, res) => {
+    const { id, desc, tag, superId } = req.body;
+    const dataToUpdate = {};
+    if (desc !== undefined) dataToUpdate.desc = desc;
+    if (tag !== undefined) dataToUpdate.tag = tag;
+    // if (superId !== undefined) dataToUpdate.superId = superId;
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const task = await prisma.task.update({
+          where: {
+            id: parseInt(id),
+          },
+          data: dataToUpdate,
+        });
+
+        if (superId !== undefined) {
+          const deleteSuperMap =
+            await prisma.supervisorTaskMapping.deleteUnique({
+              where: {
+                taskId: parseInt(id),
+              },
+            });
+
+          const makeNewTaskSuperMap = await prisma.supervisorTaskMapping.create(
+            {
+              data: {
+                userId: parseInt(superId),
+                taskId: parseInt(id),
+              },
+            }
+          );
+        }
+
+        res.status(200).json('Sucessfully updated task');
+      } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: 'Error updating task' });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });

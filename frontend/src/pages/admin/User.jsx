@@ -2,13 +2,56 @@ import Navbar from '@/components/Navbar';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, Checkbox, Loader, Modal, ActionIcon } from '@mantine/core';
+import {
+  Table,
+  Checkbox,
+  Loader,
+  Modal,
+  ActionIcon,
+  Tooltip,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import SearchBar from '../../components/SearchBar';
 import { Tabs } from '@mantine/core';
 import PropTypes from 'prop-types';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
+import EditIcon from '../../assets/icons/EditIcon';
+import PlusIcon from '../../assets/icons/PlusIcon';
+
+// export function AddTask() {
+//   return (
+//     <>
+//       <Tooltip label="Add Task" openDelay="700">
+//         <ActionIcon size="xl" color="green">
+//           <PlusIcon />
+//         </ActionIcon>
+//       </Tooltip>
+//     </>
+//   );
+// }
+
+export function EditTask() {
+  const [opened, { open, close }] = useDisclosure();
+  return (
+    <>
+      <Tooltip label="Edit Task" openDelay="700">
+        <ActionIcon size="xl" color="green" onClick={open}>
+          <EditIcon />
+        </ActionIcon>
+      </Tooltip>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Edit Task"
+        size="lg"
+        centered
+      >
+        
+      </Modal>
+    </>
+  );
+}
 
 TaskTable.propTypes = {
   tasks: PropTypes.array.isRequired,
@@ -76,6 +119,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
             <Table.Td style={{}}>
               <div>
                 <Checkbox
+                  color="green"
                   checked={task.taskCompleted}
                   onChange={() => {
                     setReload(true);
@@ -93,11 +137,11 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                     const date = new Date(task.dateCompleted);
                     const formattedDate = date.toLocaleDateString('en-US', {
                       year: 'numeric',
-                      month: 'long',
+                      month: 'numeric',
                       day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      timeZoneName: 'short',
+                      // hour: '2-digit',
+                      // minute: '2-digit',
+                      // timeZoneName: 'short',
                     });
                     console.log('formattedDate', formattedDate);
                     return formattedDate;
@@ -223,12 +267,17 @@ export default function User() {
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="flex justify-center bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5">
           <div className="md:flex md:items-center md:space-x-5 md:space-y-1">
-            <div className="text-2xl font-bold">{user.name}</div>
+            {/* <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-100 to-blue-200"> */}
+            <div className="text-2xl font-bold text-white">{user.name}</div>
             <div>{user.email}</div>
           </div>
         </div>
         <div>
-          <SearchBar setSearchTerm={setSearchTerm} />
+          <SearchBar
+            setSearchTerm={setSearchTerm}
+            // leftComp1={<AddTask />}
+            leftComp1={<EditTask />}
+          />
         </div>
       </div>
       {/* ---------- */}
@@ -252,8 +301,9 @@ export default function User() {
                   {user.DepartmentUserMapping.department.name}
                 </div>
               </div>
-              <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg flex justify-center">
-                <div className="w-3/4">
+              <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
+                <div className="md:w-3/4 border-white border-2 rounded-lg p-2 bg-blue-100 font-mono ">
+                  {console.log(tags && tags.length > 0 ? `${tags[0]}` : '')}
                   <Tabs
                     defaultValue={tags && tags.length > 0 ? `${tags[0]}` : ''}
                     variant="pills"
