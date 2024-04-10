@@ -32,6 +32,14 @@ async function main() {
     },
   });
 
+  const userAdmin4 = await prisma.user.create({
+    data: {
+      name: 'Isi Emordi',
+      email: 'isi.emord1@gmail.com',
+      role: UserRole.ADMIN,
+    }
+  });
+
   // ----------------------------------------------------
 
   const userSupervisor1 = await prisma.user.create({
