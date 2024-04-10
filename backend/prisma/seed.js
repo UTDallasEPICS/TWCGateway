@@ -24,6 +24,14 @@ async function main() {
     },
   });
 
+  const userAdmin3 = await prisma.user.create({
+    data: {
+      name: 'Sarah Park',
+      email: 'pentasky2022@gmail.com',
+      role: UserRole.ADMIN,
+    },
+  });
+
   // ----------------------------------------------------
 
   const userSupervisor1 = await prisma.user.create({
