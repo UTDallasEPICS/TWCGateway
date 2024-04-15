@@ -73,7 +73,7 @@ export default function OnboardingEmployees({
   };
 
   const handleCellClick = (event, rowData) => {
-    navigate(`/admin/user/${rowData.id}`)
+    navigate(`/admin/onboarding-employee/${rowData.id}`)
   };
 
   console.log("emps", emps)

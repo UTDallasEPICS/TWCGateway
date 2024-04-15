@@ -624,11 +624,11 @@ module.exports = {
                   department: true,
                 },
               },
-              OnboardingEmployeeTaskMapping: {
-                include: {
-                  task: true,
-                },
-              },
+              // OnboardingEmployeeTaskMapping: {
+              //   include: {
+              //     task: true,
+              //   },
+              // },
             },
           });
         } else if (user.role === 'SUPERVISOR') {
@@ -637,13 +637,13 @@ module.exports = {
               id: parseInt(id),
               archived: false,
             },
-            include: {
-              SupervisorTaskMapping: {
-                include: {
-                  task: true,
-                },
-              },
-            },
+            // include: {
+            //   SupervisorTaskMapping: {
+            //     include: {
+            //       task: true,
+            //     },
+            //   },
+            // },
           });
         }
         res.status(200).json(user);

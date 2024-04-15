@@ -2,6 +2,7 @@ import { Table, Checkbox } from '@mantine/core';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 
 Supervisors.propTypes = {
   selectedSups: PropTypes.array.isRequired,
@@ -22,6 +23,7 @@ export default function Supervisors({
   searchTerm,
   archived = false,
 }) {
+  const navigate = useNavigate();
   const [sups, setSups] = useState([]);
 
   useEffect(() => {
@@ -92,7 +94,9 @@ export default function Supervisors({
                 checked={selectedSups.includes(sup.id)}
               />
             </Table.Td>
-            <Table.Td className="hover:cursor-pointer hover:bg-purple-500">
+            <Table.Td className="hover:cursor-pointer hover:bg-purple-500" onClick={() => {
+              navigate(`/admin/supervisor/${sup.id}`);
+            }}>
               {sup.name}
             </Table.Td>
           </Table.Tr>

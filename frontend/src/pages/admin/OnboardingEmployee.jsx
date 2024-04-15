@@ -18,6 +18,7 @@ import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import EditIcon from '../../assets/icons/EditIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
+import { useNavigate } from 'react-router-dom';
 
 TaskTable.propTypes = {
   tasks: PropTypes.array.isRequired,
@@ -27,14 +28,8 @@ TaskTable.propTypes = {
 };
 
 export function TaskTable({ tasks, searchTerm, userId, setReload }) {
-  const [opened, { open, close }] = useDisclosure();
-  const [selectedSupervisor, setSelectedSupervisor] = useState(null);
+  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
-  const handleSupervisorClick = supervisor => {
-    setSelectedSupervisor(supervisor);
-    console.log('supervisor', supervisor);
-    open();
-  };
 
   const completeTask = async taskId => {
     try {
@@ -96,7 +91,6 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                 />
               </div>
             </Table.Td>
-            {/* <Table.Td>{task.dateCompleted || 'N/A'}</Table.Td> */}
             <Table.Td>
               {task.dateCompleted
                 ? (() => {
@@ -112,12 +106,14 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                     console.log('formattedDate', formattedDate);
                     return formattedDate;
                   })()
-                : 'N/A'}
+                : '-'}
             </Table.Td>
             <Table.Td>{task.task.desc}</Table.Td>
             <Table.Td
               className="hover:cursor-pointer hover:bg-purple-500"
-              onClick={() => handleSupervisorClick(task.supervisor)}
+              onClick={() => {
+                navigate(`/admin/supervisor/${task.supervisor.id}`);
+              }}
             >
               {task.supervisor.name}
             </Table.Td>
@@ -144,17 +140,11 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
         </Table.Thead>
         <Table.Tbody className="text-center">{rows}</Table.Tbody>
       </Table>
-      <Modal opened={opened} onClose={close} title="Supervisor" centered>
-        <div className="flex flex-col justify-center">
-          <h1 className="font-mono text-2xl">{selectedSupervisor?.name}</h1>
-          <p className="text-xl">{selectedSupervisor?.email}</p>
-        </div>
-      </Modal>
     </div>
   );
 }
 
-export default function User() {
+export default function OnboardingEmployee() {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [tasks, setTasks] = useState([]);
@@ -181,6 +171,8 @@ export default function User() {
           }
         );
         setUser(response1.data);
+        console.log('response1', response1.data);
+        document.title = `${response1.data.name}'s Tasks | TWCGateway`;
         console.log('response1', response1.data.id);
         const response2 = await axios.get(
           `${
