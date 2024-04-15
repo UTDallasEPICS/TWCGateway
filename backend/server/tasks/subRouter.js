@@ -3,7 +3,7 @@ const controller = require('./tasksController');
 const addRoutes = router => {
   //GET
   router.post('/getAllTasksForEmployee/:id', controller.getAllTasksForEmployee);
-  router.get(
+  router.post(
     '/getAllTasksForSupervisor/:id',
     controller.getAllTasksForSupervisor
   );

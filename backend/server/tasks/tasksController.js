@@ -127,6 +127,7 @@ module.exports = {
 
   getAllTasksForSupervisor: async (req, res) => {
     const { id } = req.params;
+    const { searchTerm } = req.body;
     const { page, pageSize } = req.query;
 
     const skip =
@@ -144,6 +145,12 @@ module.exports = {
           where: {
             AND: {
               userId: parseInt(id),
+              task: {
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
+              },
               archived: false,
             },
           },
@@ -155,6 +162,12 @@ module.exports = {
           where: {
             AND: {
               userId: parseInt(id),
+              task: {
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
+              },
               archived: false,
             },
           },

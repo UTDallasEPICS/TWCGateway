@@ -216,7 +216,7 @@ export default function OnboardingEmployee() {
 
   useEffect(() => {
     setPage(1);
-  }, [selectedTab]);
+  }, [selectedTab, searchTerm]);
 
   return (
     <div>
