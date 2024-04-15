@@ -19,40 +19,6 @@ import RightAngle from '../../assets/icons/RightAngle';
 import EditIcon from '../../assets/icons/EditIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
 
-// export function AddTask() {
-//   return (
-//     <>
-//       <Tooltip label="Add Task" openDelay="700">
-//         <ActionIcon size="xl" color="green">
-//           <PlusIcon />
-//         </ActionIcon>
-//       </Tooltip>
-//     </>
-//   );
-// }
-
-export function EditTask() {
-  const [opened, { open, close }] = useDisclosure();
-  return (
-    <>
-      <Tooltip label="Edit Task" openDelay="700">
-        <ActionIcon size="xl" color="green" onClick={open}>
-          <EditIcon />
-        </ActionIcon>
-      </Tooltip>
-      <Modal
-        opened={opened}
-        onClose={close}
-        title="Edit Task"
-        size="lg"
-        centered
-      >
-        
-      </Modal>
-    </>
-  );
-}
-
 TaskTable.propTypes = {
   tasks: PropTypes.array.isRequired,
   searchTerm: PropTypes.string,
@@ -235,6 +201,7 @@ export default function User() {
           }?page=${page}&pageSize=2`,
           {
             tag: selectedTab,
+            searchTerm: searchTerm,
           },
           {
             headers: {
@@ -253,7 +220,7 @@ export default function User() {
     };
     getUser();
     setReload(false);
-  }, [id, selectedTab, page, reload]);
+  }, [id, selectedTab, page, reload, searchTerm]);
 
   useEffect(() => {
     setPage(1);
@@ -267,17 +234,12 @@ export default function User() {
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="flex justify-center bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5">
           <div className="md:flex md:items-center md:space-x-5 md:space-y-1">
-            {/* <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-100 to-blue-200"> */}
             <div className="text-2xl font-bold text-white">{user.name}</div>
             <div>{user.email}</div>
           </div>
         </div>
         <div>
-          <SearchBar
-            setSearchTerm={setSearchTerm}
-            // leftComp1={<AddTask />}
-            leftComp1={<EditTask />}
-          />
+          <SearchBar setSearchTerm={setSearchTerm} />
         </div>
       </div>
       {/* ---------- */}

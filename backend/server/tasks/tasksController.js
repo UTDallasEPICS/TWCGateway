@@ -43,7 +43,7 @@ module.exports = {
   //GET
   getAllTasksForEmployee: async (req, res) => {
     const { id } = req.params;
-    const { tag } = req.body;
+    const { tag, searchTerm } = req.body;
     const { page, pageSize } = req.query;
 
     const skip =
@@ -63,6 +63,10 @@ module.exports = {
               userId: parseInt(id),
               task: {
                 tag: tag,
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
               },
               archived: false,
             },
@@ -78,6 +82,10 @@ module.exports = {
                 userId: parseInt(id),
                 task: {
                   tag: tag,
+                  desc: {
+                    contains: searchTerm,
+                    mode: 'insensitive',
+                  },
                 },
                 archived: false,
               },
