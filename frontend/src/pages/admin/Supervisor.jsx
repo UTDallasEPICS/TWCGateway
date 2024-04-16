@@ -75,7 +75,13 @@ export function EditAssignment({ superId }) {
         <Table.Td>{task && task.task.desc}</Table.Td>
         <Table.Td>{task && task.department.name}</Table.Td>
         <Table.Td>{task && task.task.tag}</Table.Td>
-        <Table.Td></Table.Td>
+        <Table.Td>
+          {task && task.assigned === true ? (
+            <Checkbox checked />
+          ) : (
+            task && task.task.SupervisorTaskMapping[0].user.name
+          )}
+        </Table.Td>
       </Table.Tr>
     ))
   ) : (
