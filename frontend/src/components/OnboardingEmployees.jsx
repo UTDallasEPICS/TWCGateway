@@ -64,19 +64,19 @@ export default function OnboardingEmployees({
     setReloadData(false);
   }, [reloadData, setReloadData, token]);
 
-  const handleSelectAll = (event) => {
+  const handleSelectAll = event => {
     if (event.currentTarget.checked) {
-      setSelectedEmps(emps.map((emp) => emp.id));
+      setSelectedEmps(emps.map(emp => emp.id));
     } else {
       setSelectedEmps([]);
     }
   };
 
   const handleCellClick = (event, rowData) => {
-    navigate(`/admin/onboarding-employee/${rowData.id}`)
+    navigate(`/admin/onboarding-employee/${rowData.id}`);
   };
 
-  console.log("emps", emps)
+  console.log('emps', emps);
   const rows =
     emps.length > 0 ? (
       emps
@@ -131,7 +131,7 @@ export default function OnboardingEmployees({
     );
 
   return (
-    <div className="flex flex-col bg-white bg-opacity-50 border-white border-2 rounded-lg p-2 m-5">
+    <div className="flex flex-col bg-white bg-opacity-50 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
       <div className="text-white font-bold font-mono text-2xl">
         Onboarding Employees
       </div>

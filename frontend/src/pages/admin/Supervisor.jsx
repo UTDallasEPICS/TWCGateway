@@ -4,9 +4,145 @@ import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import SearchBar from '../../components/SearchBar';
 import PropTypes from 'prop-types';
-import { Table, Loader, ActionIcon } from '@mantine/core';
+import {
+  Table,
+  Loader,
+  ActionIcon,
+  Tooltip,
+  Modal,
+  TextInput,
+  Checkbox,
+} from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
+import EditIcon from '../../assets/icons/EditIcon';
+
+EditAssignment.propTypes = {
+  superId: PropTypes.number,
+};
+
+export function EditAssignment({ superId }) {
+  const [opened, { open, close }] = useDisclosure();
+  const [allTasks, setAllTasks] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    getAllDepTasks();
+  }, [page, searchTerm]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
+  const getAllDepTasks = async () => {
+    try {
+      const fetchAllTasks = await axios.post(
+        `${
+          import.meta.env.VITE_APP_EXPRESS_BASE_URL
+        }/getAllTasksForAllDepartments?page=${page}&pageSize=5`,
+        {
+          searchTerm: searchTerm,
+          superId: superId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAllTasks(fetchAllTasks.data);
+      console.log('all tasks', fetchAllTasks.data);
+    } catch (error) {
+      console.error('fetch all tasks error', error);
+    }
+  };
+
+  const taskArray = allTasks
+    ? Object.values(allTasks).filter(
+        item =>
+          typeof item === 'object' && item !== null && !Array.isArray(item)
+      )
+    : null;
+
+  const totalPages = allTasks ? allTasks.totalPages : 0;
+
+  const rows = taskArray ? (
+    taskArray.map(task => (
+      <Table.Tr key={task && task.id}>
+        <Table.Td>{task && task.task.desc}</Table.Td>
+        <Table.Td>{task && task.department.name}</Table.Td>
+        <Table.Td>{task && task.task.tag}</Table.Td>
+        <Table.Td></Table.Td>
+      </Table.Tr>
+    ))
+  ) : (
+    <Table.Tr>
+      <Table.Td colSpan={4} className="text-center">
+        No tasks found
+      </Table.Td>
+    </Table.Tr>
+  );
+
+  return (
+    <>
+      <Tooltip label="Change Task Assignment" openDelay="700">
+        <ActionIcon color="green" size="xl" onClick={open}>
+          <EditIcon />
+        </ActionIcon>
+      </Tooltip>
+      <Modal
+        opened={opened}
+        onClose={close}
+        size="xl"
+        title="Change Task Assignment"
+      >
+        <div className="flex flex-col justify-center rounded-lg ">
+          <div className="flex justify-between items-center space-x-20 mb-10">
+            <div className=" flex-grow">
+              <TextInput
+                size="md"
+                placeholder="Search"
+                onChange={event => setSearchTerm(event.target.value)}
+              />
+            </div>
+            <div className="flex flex-grow justify-center items-center bg-gray-100 p-2 rounded-lg">
+              <ActionIcon
+                onClick={() => (page - 1 !== 0 ? setPage(page - 1) : null)}
+                disabled={page - 1 === 0}
+              >
+                <LeftAngle />
+              </ActionIcon>
+              <span className="font-mono mr-2 ml-2">
+                {page}/{totalPages}
+              </span>
+              <ActionIcon
+                onClick={() => (page !== totalPages ? setPage(page + 1) : null)}
+                disabled={page === totalPages}
+              >
+                <RightAngle />
+              </ActionIcon>
+            </div>
+          </div>
+
+          <Table withTableBorder withColumnBorders>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Description</Table.Th>
+                <Table.Th>Department</Table.Th>
+                <Table.Th>Tag</Table.Th>
+                <Table.Th className="w-1/12">Assign</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </div>
+      </Modal>
+    </>
+  );
+}
 
 TaskTable.propTypes = {
   tasks: PropTypes.array,
@@ -40,7 +176,7 @@ export function TaskTable({ tasks, searchTerm }) {
             <Table.Th style={{ textAlign: 'center' }}>Tag</Table.Th>
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody className="text-center">{rows}</Table.Tbody>
+        <Table.Tbody>{rows}</Table.Tbody>
       </Table>
     </div>
   );
@@ -118,7 +254,10 @@ export default function Supervisor() {
           </div>
         </div>
         <div>
-          <SearchBar setSearchTerm={setSearchTerm} />
+          <SearchBar
+            setSearchTerm={setSearchTerm}
+            leftComp1={<EditAssignment superId={user && user.id} />}
+          />
         </div>
       </div>
       {/* ----------- */}

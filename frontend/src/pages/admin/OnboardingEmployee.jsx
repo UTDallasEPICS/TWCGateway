@@ -77,7 +77,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
         )
         .map(task => (
           <Table.Tr key={task.id}>
-            <Table.Td style={{}}>
+            <Table.Td className="">
               <div>
                 <Checkbox
                   color="green"
@@ -91,7 +91,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                 />
               </div>
             </Table.Td>
-            <Table.Td>
+            <Table.Td className="text-center">
               {task.dateCompleted
                 ? (() => {
                     const date = new Date(task.dateCompleted);
@@ -110,7 +110,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
             </Table.Td>
             <Table.Td>{task.task.desc}</Table.Td>
             <Table.Td
-              className="hover:cursor-pointer hover:bg-purple-500"
+              className="hover:cursor-pointer hover:bg-purple-500 text-center"
               onClick={() => {
                 navigate(`/admin/supervisor/${task.supervisor.id}`);
               }}
@@ -138,7 +138,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
             <Table.Th style={{ textAlign: 'center' }}>Supervisor</Table.Th>
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody className="text-center">{rows}</Table.Tbody>
+        <Table.Tbody className="">{rows}</Table.Tbody>
       </Table>
     </div>
   );

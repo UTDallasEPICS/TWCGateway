@@ -61,10 +61,10 @@ export default function Admins({
   const rows =
     adms.length > 0 ? (
       adms
-        .filter((adm) =>
+        .filter(adm =>
           adm.name.toLowerCase().includes(searchTerm.toLowerCase())
         )
-        .map((adm) => (
+        .map(adm => (
           <Table.Tr
             key={adm.id}
             bg={
@@ -77,11 +77,11 @@ export default function Admins({
               {adm.email !== decodedToken.email && (
                 <Checkbox
                   aria-label="Select row"
-                  onChange={(event) =>
+                  onChange={event =>
                     setSelectedAdms(
                       event.currentTarget.checked
                         ? [...selectedAdms, adm.id]
-                        : selectedAdms.filter((id) => id !== adm.id)
+                        : selectedAdms.filter(id => id !== adm.id)
                     )
                   }
                   checked={selectedAdms.includes(adm.id)}
@@ -107,24 +107,17 @@ export default function Admins({
         ))
     ) : (
       <Table.Tr>
-        <Table.Td
-          colSpan={2}
-          className="text-center"
-        >
+        <Table.Td colSpan={2} className="text-center">
           No admins found
         </Table.Td>
       </Table.Tr>
     );
 
   return (
-    <div className="flex flex-col bg-white bg-opacity-50 border-white border-2 rounded-lg p-2 m-5">
+    <div className="flex flex-col bg-white bg-opacity-50 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
       <div className="text-white font-bold font-mono text-2xl">Admins</div>
       <div className="md:flex md:justify-center">
-        <Table
-          withTableBorder
-          withColumnBorders
-          className="mt-4 bg-gray-100"
-        >
+        <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
           <Table.Thead>
             <Table.Tr>
               <Table.Th></Table.Th>
