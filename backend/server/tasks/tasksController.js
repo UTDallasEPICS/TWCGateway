@@ -225,7 +225,15 @@ module.exports = {
             },
           },
           include: {
-            task: true,
+            task: {
+              include: {
+                SupervisorTaskMapping: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
             department: true,
           },
           skip,

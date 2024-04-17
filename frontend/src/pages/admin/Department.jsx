@@ -3,7 +3,9 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import SearchBar from '../../components/SearchBar';
-import { Table, Checkbox } from '@mantine/core';
+import { Table, Checkbox, ActionIcon } from '@mantine/core';
+import LeftAngle from '../../assets/icons/LeftAngle';
+import RightAngle from '../../assets/icons/RightAngle';
 
 export default function Department() {
   const { id } = useParams();
@@ -14,7 +16,6 @@ export default function Department() {
   const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(3);
-
 
   useEffect(() => {
     const getTasksForDepartment = async () => {
@@ -76,53 +77,74 @@ export default function Department() {
         <div className="text-white font-bold font-mono text-2xl">
           {department.name}
         </div>
-        <div className="mt-5 flex justify-center">
+        <div className="p-2 flex flex-col">
           <div className="w-3/4">
-            <Table withTableBorder withColumnBorders className="bg-slate-100">
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th className="w-1/12">
-                    <Checkbox
-                      checked={selectedRows.length === tasks.length}
-                      onChange={handleAllRowSelect}
-                    />
-                  </Table.Th>
-                  <Table.Th className="w-1/3">
-                    <div className="text-center">Tag</div>
-                  </Table.Th>
-                  <Table.Th className="w-1/3">
-                    <div className="text-center">Description</div>
-                  </Table.Th>
-                  <Table.Th className="w-1/3">
-                    <div className="text-center">Supervisor</div>
-                  </Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>
-                {tasks.map(task => (
-                  <Table.Tr key={task.task.id}>
-                    <Table.Td className="w-1/12">
+            <div className="p-2 bg-blue-200">
+              <Table withTableBorder withColumnBorders className="bg-slate-100">
+                <Table.Thead>
+                  <Table.Tr>
+                    <Table.Th className="w-1/12">
                       <Checkbox
-                        checked={selectedRows.includes(task.task.id)}
-                        onChange={() => {
-                          if (selectedRows.includes(task.task.id)) {
-                            setSelectedRows(
-                              selectedRows.filter(
-                                selectedRow => selectedRow !== task.task.id
-                              )
-                            );
-                          } else {
-                            setSelectedRows([...selectedRows, task.task.id]);
-                          }
-                        }}
+                        checked={selectedRows.length === tasks.length}
+                        onChange={handleAllRowSelect}
                       />
-                    </Table.Td>
-                    <Table.Td className="w-1/2">{task.task.desc}</Table.Td>
-                    <Table.Td className="w-1/2">{task.task.tag}</Table.Td>
+                    </Table.Th>
+                    <Table.Th className="w-1/3">
+                      <div className="text-center">Tag</div>
+                    </Table.Th>
+                    <Table.Th className="w-1/3">
+                      <div className="text-center">Description</div>
+                    </Table.Th>
+                    <Table.Th className="w-1/3">
+                      <div className="text-center">Supervisor</div>
+                    </Table.Th>
                   </Table.Tr>
-                ))}
-              </Table.Tbody>
-            </Table>
+                </Table.Thead>
+                <Table.Tbody>
+                  {tasks.map(task => (
+                    <Table.Tr key={task.task.id}>
+                      <Table.Td className="w-1/12">
+                        <Checkbox
+                          checked={selectedRows.includes(task.task.id)}
+                          onChange={() => {
+                            if (selectedRows.includes(task.task.id)) {
+                              setSelectedRows(
+                                selectedRows.filter(
+                                  selectedRow => selectedRow !== task.task.id
+                                )
+                              );
+                            } else {
+                              setSelectedRows([...selectedRows, task.task.id]);
+                            }
+                          }}
+                        />
+                      </Table.Td>
+                      <Table.Td className="w-1/2">{task.task.desc}</Table.Td>
+                      <Table.Td className="w-1/2">{task.task.tag}</Table.Td>
+                    </Table.Tr>
+                  ))}
+                </Table.Tbody>
+              </Table>
+            </div>
+          </div>
+          <div className="flex justify-center items-center bg-gray-200 p-2 ">
+            <ActionIcon
+              onClick={() => (page - 1 !== 0 ? setPage(page - 1) : null)}
+              disabled={page - 1 === 0}
+            >
+              <LeftAngle />
+            </ActionIcon>
+            <span className="font-mono mr-2 ml-2">
+              {page}/{tasks.totalPages}
+            </span>
+            <ActionIcon
+              onClick={() =>
+                page !== tasks.totalPages ? setPage(page + 1) : null
+              }
+              disabled={page === tasks.totalPages}
+            >
+              <RightAngle />
+            </ActionIcon>
           </div>
         </div>
       </div>
