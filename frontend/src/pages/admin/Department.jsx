@@ -1,13 +1,83 @@
 import Navbar from '../../components/Navbar';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { useDisclosure } from '@mantine/hooks';
 import axios from 'axios';
 import SearchBar from '../../components/SearchBar';
-import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs} from '@mantine/core';
+import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button} from '@mantine/core';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
+import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 
-export function TaskTable({tasks, searchTerm, setReload}){
+export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, token}){
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [opened, { open, close }] = useDisclosure();
+
+  const handleClick = async () => {
+    try {
+      setIsLoading(true);
+      await axios.patch(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/archiveTasksForDepartment/`,
+        { allSelectedTasks: selectedRows, deptId : deptId},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsLoading(false);
+      setReload(true)
+    } catch (error) {
+      console.error('Errored archiving selected tasks', error);
+    }
+
+    setSelectedRows([]);
+    close();
+  };
+
+
+  return (
+    <div>
+      <Tooltip
+        label={selectedRows.length === 0 ? 'Select Rows' : 'Archive Tasks'}
+        openDelay="700"
+      >
+        <ActionIcon
+          variant="filled"
+          size="xl"
+          color="gray"
+          disabled={selectedRows.length === 0 ? true : false}
+          loading={isLoading}
+          onClick={open}
+        >
+          <SendToArchiveIcon />
+        </ActionIcon>
+      </Tooltip>
+      <Modal
+        opened={opened}
+        onClose={close}
+        title="Confirmation"
+        centered
+        size="auto"
+        padding="md"
+      >
+        <span>Are you sure you want to </span>
+        <span className="font-bold">archive </span>
+        <span>all selected tasks?</span>
+        <div className="flex mt-3 justify-between">
+          <Button onClick={handleClick} color="red">
+            Yes
+          </Button>
+          <Button onClick={close}>No</Button>
+        </div>
+      </Modal>
+    </div>
+  )
+};
+
+
+export function TaskTable({tasks, searchTerm, selectedRows, setSelectedRows, setReloadData}){
   const rows =
     tasks.length > 0 ? (
       tasks
@@ -16,6 +86,21 @@ export function TaskTable({tasks, searchTerm, setReload}){
         )
         .map(task => (
           <Table.Tr key={task.id}>
+            <Table.Td className="w-1/12"> 
+              <div>
+                <Checkbox
+                  color="green"
+                  onChange={(event) => {
+                    setSelectedRows(
+                      event.currentTarget.checked
+                        ? [...selectedRows, task.id]
+                        : selectedRows.filter(id => id !== task.id)
+                    )
+                  }}
+                  checked={selectedRows.includes(task.id)}
+                />
+              </div>
+            </Table.Td>
             <Table.Td>{task.task.desc}</Table.Td>
             <Table.Td>{task.supervisor.name}</Table.Td>
           </Table.Tr>
@@ -28,12 +113,26 @@ export function TaskTable({tasks, searchTerm, setReload}){
       </Table.Tr>
     );
 
+  const handleSelectAll = (event) => {
+    if (event.currentTarget.checked) {
+      setSelectedRows(tasks.map((task) => task.id));
+    } else {
+      setSelectedRows([]);
+    }
+  };
 
   return (
     <div className="bg-white">
       <Table withTableBorder withColumnBorders>
         <Table.Thead>
           <Table.Tr>
+              <Table.Th>
+                <Checkbox
+                  aria-label="Select all rows"
+                  checked={selectedRows.length === tasks.length}
+                  onChange={handleSelectAll}
+                />
+              </Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Task</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Supervisor</Table.Th>
           </Table.Tr>
@@ -58,6 +157,8 @@ export default function Department() {
   const [selectedTab, setSelectedTab] = useState(
     tags && tags.length > 0 ? `${tags[0]}` : ''
   );
+  const [reloadData, setReloadData] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
     const getDepartment = async () => {
@@ -112,6 +213,7 @@ export default function Department() {
   useEffect(() => {
     setPage(1);
   }, [selectedTab]);
+
   
   return (
     <div>
@@ -129,6 +231,20 @@ export default function Department() {
                 <div className="text-2xl font-bold text-white">
                   {department.name}
                 </div>
+              </div>
+              <div>
+                  <SearchBar
+                    setSearchTerm={setSearchTerm}
+                    leftComp1={
+                      <ArchiveTasks
+                        selectedRows={selectedRows}
+                        setSelectedRows={setSelectedRows}
+                        setReload={setReload}
+                        deptId={department.id}
+                        token={token}
+                      />
+                    }
+                  />
               </div>
               <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
                 <div className="md:w-3/4 border-white border-2 rounded-lg p-2 bg-blue-100 font-mono ">
@@ -157,7 +273,9 @@ export default function Department() {
                           <TaskTable
                             tasks={tasks.tasks}
                             searchTerm={searchTerm}
-                            setReload={setReload}
+                            selectedRows={selectedRows}
+                            setSelectedRows={setSelectedRows}
+                            setReloadData={setReloadData}
                           />
                         )}
                         <div className="flex justify-center mt-10 items-center bg-white bg-opacity-50 p-2 ">

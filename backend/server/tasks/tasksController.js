@@ -498,17 +498,19 @@ module.exports = {
     }
   },
 
-  archiveTaskForDepartment: async (req, res) => {
-    const { taskID, deptID } = req.body;
+  archiveTasksForDepartment: async (req, res) => {
+    const {allSelectedTasks, deptId} = req.body;
+    //const { taskID, deptID } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      for (let i = 0; i < allSelectedTasks.length; i++) {
       try {
         const deptTaskMap = await prisma.departmentTaskMapping.updateMany({
           where: {
-            taskId: parseInt(taskID),
-            departmentId: parseInt(deptID),
+            taskId: parseInt(allSelectedTasks[i]),
+            departmentId: parseInt(deptId),
           },
           data: {
             archived: true,
@@ -517,8 +519,8 @@ module.exports = {
 
         const superTaskMap = await prisma.supervisorTaskMapping.updateMany({
           where: {
-            taskId: parseInt(taskID),
-            departmentId: parseInt(deptID),
+            taskId: parseInt(allSelectedTasks[i]),
+            departmentId: parseInt(deptId),
           },
           data: {
             archived: true,
@@ -528,8 +530,8 @@ module.exports = {
         const onboardMap =
           await prisma.onboardingEmployeeTaskMapping.updateMany({
             where: {
-              taskId: parseInt(taskID),
-              departmentId: parseInt(deptID),
+              taskId: parseInt(allSelectedTasks[i]),
+              departmentId: parseInt(deptId),
             },
             data: {
               archived: true,
@@ -541,6 +543,7 @@ module.exports = {
         console.log(error);
         res.status(500).json({ error: 'Error archiving task from department' });
       }
+    }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }

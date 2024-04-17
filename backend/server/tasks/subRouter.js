@@ -25,7 +25,7 @@ const addRoutes = router => {
   //PUT
   router.put('/archiveTaskForEmployee', controller.archiveTaskForEmployee);
   router.put('/archiveTaskForSupervisor', controller.archiveTaskForSupervisor);
-  router.put('/archiveTaskForDepartment', controller.archiveTaskForDepartment);
+  router.patch('/archiveTasksForDepartment', controller.archiveTasksForDepartment);
 
   //   router.put('/task/update-employee-task/:id', controller.updateEmployeeTask);
   //   router.put('/task/update-department-task/:id', controller.updateDepartmentTask);
