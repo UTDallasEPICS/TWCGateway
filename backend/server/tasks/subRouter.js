@@ -7,7 +7,7 @@ const addRoutes = router => {
     '/getAllTasksForSupervisor/:id',
     controller.getAllTasksForSupervisor
   );
-  router.get(
+  router.post(
     '/getAllTasksForDepartment/:id',
     controller.getAllTasksForDepartment
   );
@@ -15,6 +15,7 @@ const addRoutes = router => {
     '/getAllTaskTagsForEmployee/:id',
     controller.getAllTaskTagsForEmployee
   );
+  router.get('/getAllTaskTagsForDepartment/:id', controller.getAllTaskTagsForDepartment);
 
   //POST
   router.post('/addTaskForDepartment', controller.addTaskForDepartment);

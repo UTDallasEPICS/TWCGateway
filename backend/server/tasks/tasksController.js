@@ -173,6 +173,7 @@ module.exports = {
   getAllTasksForDepartment: async (req, res) => {
     const { id } = req.params;
     const { page, pageSize } = req.query;
+    const { tag } = req.body;
 
     const skip =
       page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
@@ -190,6 +191,9 @@ module.exports = {
             AND: {
               departmentId: parseInt(id),
               archived: false,
+              task: {
+                tag: tag
+              }
             },
           },
         });
@@ -201,6 +205,9 @@ module.exports = {
             AND: {
               departmentId: parseInt(id),
               archived: false,
+              task: {
+                tag: tag
+              }
             },
           },
           include: {
@@ -211,7 +218,19 @@ module.exports = {
           take,
         });
 
-        const result = { ...departmentTasks, totalPages, totalTasks };
+        for (let i = 0; i < departmentTasks.length; i++) {
+          const supervisor = await prisma.supervisorTaskMapping.findUnique({
+            where: {
+              archived: false,
+              taskId: departmentTasks[i].taskId,
+            },
+            include: {
+              user: true,
+            },
+          });
+          departmentTasks[i].supervisor = supervisor.user;
+        }
+        const result = { tasks : departmentTasks, totalPages, totalTasks };
 
         res.status(200).json(result);
       } catch (err) {
@@ -248,6 +267,47 @@ module.exports = {
 
         const tags = [
           ...new Set(employeeTasks.map(taskMapping => taskMapping.task.tag)),
+        ];
+
+        const result = tags;
+
+        res.status(200).json(result); //returns an array of unique tags
+      } catch (err) {
+        console.log(err);
+        res
+          .status(400)
+          .json({ error: 'Error getting tasks for onboarding employee' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  getAllTaskTagsForDepartment: async (req, res) => {
+    const { id } = req.params;
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
+      try {
+        const departmentTasks =
+          await prisma.onboardingEmployeeTaskMapping.findMany({
+            where: {
+              AND: {
+                departmentId: parseInt(id),
+                archived: false,
+              },
+            },
+            include: {
+              task: true,
+              department: true,
+            },
+          });
+
+        const tags = [
+          ...new Set(departmentTasks.map(taskMapping => taskMapping.task.tag)),
         ];
 
         const result = tags;
