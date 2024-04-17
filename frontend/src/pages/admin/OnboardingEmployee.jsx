@@ -18,40 +18,7 @@ import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import EditIcon from '../../assets/icons/EditIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
-
-// export function AddTask() {
-//   return (
-//     <>
-//       <Tooltip label="Add Task" openDelay="700">
-//         <ActionIcon size="xl" color="green">
-//           <PlusIcon />
-//         </ActionIcon>
-//       </Tooltip>
-//     </>
-//   );
-// }
-
-export function EditTask() {
-  const [opened, { open, close }] = useDisclosure();
-  return (
-    <>
-      <Tooltip label="Edit Task" openDelay="700">
-        <ActionIcon size="xl" color="green" onClick={open}>
-          <EditIcon />
-        </ActionIcon>
-      </Tooltip>
-      <Modal
-        opened={opened}
-        onClose={close}
-        title="Edit Task"
-        size="lg"
-        centered
-      >
-        
-      </Modal>
-    </>
-  );
-}
+import { useNavigate } from 'react-router-dom';
 
 TaskTable.propTypes = {
   tasks: PropTypes.array.isRequired,
@@ -61,14 +28,8 @@ TaskTable.propTypes = {
 };
 
 export function TaskTable({ tasks, searchTerm, userId, setReload }) {
-  const [opened, { open, close }] = useDisclosure();
-  const [selectedSupervisor, setSelectedSupervisor] = useState(null);
+  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
-  const handleSupervisorClick = supervisor => {
-    setSelectedSupervisor(supervisor);
-    console.log('supervisor', supervisor);
-    open();
-  };
 
   const completeTask = async taskId => {
     try {
@@ -116,7 +77,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
         )
         .map(task => (
           <Table.Tr key={task.id}>
-            <Table.Td style={{}}>
+            <Table.Td className="">
               <div>
                 <Checkbox
                   color="green"
@@ -130,8 +91,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                 />
               </div>
             </Table.Td>
-            {/* <Table.Td>{task.dateCompleted || 'N/A'}</Table.Td> */}
-            <Table.Td>
+            <Table.Td className="text-center">
               {task.dateCompleted
                 ? (() => {
                     const date = new Date(task.dateCompleted);
@@ -146,12 +106,14 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                     console.log('formattedDate', formattedDate);
                     return formattedDate;
                   })()
-                : 'N/A'}
+                : '-'}
             </Table.Td>
             <Table.Td>{task.task.desc}</Table.Td>
             <Table.Td
-              className="hover:cursor-pointer hover:bg-purple-500"
-              onClick={() => handleSupervisorClick(task.supervisor)}
+              className="hover:cursor-pointer hover:bg-purple-500 text-center"
+              onClick={() => {
+                navigate(`/admin/supervisor/${task.supervisor.id}`);
+              }}
             >
               {task.supervisor.name}
             </Table.Td>
@@ -176,19 +138,13 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
             <Table.Th style={{ textAlign: 'center' }}>Supervisor</Table.Th>
           </Table.Tr>
         </Table.Thead>
-        <Table.Tbody className="text-center">{rows}</Table.Tbody>
+        <Table.Tbody className="">{rows}</Table.Tbody>
       </Table>
-      <Modal opened={opened} onClose={close} title="Supervisor" centered>
-        <div className="flex flex-col justify-center">
-          <h1 className="font-mono text-2xl">{selectedSupervisor?.name}</h1>
-          <p className="text-xl">{selectedSupervisor?.email}</p>
-        </div>
-      </Modal>
     </div>
   );
 }
 
-export default function User() {
+export default function OnboardingEmployee() {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [tasks, setTasks] = useState([]);
@@ -215,6 +171,8 @@ export default function User() {
           }
         );
         setUser(response1.data);
+        console.log('response1', response1.data);
+        document.title = `${response1.data.name}'s Tasks | TWCGateway`;
         console.log('response1', response1.data.id);
         const response2 = await axios.get(
           `${
@@ -235,6 +193,7 @@ export default function User() {
           }?page=${page}&pageSize=2`,
           {
             tag: selectedTab,
+            searchTerm: searchTerm,
           },
           {
             headers: {
@@ -253,11 +212,11 @@ export default function User() {
     };
     getUser();
     setReload(false);
-  }, [id, selectedTab, page, reload]);
+  }, [id, selectedTab, page, reload, searchTerm]);
 
   useEffect(() => {
     setPage(1);
-  }, [selectedTab]);
+  }, [selectedTab, searchTerm]);
 
   return (
     <div>
@@ -267,17 +226,12 @@ export default function User() {
       <div className="grid grid-cols-1 md:grid-cols-2">
         <div className="flex justify-center bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5">
           <div className="md:flex md:items-center md:space-x-5 md:space-y-1">
-            {/* <div className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-green-100 to-blue-200"> */}
             <div className="text-2xl font-bold text-white">{user.name}</div>
             <div>{user.email}</div>
           </div>
         </div>
         <div>
-          <SearchBar
-            setSearchTerm={setSearchTerm}
-            // leftComp1={<AddTask />}
-            leftComp1={<EditTask />}
-          />
+          <SearchBar setSearchTerm={setSearchTerm} />
         </div>
       </div>
       {/* ---------- */}

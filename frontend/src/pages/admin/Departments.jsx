@@ -19,7 +19,7 @@ import CheckIcon from '../../assets/icons/CheckIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PropTypes from 'prop-types';
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 EditDepartment.propTypes = {
   setRefresh: PropTypes.func.isRequired,
@@ -32,6 +32,7 @@ export function EditDepartment({ setRefresh }) {
   const [selectedDepartment, setSelectedDepartment] = useState(null);
   const [selectedDepartmentName, setSelectedDepartmentName] = useState('');
   useEffect(() => {
+    document.title = 'Departments | TWCGateway';
     const getDepartments = async () => {
       try {
         const response = await axios.get(

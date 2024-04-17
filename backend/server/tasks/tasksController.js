@@ -43,7 +43,7 @@ module.exports = {
   //GET
   getAllTasksForEmployee: async (req, res) => {
     const { id } = req.params;
-    const { tag } = req.body;
+    const { tag, searchTerm } = req.body;
     const { page, pageSize } = req.query;
 
     const skip =
@@ -63,6 +63,10 @@ module.exports = {
               userId: parseInt(id),
               task: {
                 tag: tag,
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
               },
               archived: false,
             },
@@ -78,6 +82,10 @@ module.exports = {
                 userId: parseInt(id),
                 task: {
                   tag: tag,
+                  desc: {
+                    contains: searchTerm,
+                    mode: 'insensitive',
+                  },
                 },
                 archived: false,
               },
@@ -119,6 +127,7 @@ module.exports = {
 
   getAllTasksForSupervisor: async (req, res) => {
     const { id } = req.params;
+    const { searchTerm } = req.body;
     const { page, pageSize } = req.query;
 
     const skip =
@@ -136,6 +145,12 @@ module.exports = {
           where: {
             AND: {
               userId: parseInt(id),
+              task: {
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
+              },
               archived: false,
             },
           },
@@ -147,6 +162,12 @@ module.exports = {
           where: {
             AND: {
               userId: parseInt(id),
+              task: {
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
+              },
               archived: false,
             },
           },
@@ -211,7 +232,15 @@ module.exports = {
             },
           },
           include: {
-            task: true,
+            task: {
+              include: {
+                SupervisorTaskMapping: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
             department: true,
           },
           skip,
@@ -237,6 +266,83 @@ module.exports = {
         console.log(err);
         res.status(400).json({ error: 'Error getting tasks for department' });
       }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  getAllTasksForAllDepartments: async (req, res) => {
+    const { page, pageSize } = req.query;
+    const { searchTerm, superId } = req.body;
+    const skip =
+      page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+    const take = pageSize ? parseInt(pageSize) : 10;
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
+      try {
+        const totalTasks = await prisma.departmentTaskMapping.count({
+          where: {
+            archived: false,
+            task: {
+              desc: {
+                contains: searchTerm,
+                mode: 'insensitive',
+              },
+            },
+          },
+        });
+
+        const totalPages = Math.ceil(totalTasks / take);
+
+        const departmentTasks = await prisma.departmentTaskMapping.findMany({
+          where: {
+            archived: false,
+            task: {
+              desc: {
+                contains: searchTerm,
+                mode: 'insensitive',
+              },
+            },
+          },
+          include: {
+            task: {
+              include: {
+                SupervisorTaskMapping: {
+                  include: {
+                    user: true,
+                  },
+                },
+              },
+            },
+            department: true,
+          },
+          skip,
+          take,
+        });
+
+        const departmentTasksWithAssignmentInfo = departmentTasks.map(task => {
+          const supervisorMapping = task.task.SupervisorTaskMapping[0];
+
+          return {
+            ...task,
+            assigned: supervisorMapping && supervisorMapping.user.id === parseInt(superId)
+              ? true
+              : supervisorMapping ? supervisorMapping.user : false,
+          };
+        });
+
+        const result = {
+          ...departmentTasksWithAssignmentInfo,
+          totalPages,
+          totalTasks,
+        };
+
+        res.status(200).json(result);
+      } catch (error) {}
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }

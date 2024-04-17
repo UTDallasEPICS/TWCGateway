@@ -31,10 +31,8 @@ export function UnArchiveSelectedUsers({
       try {
         setIsLoading(true);
         await axios.patch(
-          `${
-            import.meta.env.VITE_APP_EXPRESS_BASE_URL
-          }/unArchiveUsers/`,
-          {allSelectedUsers: allSelectedRows},
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/unArchiveUsers/`,
+          { allSelectedUsers: allSelectedRows },
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -80,10 +78,7 @@ export function UnArchiveSelectedUsers({
         <span className="font-bold">un-archive </span>
         <span>all selected users?</span>
         <div className="flex mt-3 justify-between">
-          <Button
-            onClick={handleClick}
-            color="green"
-          >
+          <Button onClick={handleClick} color="green">
             Yes
           </Button>
           <Button onClick={close}>No</Button>
@@ -107,6 +102,7 @@ export default function Archive() {
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   useEffect(() => {
+    document.title = 'Archive | TWCGateway';
     setAllSelectedRows([...selectedAdms, ...selectedSups, ...selectedEmps]);
   }, [selectedAdms, selectedSups, selectedEmps]);
 

@@ -3,13 +3,17 @@ const controller = require('./tasksController');
 const addRoutes = router => {
   //GET
   router.post('/getAllTasksForEmployee/:id', controller.getAllTasksForEmployee);
-  router.get(
+  router.post(
     '/getAllTasksForSupervisor/:id',
     controller.getAllTasksForSupervisor
   );
   router.post(
     '/getAllTasksForDepartment/:id',
     controller.getAllTasksForDepartment
+  );
+  router.post(
+    '/getAllTasksForAllDepartments',
+    controller.getAllTasksForAllDepartments
   );
   router.get(
     '/getAllTaskTagsForEmployee/:id',
@@ -26,9 +30,6 @@ const addRoutes = router => {
   router.put('/archiveTaskForEmployee', controller.archiveTaskForEmployee);
   router.put('/archiveTaskForSupervisor', controller.archiveTaskForSupervisor);
   router.patch('/archiveTasksForDepartment', controller.archiveTasksForDepartment);
-
-  //   router.put('/task/update-employee-task/:id', controller.updateEmployeeTask);
-  //   router.put('/task/update-department-task/:id', controller.updateDepartmentTask);
 
   //PATCH
   router.patch('/completeTask', controller.completeTask);

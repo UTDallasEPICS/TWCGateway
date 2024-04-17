@@ -620,6 +620,7 @@ export default function Users() {
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   useEffect(() => {
+    document.title = 'Users | TWCGateway';
     setAllSelectedRows([...selectedAdms, ...selectedSups, ...selectedEmps]);
   }, [selectedAdms, selectedSups, selectedEmps]);
 
