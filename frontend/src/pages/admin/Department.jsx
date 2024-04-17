@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import axios from 'axios';
 import SearchBar from '../../components/SearchBar';
-import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button} from '@mantine/core';
+import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button, TextInput} from '@mantine/core';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
+import PlusIcon from '../../assets/icons/PlusIcon';
+import CheckIcon from '../../assets/icons/CheckIcon';
 
 export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, token}){
 
@@ -143,6 +145,37 @@ export function TaskTable({tasks, searchTerm, selectedRows, setSelectedRows, set
   );
 }
 
+export function AddTask({setReload}){
+  const [opened, { open, close }] = useDisclosure(false);
+  return(
+    <>
+      <Tooltip label="Add Task" openDelay="700">
+        <ActionIcon variant="filled" color="green" size="xl" onClick={open}>
+          <PlusIcon />
+        </ActionIcon>
+      </Tooltip>
+      <Modal
+      title="Add Task"
+      centered
+      opened={opened}
+      onClose={()=>close()}>
+      <form>
+      <div className="flex items-end space-x-2 bg-gray-200 p-2 rounded-lg">
+            <div className="flex-grow">
+              <TextInput
+                label="Task"
+              />
+            </div>
+          </div>
+          <div className="flex justify-center mt-10">
+            <Button>Submit</Button>
+          </div>
+      </form>
+      </Modal>
+    </>
+  );
+}
+
 export default function Department() {
   const { id } = useParams();
   const [department, setDepartment] = useState({});
@@ -235,7 +268,8 @@ export default function Department() {
               <div>
                   <SearchBar
                     setSearchTerm={setSearchTerm}
-                    leftComp1={
+                    leftComp1={<AddTask setReload={setReload} />}
+                    leftComp2={
                       <ArchiveTasks
                         selectedRows={selectedRows}
                         setSelectedRows={setSelectedRows}
