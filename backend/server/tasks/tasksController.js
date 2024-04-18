@@ -433,7 +433,6 @@ module.exports = {
   //POST
   addTaskForDepartment: async (req, res) => {
     const { deptId, desc, tag, superId } = req.body;
-    const fixedTag = tag.toLowerCase();
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
@@ -444,7 +443,7 @@ module.exports = {
         const task = await prisma.task.create({
           data: {
             desc: desc,
-            tag: fixedTag,
+            tag: tag,
           },
         });
         const taskDeptMap = await prisma.departmentTaskMapping.create({

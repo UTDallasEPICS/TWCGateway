@@ -4,12 +4,11 @@ import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import axios from 'axios';
 import SearchBar from '../../components/SearchBar';
-import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button, TextInput} from '@mantine/core';
+import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button, TextInput, Select} from '@mantine/core';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
-import CheckIcon from '../../assets/icons/CheckIcon';
 
 export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, token}){
 
@@ -145,8 +144,86 @@ export function TaskTable({tasks, searchTerm, selectedRows, setSelectedRows, set
   );
 }
 
-export function AddTask({setReload}){
+export function AddTask({token, setReload, deptId}){
   const [opened, { open, close }] = useDisclosure(false);
+  const [formData, setFormData] = useState({
+    deptId: deptId,
+    desc: '',
+    tag: '',
+    superId: 0,
+  });
+  const [supervisors, setSupervisors] = useState([]);
+
+  useEffect(() => {
+    const fetchSups =async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllSupervisors`,
+        {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      setSupervisors(response.data);
+    };
+    fetchSups();
+  }, [token]);
+
+  const handleChange = (e, field) => {
+    setFormData({
+      ...formData,
+      [field]: e.target.value,
+    });
+  };
+
+  const handleTagChange = (_value, option) =>{
+    if (option) {
+      setFormData({
+        ...formData,
+        tag: option.value,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        tag: '',
+      });
+    }
+  }
+
+  const handleSupervisorChange = selectedOptions => {
+    setFormData({
+      ...formData,
+      superId: parseInt(selectedOptions) || 0,
+    });
+    console.log('selectedOptions',selectedOptions);
+  }
+
+  const handleSubmit = async () =>{
+    console.log(formData);
+    if(formData.desc === '' || formData.tag === '' || formData.superId === ''){
+      alert('Please fill out all the fields.');
+      return;
+    }
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/addTaskForDepartment`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+    catch (error) {
+      console.error(`Failed adding task to department.\n ${error}`);
+      alert(`Failed adding task to department.\n ${error}`);
+      return;
+    }
+    close();
+    setReload(true);
+  }
+
   return(
     <>
       <Tooltip label="Add Task" openDelay="700">
@@ -160,16 +237,34 @@ export function AddTask({setReload}){
       opened={opened}
       onClose={()=>close()}>
       <form>
-      <div className="flex items-end space-x-2 bg-gray-200 p-2 rounded-lg">
-            <div className="flex-grow">
-              <TextInput
-                label="Task"
-              />
-            </div>
-          </div>
-          <div className="flex justify-center mt-10">
-            <Button>Submit</Button>
-          </div>
+        <TextInput
+        label="Task Description"
+        withAsterisk
+        onChange={e => handleChange(e, 'desc')}
+        />
+        <Select
+        label="When Due?"
+        placeholder="Choose When"
+        withAsterisk
+        data={[
+          { value: 'Pre-Hire', label: 'Pre-Hire' },
+          { value: 'First Day', label: 'First Day' },
+          { value: 'First Week', label: 'First Week' },
+          { value: 'First Month', label: 'First Month' },
+        ]}
+        onChange={handleTagChange}
+        />
+        <Select
+        label="Supervisor"
+        placeholder="Choose Supervisor"
+        nothingFoundMessage = "No supervisors found. Create one in the Users page."
+        withAsterisk
+        data={supervisors.map(supervisor => ({value: supervisor.id.toString(), label: supervisor.name}))}
+        onChange={handleSupervisorChange}
+        />
+        <div className="flex justify-center mt-10">
+          <Button onClick={handleSubmit}>Submit</Button>
+        </div>
       </form>
       </Modal>
     </>
@@ -268,7 +363,7 @@ export default function Department() {
               <div>
                   <SearchBar
                     setSearchTerm={setSearchTerm}
-                    leftComp1={<AddTask setReload={setReload} />}
+                    leftComp1={<AddTask token={token} setReload={setReload} deptId={department.id}/>}
                     leftComp2={
                       <ArchiveTasks
                         selectedRows={selectedRows}
