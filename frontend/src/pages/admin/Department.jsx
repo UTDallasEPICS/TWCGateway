@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import axios from 'axios';
 import SearchBar from '../../components/SearchBar';
-import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button, TextInput, Select} from '@mantine/core';
+import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button, TextInput, Select, TagsInput} from '@mantine/core';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
@@ -176,18 +176,11 @@ export function AddTask({token, setReload, deptId}){
     });
   };
 
-  const handleTagChange = (_value, option) =>{
-    if (option) {
-      setFormData({
-        ...formData,
-        tag: option.value,
-      });
-    } else {
-      setFormData({
-        ...formData,
-        tag: '',
-      });
-    }
+  const handleTagChange = (newTag) =>{
+    setFormData({
+      ...formData,
+      tag: newTag[0] || '',
+    });
   }
 
   const handleSupervisorChange = selectedOptions => {
@@ -195,12 +188,11 @@ export function AddTask({token, setReload, deptId}){
       ...formData,
       superId: parseInt(selectedOptions) || 0,
     });
-    console.log('selectedOptions',selectedOptions);
   }
 
   const handleSubmit = async () =>{
     console.log(formData);
-    if(formData.desc === '' || formData.tag === '' || formData.superId === ''){
+    if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
       alert('Please fill out all the fields.');
       return;
     }
@@ -220,6 +212,12 @@ export function AddTask({token, setReload, deptId}){
       alert(`Failed adding task to department.\n ${error}`);
       return;
     }
+    setFormData({
+      ...formData,
+      desc: '',
+      tag: '',
+      superId: 0,
+    });
     close();
     setReload(true);
   }
@@ -242,16 +240,11 @@ export function AddTask({token, setReload, deptId}){
         withAsterisk
         onChange={e => handleChange(e, 'desc')}
         />
-        <Select
+        <TagsInput
         label="When Due?"
-        placeholder="Choose When"
+        placeholder="Enter Tag"
         withAsterisk
-        data={[
-          { value: 'Pre-Hire', label: 'Pre-Hire' },
-          { value: 'First Day', label: 'First Day' },
-          { value: 'First Week', label: 'First Week' },
-          { value: 'First Month', label: 'First Month' },
-        ]}
+        maxTags={1}
         onChange={handleTagChange}
         />
         <Select
