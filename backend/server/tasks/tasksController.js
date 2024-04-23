@@ -399,7 +399,7 @@ module.exports = {
     ) {
       try {
         const departmentTasks =
-          await prisma.onboardingEmployeeTaskMapping.findMany({
+          await prisma.departmentTaskMapping.findMany({
             where: {
               AND: {
                 departmentId: parseInt(id),

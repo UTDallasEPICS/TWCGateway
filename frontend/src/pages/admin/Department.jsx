@@ -241,11 +241,11 @@ export function AddTask({token, setReload, deptId, tags}){
         onChange={e => handleChange(e, 'desc')}
         />
         <TagsInput
-        label="When Due?"
-        placeholder={"Enter Tag"}
+        label="Tag"
+        placeholder={formData.tag === ''? "Enter Tag" : ""}
         withAsterisk
         maxTags={1}
-        data={tags.map(tag => ({value: tag, label: tag}))}
+        data={formData.tag === ''? tags.map(tag => ({value: tag, label: tag})):[]}
         onChange={handleTagChange}
         />
         <Select
