@@ -144,7 +144,7 @@ export function TaskTable({tasks, searchTerm, selectedRows, setSelectedRows, set
   );
 }
 
-export function AddTask({token, setReload, deptId}){
+export function AddTask({token, setReload, deptId, tags}){
   const [opened, { open, close }] = useDisclosure(false);
   const [formData, setFormData] = useState({
     deptId: deptId,
@@ -242,9 +242,10 @@ export function AddTask({token, setReload, deptId}){
         />
         <TagsInput
         label="When Due?"
-        placeholder="Enter Tag"
+        placeholder={"Enter Tag"}
         withAsterisk
         maxTags={1}
+        data={tags.map(tag => ({value: tag, label: tag}))}
         onChange={handleTagChange}
         />
         <Select
@@ -356,7 +357,7 @@ export default function Department() {
               <div>
                   <SearchBar
                     setSearchTerm={setSearchTerm}
-                    leftComp1={<AddTask token={token} setReload={setReload} deptId={department.id}/>}
+                    leftComp1={<AddTask token={token} setReload={setReload} deptId={department.id} tags={tags}/>}
                     leftComp2={
                       <ArchiveTasks
                         selectedRows={selectedRows}
