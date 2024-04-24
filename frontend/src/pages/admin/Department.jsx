@@ -80,8 +80,15 @@ export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, 
   )
 };
 
+export function TaskTable({setTasks, tasks, searchTerm, selectedRows, setSelectedRows, setReloadData}){
+  const [editMode, setEditMode] = useState([]); 
 
-export function TaskTable({tasks, searchTerm, selectedRows, setSelectedRows, setReloadData}){
+  const handleDescriptionChange = (taskId, newDesc, oldDesc) => {
+    console.log('newDesc', newDesc);
+    console.log('oldDesc', oldDesc);
+    //setTasks(tasks.map(t => t.task.id === taskId ? { ...t, task: { ...t.task, desc: newDesc} } : t));
+  };
+
   const rows =
     tasks.length > 0 ? (
       tasks
@@ -105,8 +112,46 @@ export function TaskTable({tasks, searchTerm, selectedRows, setSelectedRows, set
                 />
               </div>
             </Table.Td>
-            <Table.Td>{task.task.desc}</Table.Td>
+            <Table.Td onDoubleClick={() => {setEditMode({...editMode, [task.task.id]: true});}} className='hover:cursor-pointer'>
+              {
+                editMode[task.task.id] ?
+                <textarea
+                  type="text"
+                  value={task.task.desc}
+                  className="w-full"
+                  style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}
+                  onChange={(e) =>  {handleDescriptionChange(task.task.id, e.target.value, task.task.desc)}}
+                />
+                : task.task.desc
+              }
+              </Table.Td>
             <Table.Td>{task.supervisor.name}</Table.Td>
+            <Table.Td style={{backgroundColor: ''}}>
+              <div>
+              {editMode[task.task.id] ? (
+                <div className="flex justify-center">
+                <Button
+                onClick={() => {
+                    handleCancel(task.task.id, task.task.originalDesc, task.task.ogTag);
+                    setEditMode({...editMode, [task.task.id]: false});
+                  }}
+                size= "xs"
+                style = {{backgroundColor: 'red', marginRight: '5px'}}
+              >
+                <CancelIcon />
+              </Button>
+                <Button
+                  onClick={() => handleSave(task.task.id, task.task.desc, task.task.tag)}
+                  size= "xs"
+                  style = {{backgroundColor: "green"}}>
+                  <CheckIcon />
+                </Button>
+                </div>
+              ) : (
+                console.log('editMode is false')
+              )}
+            </div>
+            </Table.Td>
           </Table.Tr>
         ))
     ) : (
@@ -268,130 +313,152 @@ export function AddTask({token, setReload, deptId, tags}){
   );
 }
 
-export function EditTask({token, setReload, deptId, taskId, tags}) {
-  const [opened, { open, close }] = useDisclosure(false);
-  const [formData, setFormData] = useState({
-    deptId: deptId,
-    desc: taskId.desc,  
-    tag: taskId.tag,
-    superId: taskId.superId,
-  });
-  const [supervisors, setSupervisors] = useState([]);
+// export function EditTask({token, setReload, deptId, taskId, tags}) {
+//   const [opened, { open, close }] = useDisclosure(false);
+//   const [formData, setFormData] = useState({
+//     desc: '',  
+//     tag: '',
+//     superId: 0,
+//   });
+//   const [tasks, setTasks] = useState([]);
+//   const [supervisors, setSupervisors] = useState([]);
 
-  useEffect(() => {
-    const fetchSups =async () => {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`,
-        {
-          headers: { 
-            Authorization: `Bearer ${token}`,
-          }
-        }
-      );
-      setSupervisors(response.data);
-    };
-    fetchSups();
-  }, [token]);
+//   useEffect(() => {
+//     const fetchSups =async () => {
+//       const response = await axios.get(
+//         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllSupervisors`,
+//         {
+//           headers: { 
+//             Authorization: `Bearer ${token}`,
+//           }
+//         }
+//       );
+//       setSupervisors(response.data);
+//     };
+//     fetchSups();
 
-  const handleChange = (e, field) => {
-    setFormData({
-      ...formData,
-      [field]: e.target.value,
-    });
-  };
+//     const fetchTasks = async () => {
+//       const response = await axios.post(
+//         `${ import.meta.env.VITE_APP_EXPRESS_BASE_URL }/getAllTasksForDepartment${deptId}`,
+//         {
+//           headers: { 
+//             Authorization: `Bearer ${token}`,
+//           }
+//         }
+//       );
+//       setTasks(response.data);
+//       console.log('tasks', response.data);
+//     };
+//     fetchTasks();
+//   }, [token]);
 
-  const handleTagChange = (newTag) =>{
-    setFormData({
-      ...formData,
-      tag: newTag[0] || '',
-    });
-  }
+//   const handleChange = (e, field) => {
+//     setFormData({
+//       ...formData,
+//       [field]: e.target.value,
+//     });
+//   };
 
-  const handleSupervisorChange = selectedOptions => {
-    setFormData({
-      ...formData,
-      superId: parseInt(selectedOptions) || 0,
-    });
-  }
+//   const handleDescriptionChange = (newDesc) =>{
+//     setFormData({
+//       ...formData,
+//       newDesc: newDesc[0] || '',
+//     });
+//   }
 
-  const handleSubmit = async () => {
-    console.log(formData);
-    if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
-      alert('Please fill out all the fields.');
-      return;
-    }
-    try {
-      const response = await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`, 
-        {
-          id: taskId,
-          desc: formData.desc,
-          tag: formData.tag,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log('response', response);
-      setReload(true);
-    } catch (error) {
-        console.error('Error updating task', error);
-        return;
-    }
-    setFormData({
-      ...formData,
-      desc: '',
-      tag: '',
-      superId: 0,
-    });
-    close();
-    setReload(true);
-  }
+//   const handleTagChange = (newTag) =>{
+//     setFormData({
+//       ...formData,
+//       tag: newTag[0] || '',
+//     });
+//   }
 
-  return(
-    <>
-      <Tooltip label="Edit Task" openDelay="700">
-        <ActionIcon variant="filled" color="green" size="xl" onClick={open}>
-          <EditIcon />
-        </ActionIcon>
-      </Tooltip>
-      <Modal
-      title="Edit Task"
-      centered
-      opened={opened}
-      onClose={()=>close()}>
-      <form>
-        <TextInput
-        label="Task Description"
-        withAsterisk
-        onChange={e => handleChange(e, 'desc')}
-        />
-        <TagsInput
-        label="Tag"
-        placeholder={formData.tag === ''? "Enter Tag" : ""}
-        withAsterisk
-        maxTags={1}
-        data={formData.tag === ''? tags.map(tag => ({value: tag, label: tag})):[]}
-        onChange={handleTagChange}
-        />
-        <Select
-        label="Supervisor"
-        placeholder="Choose Supervisor"
-        nothingFoundMessage = "No supervisors found. Create one in the Users page."
-        withAsterisk
-        data={supervisors.map(supervisor => ({value: supervisor.id.toString(), label: supervisor.name}))}
-        onChange={handleSupervisorChange}
-        />
-        <div className="flex justify-center mt-10">
-          <Button onClick={handleSubmit}>Submit</Button>
-        </div>
-      </form>
-      </Modal>
-    </>
-  );
-}
+//   const handleSupervisorChange = selectedOptions => {
+//     setFormData({
+//       ...formData,
+//       superId: parseInt(selectedOptions) || 0,
+//     });
+//   }
+
+//   const handleSubmit = async () => {
+//     console.log(formData);
+//     if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
+//       alert('Please fill out all the fields.');
+//       return;
+//     }
+//   //   try {
+//   //     const response = await axios.patch(
+//   //       `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`, 
+//   //       {
+//   //         id: taskId,
+//   //         desc: formData.desc,
+//   //         tag: formData.tag,
+//   //       },
+//   //       {
+//   //         headers: {
+//   //           Authorization: `Bearer ${token}`,
+//   //         },
+//   //       }
+//   //     );
+//   //     console.log('response', response);
+//   //     setReload(true);
+//   //   } catch (error) {
+//   //       console.error('Error updating task', error);
+//   //       return;
+//   //   }
+//   //   setFormData({
+//   //     ...formData,
+//   //     desc: '',
+//   //     tag: '',
+//   //     superId: 0,
+//   //   });
+//   //   close();
+//   //   setReload(true);
+//   // }
+//   }
+
+//   return(
+//     <>
+//       <Tooltip label="Edit Task" openDelay="700">
+//         <ActionIcon variant="filled" color="green" size="xl" onClick={open}>
+//           <EditIcon />
+//         </ActionIcon>
+//       </Tooltip>
+//       <Modal
+//       title="Edit Task"
+//       centered
+//       opened={opened}
+//       onClose={()=>close()}>
+//       <form>
+//         <TextInput
+//         label="Task Description"
+//         withAsterisk
+//         onChange={e => handleChange(e, 'desc')}
+//         />
+//         <TagsInput
+//         label="Tag"
+//         placeholder={formData.tag === ''? "Enter Tag" : ""}
+//         withAsterisk
+//         maxTags={1}
+//         data={formData.tag === ''? tags.map(tag => ({value: tag, label: tag})):[]}
+//         onChange={handleTagChange}
+//         />
+//         <Select
+//         label="Supervisor"
+//         placeholder="Choose Supervisor"
+//         nothingFoundMessage = "No supervisors found. Create one in the Users page."
+//         withAsterisk
+//         data={supervisors.map(supervisor => ({value: supervisor.id.toString(), label: supervisor.name}))}
+//         onChange={handleSupervisorChange}
+//         />
+//         <div className="flex justify-center mt-10">
+//           <Button onClick={handleSubmit}>Submit</Button>
+//         </div>
+//       </form>
+//       </Modal>
+//     </>
+//   );
+//   }
 
 export default function Department() {
   const { id } = useParams();
@@ -495,7 +562,7 @@ export default function Department() {
                         token={token}
                       />
                     }
-                    leftComp3={<EditTask token={token} setReload={setReload} deptId={department.id} taskId={tasks.tasks} tags={tags}/>}
+                    //leftComp3={<EditTask token={token} setReload={setReload} deptId={department.id} taskId={tasks.tasks} tags={tags}/>}
                   />
               </div>
               <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
@@ -523,6 +590,7 @@ export default function Department() {
                           </div>
                         ) : (
                           <TaskTable
+                            setTasks={setTasks}
                             tasks={tasks.tasks}
                             searchTerm={searchTerm}
                             selectedRows={selectedRows}
