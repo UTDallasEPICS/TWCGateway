@@ -9,6 +9,8 @@ import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
+import CheckIcon from '../../assets/icons/CheckIcon'
+import CancelIcon from '../../assets/icons/CancelIcon'
 
 export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, token}){
 
@@ -263,6 +265,72 @@ export function AddTask({token, setReload, deptId, tags}){
       </Modal>
     </>
   );
+}
+
+export function EditTask({token, setReload, deptId, taskId, tags}) {
+  const [opened, { open, close }] = useDisclosure(false);
+  const [formData, setFormData] = useState({
+    deptId: deptId,
+    desc: taskId.desc,  
+    tag: taskId.tag,
+    superId: taskId.superId,
+  });
+  const [supervisors, setSupervisors] = useState([]);
+
+  useEffect(() => {
+    const fetchSups =async () => {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`,
+        {
+          headers: { 
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
+      setSupervisors(response.data);
+    };
+    fetchSups();
+  }, [token]);
+
+  const handleChange = (e, field) => {
+    setFormData({
+      ...formData,
+      [field]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async () =>{
+    console.log(formData);
+    if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
+      alert('Please fill out all the fields.');
+      return;
+    }
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/addTaskForDepartment`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+    }
+    catch (error) {
+      console.error(`Failed editing task.\n ${error}`);
+      alert(`Failed editing task.\n ${error}`);
+      return;
+    }
+    setFormData({
+      ...formData,
+      desc: '',
+      tag: '',
+      superId: 0,
+    });
+    close();
+    setReload(true);
+  }
+
 }
 
 export default function Department() {
