@@ -15,6 +15,14 @@ const addRoutes = router => {
     '/getAllTasksForAllDepartments',
     controller.getAllTasksForAllDepartments
   );
+
+  router.get(
+    '/getAllTasks',
+    controller.getAllTasks
+  );
+
+  router.get('/getAllTasksWithoutSupervisor', controller.getAllTasksWithoutSupervisor);
+
   router.get(
     '/getAllTaskTagsForEmployee/:id',
     controller.getAllTaskTagsForEmployee

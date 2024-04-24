@@ -271,6 +271,7 @@ module.exports = {
     }
   },
 
+
   getAllTasksForAllDepartments: async (req, res) => {
     const { page, pageSize } = req.query;
     const { searchTerm, superId } = req.body;
@@ -342,6 +343,75 @@ module.exports = {
         };
 
         res.status(200).json(result);
+      } catch (error) {}
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  getAllTasks: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
+      try {
+
+        const tasks = await prisma.task.findMany();
+
+        for (let i = 0; i < tasks.length; i++) {
+          const supervisor = await prisma.supervisorTaskMapping.findUnique({
+            where: {
+              archived: false,
+              taskId: tasks[i].id,
+            },
+            include: {
+              user: true,
+            },
+          });
+          tasks[i].supervisor = supervisor;
+        }
+
+        res.status(200).json(tasks);
+      } catch (error) {}
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  getAllTasksWithoutSupervisor: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (
+      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+    ) {
+      try {
+
+        const tasks = await prisma.task.findMany();
+
+        for (let i = 0; i < tasks.length; i++) {
+          const supervisor = await prisma.supervisorTaskMapping.findUnique({
+            where: {
+              archived: false,
+              taskId: tasks[i].id,
+            },
+            include: {
+              user: true,
+            },
+          });
+          tasks[i].supervisor = supervisor;
+        }
+
+        let tasksWithoutSuper = []
+        tasks.map(task =>{
+          if(!task.supervisor)
+            tasksWithoutSuper.push(task)
+        })
+
+
+        res.status(200).json(tasksWithoutSuper);
       } catch (error) {}
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });

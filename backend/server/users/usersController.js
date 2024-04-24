@@ -867,12 +867,18 @@ module.exports = {
   //PUT
   updateEmployee: async (req, res) => {
     const { id } = req.params;
-    const { name, email, role, departments } = req.body;
+    const { name, email, role, department } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
+        const prevUser = await prisma.user.findFirst({
+          where: {
+            id: parseInt(id)
+          }
+        })
+
         const updatedUser = await prisma.user.update({
           where: {
             id: parseInt(id),
@@ -881,27 +887,22 @@ module.exports = {
             name: name,
             email: email,
             role: role,
-            DepartmentUserMapping: {
-              deleteMany: {},
-              // createMany: {
-              //   data: departments.map((department) => {
-              //     return {
-              //       userId: parseInt(id),
-              //       departmentId: parseInt(department),
-              //     };
-              //   }),
-              // },
-            },
           },
         });
-        for (const department of departments) {
-          await prisma.departmentUserMapping.create({
-            data: {
-              userId: parseInt(id),
-              departmentId: parseInt(department),
-            },
-          });
-        }
+        
+        const deleteMaps = await prisma.departmentUserMapping.delete({
+          where:{
+            userId : prevUser.id
+          }
+        })
+
+        const map = await prisma.departmentUserMapping.create({
+          data: {
+            userId: parseInt(id),
+            departmentId: parseInt(department),
+          },
+        });
+
         res
           .status(200)
           .json({ message: 'Employee Updated Successfully', updatedUser });
