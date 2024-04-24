@@ -11,6 +11,7 @@ import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
 import CheckIcon from '../../assets/icons/CheckIcon'
 import CancelIcon from '../../assets/icons/CancelIcon'
+import EditIcon from '../../assets/icons/EditIcon';
 
 export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, token}){
 
@@ -299,27 +300,45 @@ export function EditTask({token, setReload, deptId, taskId, tags}) {
     });
   };
 
-  const handleSubmit = async () =>{
+  const handleTagChange = (newTag) =>{
+    setFormData({
+      ...formData,
+      tag: newTag[0] || '',
+    });
+  }
+
+  const handleSupervisorChange = selectedOptions => {
+    setFormData({
+      ...formData,
+      superId: parseInt(selectedOptions) || 0,
+    });
+  }
+
+  const handleSubmit = async () => {
     console.log(formData);
     if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
       alert('Please fill out all the fields.');
       return;
     }
     try {
-      await axios.post(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/addTaskForDepartment`,
-        formData,
+      const response = await axios.patch(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`, 
+        {
+          id: taskId,
+          desc: formData.desc,
+          tag: formData.tag,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-    }
-    catch (error) {
-      console.error(`Failed editing task.\n ${error}`);
-      alert(`Failed editing task.\n ${error}`);
-      return;
+      console.log('response', response);
+      setReload(true);
+    } catch (error) {
+        console.error('Error updating task', error);
+        return;
     }
     setFormData({
       ...formData,
@@ -331,6 +350,47 @@ export function EditTask({token, setReload, deptId, taskId, tags}) {
     setReload(true);
   }
 
+  return(
+    <>
+      <Tooltip label="Edit Task" openDelay="700">
+        <ActionIcon variant="filled" color="green" size="xl" onClick={open}>
+          <EditIcon />
+        </ActionIcon>
+      </Tooltip>
+      <Modal
+      title="Edit Task"
+      centered
+      opened={opened}
+      onClose={()=>close()}>
+      <form>
+        <TextInput
+        label="Task Description"
+        withAsterisk
+        onChange={e => handleChange(e, 'desc')}
+        />
+        <TagsInput
+        label="Tag"
+        placeholder={formData.tag === ''? "Enter Tag" : ""}
+        withAsterisk
+        maxTags={1}
+        data={formData.tag === ''? tags.map(tag => ({value: tag, label: tag})):[]}
+        onChange={handleTagChange}
+        />
+        <Select
+        label="Supervisor"
+        placeholder="Choose Supervisor"
+        nothingFoundMessage = "No supervisors found. Create one in the Users page."
+        withAsterisk
+        data={supervisors.map(supervisor => ({value: supervisor.id.toString(), label: supervisor.name}))}
+        onChange={handleSupervisorChange}
+        />
+        <div className="flex justify-center mt-10">
+          <Button onClick={handleSubmit}>Submit</Button>
+        </div>
+      </form>
+      </Modal>
+    </>
+  );
 }
 
 export default function Department() {
@@ -435,6 +495,7 @@ export default function Department() {
                         token={token}
                       />
                     }
+                    leftComp3={<EditTask token={token} setReload={setReload} deptId={department.id} taskId={tasks.tasks} tags={tags}/>}
                   />
               </div>
               <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
