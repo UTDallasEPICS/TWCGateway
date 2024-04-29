@@ -7,7 +7,7 @@ import Departments from '@/pages/admin/Departments';
 import Department from '@/pages/admin/Department';
 import Archive from '@/pages/admin/Archive';
 import PlaceholderSu from '@/pages/supervisor/PlaceholderSu';
-import PlaceholderEm from '@/pages/employee/PlaceholderEm';
+import EmployeeHomepage from '@/pages/employee/EmployeeHomepage';
 import OnboardingEmployee from './pages/admin/OnboardingEmployee';
 import Supervisor from './pages/admin/Supervisor';
 
@@ -26,12 +26,12 @@ function App() {
           path="/admin/onboarding-employee/:id"
           element={<OnboardingEmployee />}
         />
-        <Route path="/admin/supervisor/:id" element={<Supervisor />}/>
+        <Route path="/admin/supervisor/:id" element={<Supervisor />} />
         <Route path="/admin/departments" element={<Departments />} />
         <Route path="/admin/department/:id" element={<Department />} />
         <Route path="/admin/archive" element={<Archive />} />
         <Route path="/supervisor/placeholder" element={<PlaceholderSu />} />
-        <Route path="/employee/placeholder" element={<PlaceholderEm />} />
+        <Route path="/onboarding-employee" element={<EmployeeHomepage />} />
       </Routes>
     </BrowserRouter>
   );

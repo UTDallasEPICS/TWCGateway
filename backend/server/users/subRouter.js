@@ -24,6 +24,8 @@ const addRoutes = (router) => {
   router.put('/updateEmployee/:id', controller.updateEmployee);
   router.put('/updateSupervisor/:id', controller.updateSupervisor);
   router.put('/updateAdmin/:id', controller.updateAdmin);
+
+  router.post('/onboardingEmployee/getUserByEmail', controller.getOnboardingEmployeeByEmail);
 };
 
 module.exports = {
