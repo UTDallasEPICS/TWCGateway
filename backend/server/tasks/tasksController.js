@@ -721,7 +721,7 @@ module.exports = {
     const dataToUpdate = {};
     if (desc !== undefined) dataToUpdate.desc = desc;
     if (tag !== undefined) dataToUpdate.tag = tag;
-    // if (superId !== undefined) dataToUpdate.superId = superId;
+    if (superId !== undefined) dataToUpdate.superId = superId;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }

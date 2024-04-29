@@ -4,17 +4,34 @@ import { useEffect, useState } from 'react';
 import { useDisclosure } from '@mantine/hooks';
 import axios from 'axios';
 import SearchBar from '../../components/SearchBar';
-import {Table,Checkbox,Loader,Modal,ActionIcon,Tooltip,Tabs, Button, TextInput, Select, TagsInput} from '@mantine/core';
+import {
+  Table,
+  Checkbox,
+  Loader,
+  Modal,
+  ActionIcon,
+  Tooltip,
+  Tabs,
+  Button,
+  TextInput,
+  Select,
+  TagsInput,
+} from '@mantine/core';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
-import CheckIcon from '../../assets/icons/CheckIcon'
-import CancelIcon from '../../assets/icons/CancelIcon'
+import CheckIcon from '../../assets/icons/CheckIcon';
+import CancelIcon from '../../assets/icons/CancelIcon';
 import EditIcon from '../../assets/icons/EditIcon';
 
-export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, token}){
-
+export function ArchiveTasks({
+  selectedRows,
+  setSelectedRows,
+  setReload,
+  deptId,
+  token,
+}) {
   const [isLoading, setIsLoading] = useState(false);
   const [opened, { open, close }] = useDisclosure();
 
@@ -22,8 +39,10 @@ export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, 
     try {
       setIsLoading(true);
       await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/archiveTasksForDepartment/`,
-        { allSelectedTasks: selectedRows, deptId : deptId},
+        `${
+          import.meta.env.VITE_APP_EXPRESS_BASE_URL
+        }/archiveTasksForDepartment/`,
+        { allSelectedTasks: selectedRows, deptId: deptId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -31,7 +50,7 @@ export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, 
         }
       );
       setIsLoading(false);
-      setReload(true)
+      setReload(true);
     } catch (error) {
       console.error('Errored archiving selected tasks', error);
     }
@@ -39,7 +58,6 @@ export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, 
     setSelectedRows([]);
     close();
   };
-
 
   return (
     <div>
@@ -77,80 +95,196 @@ export function ArchiveTasks({selectedRows, setSelectedRows, setReload, deptId, 
         </div>
       </Modal>
     </div>
-  )
-};
+  );
+}
 
-export function TaskTable({setTasks, tasks, searchTerm, selectedRows, setSelectedRows, setReloadData}){
-  const [editMode, setEditMode] = useState([]); 
+export function TaskTable({
+  setTasks,
+  tasks,
+  searchTerm,
+  selectedRows,
+  setSelectedRows,
+  setReloadData,
+  token,
+}) {
+  const [editMode, setEditMode] = useState([]);
+  const [updatedTasks, setUpdatedTasks] = useState(tasks.tasks);
+  const [supervisors, setSupervisors] = useState([]);
 
-  const handleDescriptionChange = (taskId, newDesc, oldDesc) => {
-    console.log('newDesc', newDesc);
-    console.log('oldDesc', oldDesc);
-    //setTasks(tasks.map(t => t.task.id === taskId ? { ...t, task: { ...t.task, desc: newDesc} } : t));
+  const handleDescriptionChange = (taskId, newDesc) => {
+    setEditMode({ ...editMode, [taskId]: true });
+
+    const updatedTasksCopy = updatedTasks.map(t => {
+      if (t.id === taskId) {
+        return { ...t, task: { ...t.task, desc: newDesc } };
+      }
+      return t;
+    });
+
+    setUpdatedTasks(updatedTasksCopy);
   };
 
+  const handleSupervisorChange = (taskId, newSup) => {
+    setEditMode({ ...editMode, [taskId]: true });
+
+    newSup = parseInt(newSup, 10);
+
+    const updatedTasksCopy = updatedTasks.map(t => {
+      if (t.id === taskId) {
+        return { ...t, supervisor: { ...t.supervisor,  id: newSup}};
+      }
+      return t;
+    });
+
+    setUpdatedTasks(updatedTasksCopy);
+  };
+
+  const handleCancel = taskId => {
+    const ogDesc = tasks.tasks.find(x => x.task.id === taskId).task.desc;
+    const ogSup = tasks.tasks.find(x => x.task.id === taskId).supervisor.id;
+
+    setUpdatedTasks(
+      updatedTasks.map(t =>
+        t.task.id === taskId ? { ...t, supervisor: {...t.supervisor, id: ogSup}, task: { ...t.task, desc: ogDesc} } : t
+      )
+    );
+  };
+
+  const handleSave = async (taskId, newDesc, sameTag, newSupId) => {
+    try {
+      const response = await axios.patch(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`,
+        {
+          id: taskId,
+          desc: newDesc,
+          tag: sameTag,
+          superId: newSupId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setReloadData(true);
+    } catch (error) {
+      console.error('Error updating task', error);
+      console.log(taskId, newDesc, sameTag, newSupId); 
+    }
+  };
+
+  useEffect(() => {
+    const fetchSups = async () => {
+      const response = await axios.get(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllSupervisors`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setSupervisors(response.data);
+    };
+    fetchSups();
+  }, [token]);
+
   const rows =
-    tasks.length > 0 ? (
-      tasks
+    updatedTasks.length > 0 ? (
+      updatedTasks
         .filter(task =>
           task.task.desc.toLowerCase().includes(searchTerm.toLowerCase())
         )
         .map(task => (
           <Table.Tr key={task.id}>
-            <Table.Td className="w-1/12"> 
+            <Table.Td className="w-1/12">
               <div>
                 <Checkbox
                   color="green"
-                  onChange={(event) => {
+                  onChange={event => {
                     setSelectedRows(
                       event.currentTarget.checked
                         ? [...selectedRows, task.id]
                         : selectedRows.filter(id => id !== task.id)
-                    )
+                    );
                   }}
                   checked={selectedRows.includes(task.id)}
                 />
               </div>
             </Table.Td>
-            <Table.Td onDoubleClick={() => {setEditMode({...editMode, [task.task.id]: true});}} className='hover:cursor-pointer'>
-              {
-                editMode[task.task.id] ?
+            <Table.Td
+              onDoubleClick={() => {
+                setEditMode({ ...editMode, [task.task.id]: true });
+              }}
+              className="hover:cursor-pointer"
+            >
+              {editMode[task.task.id] ? (
                 <textarea
                   type="text"
                   value={task.task.desc}
                   className="w-full"
                   style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}
-                  onChange={(e) =>  {handleDescriptionChange(task.task.id, e.target.value, task.task.desc)}}
-                />
-                : task.task.desc
-              }
-              </Table.Td>
-            <Table.Td>{task.supervisor.name}</Table.Td>
-            <Table.Td style={{backgroundColor: ''}}>
-              <div>
-              {editMode[task.task.id] ? (
-                <div className="flex justify-center">
-                <Button
-                onClick={() => {
-                    handleCancel(task.task.id, task.task.originalDesc, task.task.ogTag);
-                    setEditMode({...editMode, [task.task.id]: false});
+                  onChange={e => {
+                    handleDescriptionChange(
+                      task.task.id,
+                      e.target.value,
+                      task.task.desc
+                    );
                   }}
-                size= "xs"
-                style = {{backgroundColor: 'red', marginRight: '5px'}}
-              >
-                <CancelIcon />
-              </Button>
-                <Button
-                  onClick={() => handleSave(task.task.id, task.task.desc, task.task.tag)}
-                  size= "xs"
-                  style = {{backgroundColor: "green"}}>
-                  <CheckIcon />
-                </Button>
-                </div>
+                />
               ) : (
-                console.log('editMode is false')
+                task.task.desc
               )}
-            </div>
+            </Table.Td>
+            <Table.Td
+              onDoubleClick={() => {
+                setEditMode({ ...editMode, [task.task.id]: true });
+              }}
+              className="hover:cursor-pointer"
+            >
+              {editMode[task.task.id] ? (
+                <Select
+                defaultSearchValue={task.supervisor.name}
+                nothingFoundMessage="No supervisors found. Create one in the Users page."
+                withAsterisk
+                data={supervisors.map(supervisor => ({
+                  value: supervisor.id.toString(),
+                  label: supervisor.name,
+                }))}
+                onChange={(selectedValue) => handleSupervisorChange(task.task.id, selectedValue)}
+                />
+              ) : (
+                task.supervisor.name
+              )}
+            </Table.Td>
+            <Table.Td style={{ backgroundColor: '' }}>
+              <div>
+                {editMode[task.task.id] ? (
+                  <div className="flex justify-center">
+                    <Button
+                      onClick={() => {
+                        handleCancel(task.task.id);
+                        setEditMode({ ...editMode, [task.task.id]: false });
+                      }}
+                      size="xs"
+                      style={{ backgroundColor: 'red', marginRight: '5px' }}
+                    >
+                      <CancelIcon />
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        handleSave(task.task.id, task.task.desc, task.task.tag, task.supervisor.id);
+                        setEditMode({ ...editMode, [task.task.id]: false });
+                      }}
+                      size="xs"
+                      style={{ backgroundColor: 'green' }}
+                    >
+                      <CheckIcon />
+                    </Button>
+                  </div>
+                ) : (
+                  console.log('editMode is false')
+                )}
+              </div>
             </Table.Td>
           </Table.Tr>
         ))
@@ -162,9 +296,9 @@ export function TaskTable({setTasks, tasks, searchTerm, selectedRows, setSelecte
       </Table.Tr>
     );
 
-  const handleSelectAll = (event) => {
+  const handleSelectAll = event => {
     if (event.currentTarget.checked) {
-      setSelectedRows(tasks.map((task) => task.id));
+      setSelectedRows(tasks.map(task => task.id));
     } else {
       setSelectedRows([]);
     }
@@ -175,13 +309,13 @@ export function TaskTable({setTasks, tasks, searchTerm, selectedRows, setSelecte
       <Table withTableBorder withColumnBorders>
         <Table.Thead>
           <Table.Tr>
-              <Table.Th>
-                <Checkbox
-                  aria-label="Select all rows"
-                  checked={selectedRows.length === tasks.length}
-                  onChange={handleSelectAll}
-                />
-              </Table.Th>
+            <Table.Th>
+              <Checkbox
+                aria-label="Select all rows"
+                checked={selectedRows.length === tasks.length}
+                onChange={handleSelectAll}
+              />
+            </Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Task</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Supervisor</Table.Th>
           </Table.Tr>
@@ -192,7 +326,7 @@ export function TaskTable({setTasks, tasks, searchTerm, selectedRows, setSelecte
   );
 }
 
-export function AddTask({token, setReload, deptId, tags}){
+export function AddTask({ token, setReload, deptId, tags }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [formData, setFormData] = useState({
     deptId: deptId,
@@ -203,13 +337,13 @@ export function AddTask({token, setReload, deptId, tags}){
   const [supervisors, setSupervisors] = useState([]);
 
   useEffect(() => {
-    const fetchSups =async () => {
+    const fetchSups = async () => {
       const response = await axios.get(
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllSupervisors`,
         {
-          headers: { 
+          headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         }
       );
       setSupervisors(response.data);
@@ -224,23 +358,23 @@ export function AddTask({token, setReload, deptId, tags}){
     });
   };
 
-  const handleTagChange = (newTag) =>{
+  const handleTagChange = newTag => {
     setFormData({
       ...formData,
       tag: newTag[0] || '',
     });
-  }
+  };
 
   const handleSupervisorChange = selectedOptions => {
     setFormData({
       ...formData,
       superId: parseInt(selectedOptions) || 0,
     });
-  }
+  };
 
-  const handleSubmit = async () =>{
+  const handleSubmit = async () => {
     console.log(formData);
-    if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
+    if (formData.desc === '' || formData.tag === '' || formData.superId === 0) {
       alert('Please fill out all the fields.');
       return;
     }
@@ -254,8 +388,7 @@ export function AddTask({token, setReload, deptId, tags}){
           },
         }
       );
-    }
-    catch (error) {
+    } catch (error) {
       console.error(`Failed adding task to department.\n ${error}`);
       alert(`Failed adding task to department.\n ${error}`);
       return;
@@ -268,197 +401,53 @@ export function AddTask({token, setReload, deptId, tags}){
     });
     close();
     setReload(true);
-  }
+  };
 
-  return(
+  return (
     <>
       <Tooltip label="Add Task" openDelay="700">
         <ActionIcon variant="filled" color="green" size="xl" onClick={open}>
           <PlusIcon />
         </ActionIcon>
       </Tooltip>
-      <Modal
-      title="Add Task"
-      centered
-      opened={opened}
-      onClose={()=>close()}>
-      <form>
-        <TextInput
-        label="Task Description"
-        withAsterisk
-        onChange={e => handleChange(e, 'desc')}
-        />
-        <TagsInput
-        label="Tag"
-        placeholder={formData.tag === ''? "Enter Tag" : ""}
-        withAsterisk
-        maxTags={1}
-        data={formData.tag === ''? tags.map(tag => ({value: tag, label: tag})):[]}
-        onChange={handleTagChange}
-        />
-        <Select
-        label="Supervisor"
-        placeholder="Choose Supervisor"
-        nothingFoundMessage = "No supervisors found. Create one in the Users page."
-        withAsterisk
-        data={supervisors.map(supervisor => ({value: supervisor.id.toString(), label: supervisor.name}))}
-        onChange={handleSupervisorChange}
-        />
-        <div className="flex justify-center mt-10">
-          <Button onClick={handleSubmit}>Submit</Button>
-        </div>
-      </form>
+      <Modal title="Add Task" centered opened={opened} onClose={() => close()}>
+        <form>
+          <TextInput
+            label="Task Description"
+            withAsterisk
+            onChange={e => handleChange(e, 'desc')}
+          />
+          <TagsInput
+            label="Tag"
+            placeholder={formData.tag === '' ? 'Enter Tag' : ''}
+            withAsterisk
+            maxTags={1}
+            data={
+              formData.tag === ''
+                ? tags.map(tag => ({ value: tag, label: tag }))
+                : []
+            }
+            onChange={handleTagChange}
+          />
+          <Select
+            label="Supervisor"
+            placeholder="Choose Supervisor"
+            nothingFoundMessage="No supervisors found. Create one in the Users page."
+            withAsterisk
+            data={supervisors.map(supervisor => ({
+              value: supervisor.id.toString(),
+              label: supervisor.name,
+            }))}
+            onChange={handleSupervisorChange}
+          />
+          <div className="flex justify-center mt-10">
+            <Button onClick={handleSubmit}>Submit</Button>
+          </div>
+        </form>
       </Modal>
     </>
   );
 }
-
-// export function EditTask({token, setReload, deptId, taskId, tags}) {
-//   const [opened, { open, close }] = useDisclosure(false);
-//   const [formData, setFormData] = useState({
-//     desc: '',  
-//     tag: '',
-//     superId: 0,
-//   });
-//   const [tasks, setTasks] = useState([]);
-//   const [supervisors, setSupervisors] = useState([]);
-
-//   useEffect(() => {
-//     const fetchSups =async () => {
-//       const response = await axios.get(
-//         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllSupervisors`,
-//         {
-//           headers: { 
-//             Authorization: `Bearer ${token}`,
-//           }
-//         }
-//       );
-//       setSupervisors(response.data);
-//     };
-//     fetchSups();
-
-//     const fetchTasks = async () => {
-//       const response = await axios.post(
-//         `${ import.meta.env.VITE_APP_EXPRESS_BASE_URL }/getAllTasksForDepartment${deptId}`,
-//         {
-//           headers: { 
-//             Authorization: `Bearer ${token}`,
-//           }
-//         }
-//       );
-//       setTasks(response.data);
-//       console.log('tasks', response.data);
-//     };
-//     fetchTasks();
-//   }, [token]);
-
-//   const handleChange = (e, field) => {
-//     setFormData({
-//       ...formData,
-//       [field]: e.target.value,
-//     });
-//   };
-
-//   const handleDescriptionChange = (newDesc) =>{
-//     setFormData({
-//       ...formData,
-//       newDesc: newDesc[0] || '',
-//     });
-//   }
-
-//   const handleTagChange = (newTag) =>{
-//     setFormData({
-//       ...formData,
-//       tag: newTag[0] || '',
-//     });
-//   }
-
-//   const handleSupervisorChange = selectedOptions => {
-//     setFormData({
-//       ...formData,
-//       superId: parseInt(selectedOptions) || 0,
-//     });
-//   }
-
-//   const handleSubmit = async () => {
-//     console.log(formData);
-//     if(formData.desc === '' || formData.tag === '' || formData.superId === 0){
-//       alert('Please fill out all the fields.');
-//       return;
-//     }
-//   //   try {
-//   //     const response = await axios.patch(
-//   //       `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`, 
-//   //       {
-//   //         id: taskId,
-//   //         desc: formData.desc,
-//   //         tag: formData.tag,
-//   //       },
-//   //       {
-//   //         headers: {
-//   //           Authorization: `Bearer ${token}`,
-//   //         },
-//   //       }
-//   //     );
-//   //     console.log('response', response);
-//   //     setReload(true);
-//   //   } catch (error) {
-//   //       console.error('Error updating task', error);
-//   //       return;
-//   //   }
-//   //   setFormData({
-//   //     ...formData,
-//   //     desc: '',
-//   //     tag: '',
-//   //     superId: 0,
-//   //   });
-//   //   close();
-//   //   setReload(true);
-//   // }
-//   }
-
-//   return(
-//     <>
-//       <Tooltip label="Edit Task" openDelay="700">
-//         <ActionIcon variant="filled" color="green" size="xl" onClick={open}>
-//           <EditIcon />
-//         </ActionIcon>
-//       </Tooltip>
-//       <Modal
-//       title="Edit Task"
-//       centered
-//       opened={opened}
-//       onClose={()=>close()}>
-//       <form>
-//         <TextInput
-//         label="Task Description"
-//         withAsterisk
-//         onChange={e => handleChange(e, 'desc')}
-//         />
-//         <TagsInput
-//         label="Tag"
-//         placeholder={formData.tag === ''? "Enter Tag" : ""}
-//         withAsterisk
-//         maxTags={1}
-//         data={formData.tag === ''? tags.map(tag => ({value: tag, label: tag})):[]}
-//         onChange={handleTagChange}
-//         />
-//         <Select
-//         label="Supervisor"
-//         placeholder="Choose Supervisor"
-//         nothingFoundMessage = "No supervisors found. Create one in the Users page."
-//         withAsterisk
-//         data={supervisors.map(supervisor => ({value: supervisor.id.toString(), label: supervisor.name}))}
-//         onChange={handleSupervisorChange}
-//         />
-//         <div className="flex justify-center mt-10">
-//           <Button onClick={handleSubmit}>Submit</Button>
-//         </div>
-//       </form>
-//       </Modal>
-//     </>
-//   );
-//   }
 
 export default function Department() {
   const { id } = useParams();
@@ -493,7 +482,9 @@ export default function Department() {
         console.log('department', response1.data);
 
         const response2 = await axios.get(
-          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllTaskTagsForDepartment/${id}`,
+          `${
+            import.meta.env.VITE_APP_EXPRESS_BASE_URL
+          }/getAllTaskTagsForDepartment/${id}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -504,10 +495,11 @@ export default function Department() {
         console.log('selectedTab', response2.data);
 
         const response3 = await axios.post(
-          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL
+          `${
+            import.meta.env.VITE_APP_EXPRESS_BASE_URL
           }/getAllTasksForDepartment/${id}?page=${page}&pageSize=${pageSize}`,
           {
-            tag: selectedTab
+            tag: selectedTab,
           },
           {
             headers: {
@@ -517,7 +509,6 @@ export default function Department() {
         );
         setTasks(response3.data);
         console.log('tasks', response3.data);
-
       } catch (error) {
         console.error('Error in fetching department in Task page', error);
       }
@@ -531,108 +522,109 @@ export default function Department() {
     setPage(1);
   }, [selectedTab]);
 
-  
   return (
     <div>
       {/* ---------- */}
       <Navbar />
       {/* ---------- */}
       <div>
-        {
-          department && (
-            <div
-              key={department.id}
-              className="flex-col bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5"
-            >
-              <div className="md:flex-col md:items-center md:space-x-5 md:space-y-1 mb-10">
-                <div className="text-2xl font-bold text-white">
-                  {department.name}
-                </div>
-              </div>
-              <div>
-                  <SearchBar
-                    setSearchTerm={setSearchTerm}
-                    leftComp1={<AddTask token={token} setReload={setReload} deptId={department.id} tags={tags}/>}
-                    leftComp2={
-                      <ArchiveTasks
-                        selectedRows={selectedRows}
-                        setSelectedRows={setSelectedRows}
-                        setReload={setReload}
-                        deptId={department.id}
-                        token={token}
-                      />
-                    }
-                    //leftComp3={<EditTask token={token} setReload={setReload} deptId={department.id} taskId={tasks.tasks} tags={tags}/>}
-                  />
-              </div>
-              <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
-                <div className="md:w-3/4 border-white border-2 rounded-lg p-2 bg-blue-100 font-mono ">
-                  {console.log(tags && tags.length > 0 ? `${tags[0]}` : '')}
-                  <Tabs
-                    defaultValue={tags && tags.length > 0 ? `${tags[0]}` : ''}
-                    variant="pills"
-                    color="violet"
-                    radius="xl"
-                    onChange={setSelectedTab}
-                  >
-                    <Tabs.List grow>
-                      {tags.map(tag => (
-                        <Tabs.Tab value={tag} key={tag}>
-                          {tag}
-                        </Tabs.Tab>
-                      ))}
-                    </Tabs.List>
-                    {tags.map(tag => (
-                      <Tabs.Panel value={tag} key={tag} className="mt-3">
-                        {isLoading ? (
-                          <div className="flex justify-center items-center">
-                            <Loader />
-                          </div>
-                        ) : (
-                          <TaskTable
-                            setTasks={setTasks}
-                            tasks={tasks.tasks}
-                            searchTerm={searchTerm}
-                            selectedRows={selectedRows}
-                            setSelectedRows={setSelectedRows}
-                            setReloadData={setReloadData}
-                          />
-                        )}
-                        <div className="flex justify-center mt-10 items-center bg-white bg-opacity-50 p-2 ">
-                          <ActionIcon
-                            onClick={() =>
-                              page - 1 !== 0 ? setPage(page - 1) : null
-                            }
-                            disabled={page - 1 === 0}
-                          >
-                            <LeftAngle />
-                          </ActionIcon>
-                          <span className="font-mono mr-2 ml-2">
-                            {page}/{tasks.totalPages}
-                          </span>
-                          <ActionIcon
-                            onClick={() =>
-                              page !== tasks.totalPages
-                                ? setPage(page + 1)
-                                : null
-                            }
-                            disabled={page === tasks.totalPages}
-                          >
-                            <RightAngle />
-                          </ActionIcon>
-                        </div>
-                      </Tabs.Panel>
-                    ))}
-                  </Tabs>
-                </div>
+        {department && (
+          <div
+            key={department.id}
+            className="flex-col bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5"
+          >
+            <div className="md:flex-col md:items-center md:space-x-5 md:space-y-1 mb-10">
+              <div className="text-2xl font-bold text-white">
+                {department.name}
               </div>
             </div>
-          )
-        }
+            <div>
+              <SearchBar
+                setSearchTerm={setSearchTerm}
+                leftComp1={
+                  <AddTask
+                    token={token}
+                    setReload={setReload}
+                    deptId={department.id}
+                    tags={tags}
+                  />
+                }
+                leftComp2={
+                  <ArchiveTasks
+                    selectedRows={selectedRows}
+                    setSelectedRows={setSelectedRows}
+                    setReload={setReload}
+                    deptId={department.id}
+                    token={token}
+                  />
+                }
+                //leftComp3={<EditTask token={token} setReload={setReload} deptId={department.id} taskId={tasks.tasks} tags={tags}/>}
+              />
+            </div>
+            <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
+              <div className="md:w-3/4 border-white border-2 rounded-lg p-2 bg-blue-100 font-mono ">
+                {console.log(tags && tags.length > 0 ? `${tags[0]}` : '')}
+                <Tabs
+                  defaultValue={tags && tags.length > 0 ? `${tags[0]}` : ''}
+                  variant="pills"
+                  color="violet"
+                  radius="xl"
+                  onChange={setSelectedTab}
+                >
+                  <Tabs.List grow>
+                    {tags.map(tag => (
+                      <Tabs.Tab value={tag} key={tag}>
+                        {tag}
+                      </Tabs.Tab>
+                    ))}
+                  </Tabs.List>
+                  {tags.map(tag => (
+                    <Tabs.Panel value={tag} key={tag} className="mt-3">
+                      {isLoading ? (
+                        <div className="flex justify-center items-center">
+                          <Loader />
+                        </div>
+                      ) : (
+                        <TaskTable
+                          setTasks={setTasks}
+                          tasks={tasks}
+                          searchTerm={searchTerm}
+                          selectedRows={selectedRows}
+                          setSelectedRows={setSelectedRows}
+                          setReloadData={setReloadData}
+                          token={token}
+                        />
+                      )}
+                      <div className="flex justify-center mt-10 items-center bg-white bg-opacity-50 p-2 ">
+                        <ActionIcon
+                          onClick={() =>
+                            page - 1 !== 0 ? setPage(page - 1) : null
+                          }
+                          disabled={page - 1 === 0}
+                        >
+                          <LeftAngle />
+                        </ActionIcon>
+                        <span className="font-mono mr-2 ml-2">
+                          {page}/{tasks.totalPages}
+                        </span>
+                        <ActionIcon
+                          onClick={() =>
+                            page !== tasks.totalPages ? setPage(page + 1) : null
+                          }
+                          disabled={page === tasks.totalPages}
+                        >
+                          <RightAngle />
+                        </ActionIcon>
+                      </div>
+                    </Tabs.Panel>
+                  ))}
+                </Tabs>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       {/* ---------- */}
     </div>
   );
-
-
 }
