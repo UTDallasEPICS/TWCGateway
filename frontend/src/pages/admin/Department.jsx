@@ -131,7 +131,7 @@ export function TaskTable({
 
     const updatedTasksCopy = updatedTasks.map(t => {
       if (t.id === taskId) {
-        return { ...t, supervisor: { ...t.supervisor,  id: newSup}};
+        return { ...t, supervisor: { ...t.supervisor, id: newSup } };
       }
       return t;
     });
@@ -145,7 +145,13 @@ export function TaskTable({
 
     setUpdatedTasks(
       updatedTasks.map(t =>
-        t.task.id === taskId ? { ...t, supervisor: {...t.supervisor, id: ogSup}, task: { ...t.task, desc: ogDesc} } : t
+        t.task.id === taskId
+          ? {
+              ...t,
+              supervisor: { ...t.supervisor, id: ogSup },
+              task: { ...t.task, desc: ogDesc },
+            }
+          : t
       )
     );
   };
@@ -169,7 +175,7 @@ export function TaskTable({
       setReloadData(true);
     } catch (error) {
       console.error('Error updating task', error);
-      console.log(taskId, newDesc, sameTag, newSupId); 
+      console.log(taskId, newDesc, sameTag, newSupId);
     }
   };
 
@@ -243,20 +249,23 @@ export function TaskTable({
             >
               {editMode[task.task.id] ? (
                 <Select
-                defaultSearchValue={task.supervisor.name}
-                nothingFoundMessage="No supervisors found. Create one in the Users page."
-                withAsterisk
-                data={supervisors.map(supervisor => ({
-                  value: supervisor.id.toString(),
-                  label: supervisor.name,
-                }))}
-                onChange={(selectedValue) => handleSupervisorChange(task.task.id, selectedValue)}
+                  defaultSearchValue={task.supervisor.name}
+                  nothingFoundMessage="No supervisors found. Create one in the Users page."
+                  withAsterisk
+                  data={supervisors.map(supervisor => ({
+                    value: supervisor.id.toString(),
+                    label: supervisor.name,
+                  }))}
+                  onChange={selectedValue =>
+                    handleSupervisorChange(task.task.id, selectedValue)
+                  }
                 />
               ) : (
                 task.supervisor.name
               )}
             </Table.Td>
-            <Table.Td style={{ backgroundColor: '' }}>
+
+            <Table.Td style={{ backgroundColor: '#DBEAFE', border: 0 }}>
               <div>
                 {editMode[task.task.id] ? (
                   <div className="flex justify-center">
@@ -272,7 +281,12 @@ export function TaskTable({
                     </Button>
                     <Button
                       onClick={() => {
-                        handleSave(task.task.id, task.task.desc, task.task.tag, task.supervisor.id);
+                        handleSave(
+                          task.task.id,
+                          task.task.desc,
+                          task.task.tag,
+                          task.supervisor.id
+                        );
                         setEditMode({ ...editMode, [task.task.id]: false });
                       }}
                       size="xs"
@@ -318,6 +332,7 @@ export function TaskTable({
             </Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Task</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Supervisor</Table.Th>
+            <Table.Th style={{ backgroundColor: '#DBEAFE' }} />
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody className="text-center">{rows}</Table.Tbody>
@@ -434,6 +449,7 @@ export function AddTask({ token, setReload, deptId, tags }) {
             placeholder="Choose Supervisor"
             nothingFoundMessage="No supervisors found. Create one in the Users page."
             withAsterisk
+            searchable
             data={supervisors.map(supervisor => ({
               value: supervisor.id.toString(),
               label: supervisor.name,
