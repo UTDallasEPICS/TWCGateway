@@ -201,7 +201,41 @@ module.exports = {
   getOnboardingEmployeeByEmail: async (req, res) => {
     // console.log("getting hit")
     const { email } = req.body;
+    const { page, pageSize } = req.query;
+
+    const skip =
+      page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+    const take = pageSize ? parseInt(pageSize) : 10;
+
     try {
+      // const user = await prisma.user.findUnique({
+      //   where: {
+      //     email: email,
+      //   },
+      //   include: {
+      //     DepartmentUserMapping: {
+      //       include: {
+      //         department: true,
+      //       },
+      //     },
+      //     OnboardingEmployeeTaskMapping: {
+      //       include: {
+      //         task: {
+      //           include: {
+      //             SupervisorTaskMapping: {
+      //               include: {
+      //                 user: true,
+      //               },
+      //             },
+      //           },
+      //           skip,
+      //           take,
+      //         },
+      //       },
+      //     },
+      //   },
+      // });
+
       const user = await prisma.user.findUnique({
         where: {
           email: email,
@@ -212,21 +246,33 @@ module.exports = {
               department: true,
             },
           },
-          OnboardingEmployeeTaskMapping: {
-            include: {
-              task: {
-                include: {
-                  SupervisorTaskMapping: {
-                    include: {
-                      user: true,
-                    },
+        },
+      });
+
+      if (user) {
+        const tasks = await prisma.onboardingEmployeeTaskMapping.findMany({
+          where: {
+            userId: user.id,
+          },
+          include: {
+            task: {
+              include: {
+                SupervisorTaskMapping: {
+                  include: {
+                    user: true,
                   },
                 },
               },
             },
           },
-        },
-      });
+          skip,
+          take,
+        });
+
+        user.OnboardingEmployeeTaskMapping = tasks;
+      }
+
+      // rest of your code
 
       if (user === null || user.length === 0) {
         res.status(200).json({

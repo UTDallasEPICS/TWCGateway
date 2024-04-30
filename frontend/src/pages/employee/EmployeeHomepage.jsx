@@ -103,7 +103,7 @@ export default function EmployeeHomepage() {
                               <Table.Th>Supervisor</Table.Th>
                             </Table.Tr>
                           </Table.Thead>
-                          <Table.Tbody>
+                          <Table.Tbody className="text-center">
                             {userTasks &&
                               userTasks
                                 .filter(task => task.task.tag === tag)
@@ -115,7 +115,9 @@ export default function EmployeeHomepage() {
                                     <Table.Td>
                                       {task.dateCompleted || 'N/A'}
                                     </Table.Td>
-                                    <Table.Td>{task.task.desc}</Table.Td>
+                                    <Table.Td className="text-left">
+                                      {task.task.desc}
+                                    </Table.Td>
                                     <Table.Td>
                                       {
                                         task.task.SupervisorTaskMapping[0].user
