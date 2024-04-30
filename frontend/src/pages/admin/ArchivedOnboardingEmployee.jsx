@@ -2,22 +2,12 @@ import Navbar from '@/components/Navbar';
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import {
-  Table,
-  Checkbox,
-  Loader,
-  Modal,
-  ActionIcon,
-  Tooltip,
-} from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import {Table,Loader,ActionIcon} from '@mantine/core';
 import SearchBar from '../../components/SearchBar';
 import { Tabs } from '@mantine/core';
 import PropTypes from 'prop-types';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
-import EditIcon from '../../assets/icons/EditIcon';
-import PlusIcon from '../../assets/icons/PlusIcon';
 import { useNavigate } from 'react-router-dom';
 
 TaskTable.propTypes = {
@@ -27,47 +17,9 @@ TaskTable.propTypes = {
   setReload: PropTypes.func,
 };
 
-export function TaskTable({ tasks, searchTerm, userId, setReload }) {
+export function TaskTable({ tasks, searchTerm}) {
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
-
-  const completeTask = async taskId => {
-    try {
-      await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/completeTask`,
-        {
-          taskId: taskId,
-          userId: userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.error('Error in completing task', error);
-    }
-  };
-
-  const uncompleteTask = async taskId => {
-    try {
-      await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/uncompleteTask`,
-        {
-          taskId: taskId,
-          userId: userId,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-    } catch (error) {
-      console.error('Error in uncompleting task', error);
-    }
-  };
 
   const rows =
     tasks.length > 0 ? (
@@ -77,20 +29,6 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
         )
         .map(task => (
           <Table.Tr key={task.id}>
-            <Table.Td className="">
-              <div>
-                <Checkbox
-                  color="green"
-                  checked={task.taskCompleted}
-                  onChange={() => {
-                    setReload(true);
-                    task.taskCompleted
-                      ? uncompleteTask(task.id)
-                      : completeTask(task.id);
-                  }}
-                />
-              </div>
-            </Table.Td>
             <Table.Td className="text-center">
               {task.dateCompleted
                 ? (() => {
@@ -99,9 +37,6 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                       year: 'numeric',
                       month: 'numeric',
                       day: 'numeric',
-                      // hour: '2-digit',
-                      // minute: '2-digit',
-                      // timeZoneName: 'short',
                     });
                     console.log('formattedDate', formattedDate);
                     return formattedDate;
@@ -132,7 +67,6 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
       <Table withTableBorder withColumnBorders>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th style={{ textAlign: 'center' }}>Completed?</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Date Completed</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Description</Table.Th>
             <Table.Th style={{ textAlign: 'center' }}>Supervisor</Table.Th>
@@ -144,7 +78,9 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
   );
 }
 
-export default function OnboardingEmployee() {
+
+
+export default function ArchivedOnboardingEmployee() {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [tasks, setTasks] = useState([]);
@@ -163,7 +99,7 @@ export default function OnboardingEmployee() {
       setIsLoading(true);
       try {
           const response1 = await axios.get(
-            `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getUser/${id}`,
+            `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getArchivedUser/${id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -172,12 +108,12 @@ export default function OnboardingEmployee() {
           );
           setUser(response1.data);
           console.log('response1', response1.data);
-          document.title = `${response1.data.name}'s Tasks | TWCGateway`;
+          document.title = `Archive | ${response1.data.name}'s Tasks | TWCGateway`;
           console.log('response1', response1.data.id);
           const response2 = await axios.get(
             `${
               import.meta.env.VITE_APP_EXPRESS_BASE_URL
-            }/getAllTaskTagsForEmployee/${response1.data.id}`,
+            }/getAllTaskTagsForArchivedEmployee/${response1.data.id}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
@@ -188,7 +124,7 @@ export default function OnboardingEmployee() {
           const response3 = await axios.post(
             `${
               import.meta.env.VITE_APP_EXPRESS_BASE_URL
-            }/getAllTasksForEmployee/${
+            }/getAllTasksForArchivedEmployee/${
               response1.data.id
             }?page=${page}&pageSize=2`,
             {
@@ -204,9 +140,11 @@ export default function OnboardingEmployee() {
           setTags(response2.data);
           console.log('tags', response2.data);
           setTasks(response3.data);
-          console.log('tasks', response3.data);  
+          console.log('tasks', response3.data);
+        
+        
       } catch (error) {
-        console.error('Error in fetching user in User page', error);
+        console.error('Error in fetching user in Archived User page', error);
       }
       setIsLoading(false);
     };
