@@ -99,7 +99,10 @@ export default function Supervisors({
             <Table.Td
               className="hover:cursor-pointer hover:bg-purple-500"
               onClick={() => {
-                navigate(`/admin/supervisor/${sup.id}`);
+                if(archived === false)
+                  navigate(`/admin/supervisor/${sup.id}`);
+                else
+                  navigate(`/admin/archived-supervisor/${sup.id}`);
               }}
             >
               {sup.name}
