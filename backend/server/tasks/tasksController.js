@@ -341,6 +341,7 @@ module.exports = {
 
         const result = {
           ...departmentTasksWithAssignmentInfo,
+          // departmentTasks,
           totalPages,
           totalTasks,
         };

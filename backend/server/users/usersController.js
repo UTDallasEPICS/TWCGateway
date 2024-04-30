@@ -272,8 +272,6 @@ module.exports = {
         user.OnboardingEmployeeTaskMapping = tasks;
       }
 
-      // rest of your code
-
       if (user === null || user.length === 0) {
         res.status(200).json({
           //can't use 204 (no content) because message is not sent
@@ -286,6 +284,72 @@ module.exports = {
       console.error('Error Retrieving User by Email', error);
       res.status(500).json({ message: 'Error Retrieving User by Email' });
     }
+  },
+
+  getSupervisorByEmail: async (req, res) => {
+    const { email } = req.body;
+    try {
+      const supervisor = await prisma.user.findUnique({
+        where: {
+          email: email,
+        },
+        include: {
+          SupervisorTaskMapping: {
+            include: {
+              task: true,
+            },
+          },
+        },
+      });
+      res.status(200).json(supervisor);
+    } catch (error) {
+      console.error('Error Retrieving Supervisor by Email', error);
+      res.status(500).json({ message: 'Error Retrieving Supervisor by Email' });
+    }
+  },
+
+  getTasks: async (req, res) => {
+    const { id } = req.body;
+    const { page, pageSize } = req.query;
+
+    const skip =
+      page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+    const take = pageSize ? parseInt(pageSize) : 10;
+
+    try {
+      const tasks = await prisma.supervisorTaskMapping.findMany({
+        where: {
+          userId: parseInt(id),
+          archived: false,
+        },
+        include: {
+          task: true,
+        },
+        skip,
+        take,
+      });
+
+      const employeesPromises = tasks.map(async (task) => {
+        return await prisma.onboardingEmployeeTaskMapping.findMany({
+          where: {
+            taskId: task.taskId,
+          },
+          include: {
+            user: true,
+          },
+        });
+      })
+      const employees = await Promise.all(employeesPromises);
+
+      res.status(200).json({tasks: tasks, employees: employees});
+    } catch (error) {
+      console.error('Error Getting Supervisor Tasks', error);
+      res.status(500).json({ message: 'Error Getting Supervisor Tasks' });
+    }
+  },
+
+  getEmployeeTasks: async (req, res) => {
+    // const {}
   },
 
   //GET

@@ -33,7 +33,7 @@ export default function LoginRedirect() {
         if (loggedinUser.role === 'ADMIN') {
           navigate('/admin/users');
         } else if (loggedinUser.role === 'SUPERVISOR') {
-          navigate('/supervisor/placeholder');
+          navigate('/supervisor');
         } else if (loggedinUser.role === 'EMPLOYEE') {
           navigate(`/onboarding-employee`);
         } else {

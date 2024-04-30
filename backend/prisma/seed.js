@@ -37,7 +37,7 @@ async function main() {
       name: 'Isi Emordi',
       email: 'isi.emord1@gmail.com',
       role: UserRole.ADMIN,
-    }
+    },
   });
 
   // ----------------------------------------------------
@@ -58,6 +58,14 @@ async function main() {
     },
   });
 
+  const userSupervisor3 = await prisma.user.create({
+    data: {
+      name: 'Tushar (supervisor)',
+      email: 'tws@gmail.com',
+      role: UserRole.SUPERVISOR,
+    },
+  });
+
   // ----------------------------------------------------
 
   const userEmployee1 = await prisma.user.create({
@@ -72,6 +80,14 @@ async function main() {
     data: {
       name: 'Employee2',
       email: 'employee2@employee2.com',
+      role: UserRole.EMPLOYEE,
+    },
+  });
+
+  const userEmployee3 = await prisma.user.create({
+    data: {
+      name: 'Tushar (employee)',
+      email: 'twe@gmail.com',
       role: UserRole.EMPLOYEE,
     },
   });
@@ -176,6 +192,7 @@ async function main() {
     },
   });
   // ----------------------------------------------------
+
   await prisma.departmentUserMapping.create({
     data: {
       user: { connect: { id: userEmployee1.id } },
@@ -189,6 +206,14 @@ async function main() {
       department: { connect: { id: department2.id } },
     },
   });
+
+  await prisma.departmentUserMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
   // ----------------------------------------------------
   await prisma.departmentTaskMapping.create({
     data: {
@@ -364,6 +389,54 @@ async function main() {
   await prisma.OnboardingEmployeeTaskMapping.create({
     data: {
       user: { connect: { id: userEmployee2.id } },
+      task: { connect: { id: task12.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.OnboardingEmployeeTaskMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
+      task: { connect: { id: task7.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.OnboardingEmployeeTaskMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
+      task: { connect: { id: task8.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.OnboardingEmployeeTaskMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
+      task: { connect: { id: task9.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.OnboardingEmployeeTaskMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
+      task: { connect: { id: task10.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.OnboardingEmployeeTaskMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
+      task: { connect: { id: task11.id } },
+      department: { connect: { id: department2.id } },
+    },
+  });
+
+  await prisma.OnboardingEmployeeTaskMapping.create({
+    data: {
+      user: { connect: { id: userEmployee3.id } },
       task: { connect: { id: task12.id } },
       department: { connect: { id: department2.id } },
     },
@@ -443,9 +516,33 @@ async function main() {
     },
   });
 
+  // await prisma.SupervisorTaskMapping.create({
+  //   data: {
+  //     user: { connect: { id: userSupervisor2.id } },
+  //     task: { connect: { id: task11.id } },
+  //     department: { connect: { id: department2.id } },
+  //   },
+  // });
+
+  // await prisma.SupervisorTaskMapping.create({
+  //   data: {
+  //     user: { connect: { id: userSupervisor2.id } },
+  //     task: { connect: { id: task6.id } },
+  //     department: { connect: { id: department2.id } },
+  //   },
+  // });
+
+  // await prisma.SupervisorTaskMapping.create({
+  //   data: {
+  //     user: { connect: { id: userSupervisor2.id } },
+  //     task: { connect: { id: task12.id } },
+  //     department: { connect: { id: department2.id } },
+  //   },
+  // });
+
   await prisma.SupervisorTaskMapping.create({
     data: {
-      user: { connect: { id: userSupervisor2.id } },
+      user: { connect: { id: userSupervisor3.id } },
       task: { connect: { id: task11.id } },
       department: { connect: { id: department2.id } },
     },
@@ -453,7 +550,7 @@ async function main() {
 
   await prisma.SupervisorTaskMapping.create({
     data: {
-      user: { connect: { id: userSupervisor2.id } },
+      user: { connect: { id: userSupervisor3.id } },
       task: { connect: { id: task6.id } },
       department: { connect: { id: department2.id } },
     },
@@ -461,7 +558,7 @@ async function main() {
 
   await prisma.SupervisorTaskMapping.create({
     data: {
-      user: { connect: { id: userSupervisor2.id } },
+      user: { connect: { id: userSupervisor3.id } },
       task: { connect: { id: task12.id } },
       department: { connect: { id: department2.id } },
     },
