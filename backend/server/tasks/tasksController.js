@@ -717,11 +717,11 @@ module.exports = {
   },
 
   updateTask: async (req, res) => {
-    const { id, desc, tag, superId } = req.body;
+    const { id, desc, tag, superId, departmentId } = req.body;
     const dataToUpdate = {};
     if (desc !== undefined) dataToUpdate.desc = desc;
     if (tag !== undefined) dataToUpdate.tag = tag;
-    if (superId !== undefined) dataToUpdate.superId = superId;
+    //if (superId !== undefined) dataToUpdate.superId = superId;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
@@ -736,7 +736,7 @@ module.exports = {
 
         if (superId !== undefined) {
           const deleteSuperMap =
-            await prisma.supervisorTaskMapping.deleteUnique({
+            await prisma.supervisorTaskMapping.deleteMany({
               where: {
                 taskId: parseInt(id),
               },
@@ -745,8 +745,10 @@ module.exports = {
           const makeNewTaskSuperMap = await prisma.supervisorTaskMapping.create(
             {
               data: {
-                userId: parseInt(superId),
                 taskId: parseInt(id),
+                userId: parseInt(superId),
+                departmentId: parseInt(departmentId),
+                
               },
             }
           );

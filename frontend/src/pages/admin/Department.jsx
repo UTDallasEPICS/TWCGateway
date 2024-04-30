@@ -110,6 +110,7 @@ export function TaskTable({
   const [editMode, setEditMode] = useState([]);
   const [updatedTasks, setUpdatedTasks] = useState(tasks.tasks);
   const [supervisors, setSupervisors] = useState([]);
+  const [reload, setReload] = useState(0);
 
   const handleDescriptionChange = (taskId, newDesc) => {
     setEditMode({ ...editMode, [taskId]: true });
@@ -156,7 +157,7 @@ export function TaskTable({
     );
   };
 
-  const handleSave = async (taskId, newDesc, sameTag, newSupId) => {
+  const handleSave = async (taskId, newDesc, sameTag, newSupId, deptId) => {
     try {
       const response = await axios.patch(
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`,
@@ -165,6 +166,7 @@ export function TaskTable({
           desc: newDesc,
           tag: sameTag,
           superId: newSupId,
+          departmentId: deptId,
         },
         {
           headers: {
@@ -175,7 +177,7 @@ export function TaskTable({
       setReloadData(true);
     } catch (error) {
       console.error('Error updating task', error);
-      console.log(taskId, newDesc, sameTag, newSupId);
+      console.log(taskId, newDesc, sameTag, newSupId, deptId);
     }
   };
 
@@ -280,12 +282,13 @@ export function TaskTable({
                       <CancelIcon />
                     </Button>
                     <Button
-                      onClick={() => {
+                      onClick={() => { console.log(task)
                         handleSave(
                           task.task.id,
                           task.task.desc,
                           task.task.tag,
-                          task.supervisor.id
+                          task.supervisor.id,
+                          task.departmentId
                         );
                         setEditMode({ ...editMode, [task.task.id]: false });
                       }}
@@ -607,7 +610,7 @@ export default function Department() {
                           searchTerm={searchTerm}
                           selectedRows={selectedRows}
                           setSelectedRows={setSelectedRows}
-                          setReloadData={setReloadData}
+                          setReloadData={setReload}
                           token={token}
                         />
                       )}
