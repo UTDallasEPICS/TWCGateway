@@ -221,15 +221,16 @@ export function TaskTable({
             </Table.Td>
             <Table.Td
               onDoubleClick={() => {
+                
                 setEditMode({ ...editMode, [task.task.id]: true });
               }} 
-              onClick={() => {
-                setSelectedRows(
-                  selectedRows.includes(task.id) || editMode[task.task.id]
-                    ? selectedRows.filter(id => id !== task.id)
-                    : [...selectedRows, task.id]
-                );
-              }}
+              // onClick={() => {
+              //   //setSelectedRows(
+              //     selectedRows.includes(task.id) || editMode[task.task.id]
+              //       ? selectedRows.filter(id => id !== task.id)
+              //       : [...selectedRows, task.id]
+              //   );
+              // }}
               className="hover:cursor-pointer"
             >
               {editMode[task.task.id] ? (
