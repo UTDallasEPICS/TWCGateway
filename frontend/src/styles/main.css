@@ -3,5 +3,10 @@
 @tailwind utilities;
 
 body {
-  background-color: #7e22ce !important
+  background-color: #7e22ce !important;
 }
+
+/* .input {
+  &:focus {
+  }
+} */

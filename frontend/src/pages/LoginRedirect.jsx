@@ -1,5 +1,5 @@
 import '@/styles/Login.css';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
@@ -26,7 +26,7 @@ export default function LoginRedirect() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      getAccessTokenSilently().then(async (token) => {
+      getAccessTokenSilently().then(async token => {
         Cookies.set('token', token);
         const loggedinUser = await fetchUser();
         console.log('loggedinUser', loggedinUser);
@@ -35,7 +35,7 @@ export default function LoginRedirect() {
         } else if (loggedinUser.role === 'SUPERVISOR') {
           navigate('/supervisor/placeholder');
         } else if (loggedinUser.role === 'EMPLOYEE') {
-          navigate('/employee/placeholder');
+          navigate(`/onboarding-employee`);
         } else {
           console.error(
             'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
@@ -48,12 +48,7 @@ export default function LoginRedirect() {
   return (
     <div className="flex flex-col h-screen justify-center items-center gradient-background">
       <div className="bg-white bg-opacity-30 rounded-lg showdow-lg redirect-grow-shrink">
-        <img
-          src={logo}
-          alt="TWCGateway Logo"
-          width="700"
-          draggable="false"
-        />
+        <img src={logo} alt="TWCGateway Logo" width="700" draggable="false" />
       </div>
     </div>
   );
