@@ -12,6 +12,8 @@ import {
   Modal,
   TextInput,
   Checkbox,
+  Select,
+  CheckIcon,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import LeftAngle from '../../assets/icons/LeftAngle';
@@ -28,9 +30,11 @@ export function EditAssignment({ superId }) {
   const [searchTerm, setSearchTerm] = useState('');
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
   const [page, setPage] = useState(1);
+  const [allSupervisors, setAllSupervisors] = useState(null);
 
   useEffect(() => {
     getAllDepTasks();
+    getAllSupervisors();
   }, [page, searchTerm]);
 
   useEffect(() => {
@@ -53,10 +57,28 @@ export function EditAssignment({ superId }) {
           },
         }
       );
+
       setAllTasks(fetchAllTasks.data);
       console.log('all tasks', fetchAllTasks.data);
     } catch (error) {
       console.error('fetch all tasks error', error);
+    }
+  };
+
+  const getAllSupervisors = async () => {
+    try {
+      const fetchAllSupervisors = await axios.get(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllSupervisors`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setAllSupervisors(fetchAllSupervisors.data);
+      console.log('all supervisors', fetchAllSupervisors.data);
+    } catch (error) {
+      console.error('fetch all supervisors error', error);
     }
   };
 
@@ -72,15 +94,21 @@ export function EditAssignment({ superId }) {
   const rows = taskArray ? (
     taskArray.map(task => (
       <Table.Tr key={task && task.id}>
-        <Table.Td>{task && task.task.desc}</Table.Td>
+        <Table.Td className="w-1/2">{task && task.task.desc}</Table.Td>
         <Table.Td>{task && task.department.name}</Table.Td>
         <Table.Td>{task && task.task.tag}</Table.Td>
         <Table.Td>
           {task && task.assigned === true ? (
-            <Checkbox checked />
+            // <Checkbox  />
+            <CheckIcon width="25" color="blue" />
           ) : (
             task && task.task.SupervisorTaskMapping[0].user.name
           )}
+          {/* <Select
+            value={task.task.SupervisorTaskMapping[0].user.name}
+            data={allSupervisors.name}
+            placeholder="Select Supervisor"
+          /> */}
         </Table.Td>
       </Table.Tr>
     ))
@@ -104,6 +132,7 @@ export function EditAssignment({ superId }) {
         onClose={close}
         size="xl"
         title="Change Task Assignment"
+        centered
       >
         <div className="flex flex-col justify-center rounded-lg ">
           <div className="flex justify-between items-center space-x-20 mb-10">
