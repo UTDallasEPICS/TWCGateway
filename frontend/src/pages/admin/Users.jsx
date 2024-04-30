@@ -572,6 +572,9 @@ ArchiveSelectedUsers.propTypes = {
 };
 
 export function ArchiveSelectedUsers({
+  setSelectedEmps,
+  setSelectedSups,
+  setSelectedAdms,
   allSelectedRows,
   setAllSelectedRows,
   setReloadData,
@@ -598,6 +601,9 @@ export function ArchiveSelectedUsers({
       console.error('Errored archiving selected users', error);
     }
     setAllSelectedRows([]);
+    setSelectedEmps([]);
+    setSelectedSups([]);
+    setSelectedAdms([]);
     close();
   };
 
@@ -673,6 +679,9 @@ export default function Users() {
         leftComp2={<EditUser token={token} setReloadData={setReloadData} />}
         leftComp3={
           <ArchiveSelectedUsers
+            setSelectedEmps={setSelectedEmps}
+            setSelectedSups={setSelectedSups}
+            setSelectedAdms={setSelectedAdms}
             allSelectedRows={allSelectedRows}
             setAllSelectedRows={setAllSelectedRows}
             setReloadData={setReloadData}
