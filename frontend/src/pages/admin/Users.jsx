@@ -34,13 +34,11 @@ AddUser.propTypes = {
 export function AddUser({ token, setReloadData }) {
   const [opened, { open, close }] = useDisclosure();
   const [departments, setDepartments] = useState([]);
-  const [tasks, setTasks] = useState([]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     role: '',
     department: 0,
-    tasks: [],
   });
 
   useEffect(() => {
@@ -57,17 +55,6 @@ export function AddUser({ token, setReloadData }) {
       setDepartments(response.data);
       console.log('response', response.data);
       
-      const response2 = await axios.get(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllTasks`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      setTasks(response2.data)
-      console.log('tasks', response2.data)
       }
       catch(error){
         console.error('Error fetching departments', error);
@@ -101,18 +88,10 @@ export function AddUser({ token, setReloadData }) {
   const handleDepartmentChange = selectedOptions => {
     setFormData({
       ...formData,
-      // departments: selectedOptions ? selectedOptions.map(option => option) : [],
       department: selectedOptions || [],
     });
   };
 
-  const handleTaskChange = selectedOptions => {
-    console.log('selectedOptions', selectedOptions);
-    setFormData({
-      ...formData,
-      tasks: selectedOptions ? selectedOptions.map(option => option) : [],
-    });
-  };
 
   const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.role) {
@@ -149,12 +128,6 @@ export function AddUser({ token, setReloadData }) {
       }
     }
 
-    if (formData.role === 'SUPERVISOR' && formData.tasks.length === 0) {
-      alert('Please select tasks for Supervisor');
-      return;
-    }
-    console.log('formData', formData);
-
     if (formData.role === 'SUPERVISOR') {
       try {
         await axios.post(
@@ -184,7 +157,7 @@ export function AddUser({ token, setReloadData }) {
     }
 
     close();
-    setFormData({ name: '', email: '', role: '', department: 0, tasks: [] });
+    setFormData({ name: '', email: '', role: '', department: 0});    
     setReloadData(true);
   };
 
@@ -205,7 +178,6 @@ export function AddUser({ token, setReloadData }) {
             email: '',
             role: '',
             department: 0,
-            tasks: [],
           });
         }}
         title="Add User"
@@ -255,25 +227,8 @@ export function AddUser({ token, setReloadData }) {
               handleDepartmentChange(selectedOptions);
             }}
           />
-        ) : formData.role === 'SUPERVISOR' ? (
-          <MultiSelect
-            label="Tasks"
-            withAsterisk
-            searchable
-            nothingFoundMessage="No such task. Create one in the Departments page."
-            hidePickedOptions
-            clearable
-            data={
-              tasks.map(task => {
-                return {
-                  value: task.id.toString(),
-                  label: task.desc
-                };
-            })} 
-            onChange={handleTaskChange}
-          />
         ) : null}
-        {formData.department !== 0 || formData.tasks.length !== 0 || formData.role === 'ADMIN' ? (
+        {formData.department !== 0 || formData.role === 'SUPERVISOR' || formData.role === 'ADMIN' ? (         
           <div className="flex justify-center mt-10">
             <Button onClick={handleSubmit}>Submit</Button>
           </div>
@@ -474,8 +429,14 @@ export function EditUser({ token, setReloadData }) {
         return;
       }
     }
-
     setReloadData(true)
+    setFormData({
+      name: '',
+      email: '',
+      role: null,
+      department: '',
+    });
+    close();
   };
 
   return (

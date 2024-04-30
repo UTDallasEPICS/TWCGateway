@@ -135,7 +135,7 @@ module.exports = {
   },
 
   addSupervisor: async (req, res) => {
-    const { name, email, tasks, role } = req.body;
+    const { name, email, role } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
@@ -147,22 +147,6 @@ module.exports = {
             email: email,
             role: role,
           },
-        });
-        const id = user.id;
-        tasks.map(async task => {
-          const depTaskMapping = await prisma.departmentTaskMapping.findUnique({
-            where: {
-              taskId: parseInt(task),
-            },
-          });
-
-          await prisma.supervisorTaskMapping.create({
-            data: {
-              userId: id,
-              taskId: parseInt(task),
-              departmentId: depTaskMapping.departmentId,
-            },
-          });
         });
         res.status(201).send();
       } catch (error) {
@@ -873,12 +857,6 @@ module.exports = {
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
-        const prevUser = await prisma.user.findFirst({
-          where: {
-            id: parseInt(id)
-          }
-        })
-
         const updatedUser = await prisma.user.update({
           where: {
             id: parseInt(id),
@@ -890,19 +868,26 @@ module.exports = {
           },
         });
         
-        const deleteMaps = await prisma.departmentUserMapping.delete({
-          where:{
-            userId : prevUser.id
-          }
-        })
-
-        const map = await prisma.departmentUserMapping.create({
+        const deptUserMap = await prisma.departmentUserMapping.create({
           data: {
             userId: parseInt(id),
             departmentId: parseInt(department),
           },
         });
-
+        const tasks = await prisma.departmentTaskMapping.findMany({
+          where: {
+            departmentId: parseInt(department),
+          },
+        });
+        tasks.forEach(async task => {
+          await prisma.onboardingEmployeeTaskMapping.create({
+            data: {
+              userId: parseInt(id),
+              taskId: task.taskId,
+              departmentId: parseInt(department),
+            },
+          });
+        });
         res
           .status(200)
           .json({ message: 'Employee Updated Successfully', updatedUser });
@@ -923,6 +908,21 @@ module.exports = {
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
+
+        const prevUser = await prisma.user.findFirst({
+          where: {
+            id: parseInt(id)
+          }
+        })
+        console.log("prevUser", prevUser)
+        if(prevUser.role === 'EMPLOYEE'){
+          const deleteMaps = await prisma.departmentUserMapping.deleteMany({
+            where:{
+              userId : parseInt(id)
+            }
+          })
+        }
+
         const updatedUser = await prisma.user.update({
           where: {
             id: parseInt(id),
@@ -952,6 +952,21 @@ module.exports = {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+
+      const prevUser = await prisma.user.findFirst({
+        where: {
+          id: parseInt(id)
+        }
+      })
+      console.log("prevUser", prevUser)
+      if(prevUser.role === 'EMPLOYEE'){
+        const deleteMaps = await prisma.departmentUserMapping.deleteMany({
+          where:{
+            userId : parseInt(id)
+          }
+        })
+      }
+      
       const updatedUser = await prisma.user.update({
         where: {
           id: parseInt(id),
