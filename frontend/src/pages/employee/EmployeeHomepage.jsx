@@ -40,6 +40,20 @@ export default function EmployeeHomepage() {
   const tags = [...new Set(userTasks && userTasks.map(task => task.task.tag))];
   // console.log('tags', tags);
 
+  const getFormattedDate = date => {
+    const dateObj = new Date(date);
+    const formattedDate = dateObj.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric',
+      // hour: '2-digit',
+      // minute: '2-digit',
+      // timeZoneName: 'short',
+    });
+    console.log('formattedDate', formattedDate);
+    return formattedDate;
+  };
+
   return (
     <div>
       <div className="flex flex-col m-3 p-3 rounded-lg bg-white bg-opacity-50 relative">
@@ -113,7 +127,9 @@ export default function EmployeeHomepage() {
                                       {task.taskCompleted ? 'Yes' : 'No'}
                                     </Table.Td>
                                     <Table.Td>
-                                      {task.dateCompleted || 'N/A'}
+                                      {task.dateCompleted
+                                        ? getFormattedDate(task.dateCompleted)
+                                        : 'N/A'}
                                     </Table.Td>
                                     <Table.Td className="text-left">
                                       {task.task.desc}
