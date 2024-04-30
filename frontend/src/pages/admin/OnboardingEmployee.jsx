@@ -33,7 +33,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
 
   const completeTask = async taskId => {
     try {
-      await axios.patch(
+      const res = await axios.patch(
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/completeTask`,
         {
           taskId: taskId,
@@ -45,6 +45,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
           },
         }
       );
+      console.log('res for completed task', res.data);
     } catch (error) {
       console.error('Error in completing task', error);
     }
@@ -83,10 +84,12 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
                   color="green"
                   checked={task.taskCompleted}
                   onChange={() => {
+                    console.log('checkbox clicked', task.id);
+                    console.log('checkbox clicked', task);
                     setReload(true);
                     task.taskCompleted
-                      ? uncompleteTask(task.id)
-                      : completeTask(task.id);
+                      ? uncompleteTask(task.task.id)
+                      : completeTask(task.task.id);
                   }}
                 />
               </div>

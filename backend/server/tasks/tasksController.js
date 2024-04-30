@@ -213,8 +213,8 @@ module.exports = {
               departmentId: parseInt(id),
               archived: false,
               task: {
-                tag: tag
-              }
+                tag: tag,
+              },
             },
           },
         });
@@ -227,8 +227,8 @@ module.exports = {
               departmentId: parseInt(id),
               archived: false,
               task: {
-                tag: tag
-              }
+                tag: tag,
+              },
             },
           },
           include: {
@@ -259,7 +259,7 @@ module.exports = {
           });
           departmentTasks[i].supervisor = supervisor.user;
         }
-        const result = { tasks : departmentTasks, totalPages, totalTasks };
+        const result = { tasks: departmentTasks, totalPages, totalTasks };
 
         res.status(200).json(result);
       } catch (err) {
@@ -329,9 +329,13 @@ module.exports = {
 
           return {
             ...task,
-            assigned: supervisorMapping && supervisorMapping.user.id === parseInt(superId)
-              ? true
-              : supervisorMapping ? supervisorMapping.user : false,
+            assigned:
+              supervisorMapping &&
+              supervisorMapping.user.id === parseInt(superId)
+                ? true
+                : supervisorMapping
+                  ? supervisorMapping.user
+                  : false,
           };
         });
 
@@ -398,19 +402,18 @@ module.exports = {
       await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
     ) {
       try {
-        const departmentTasks =
-          await prisma.departmentTaskMapping.findMany({
-            where: {
-              AND: {
-                departmentId: parseInt(id),
-                archived: false,
-              },
+        const departmentTasks = await prisma.departmentTaskMapping.findMany({
+          where: {
+            AND: {
+              departmentId: parseInt(id),
+              archived: false,
             },
-            include: {
-              task: true,
-              department: true,
-            },
-          });
+          },
+          include: {
+            task: true,
+            department: true,
+          },
+        });
 
         const tags = [
           ...new Set(departmentTasks.map(taskMapping => taskMapping.task.tag)),
@@ -604,36 +607,15 @@ module.exports = {
   },
 
   archiveTasksForDepartment: async (req, res) => {
-    const {allSelectedTasks, deptId} = req.body;
+    const { allSelectedTasks, deptId } = req.body;
     //const { taskID, deptID } = req.body;
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       for (let i = 0; i < allSelectedTasks.length; i++) {
-      try {
-        const deptTaskMap = await prisma.departmentTaskMapping.updateMany({
-          where: {
-            taskId: parseInt(allSelectedTasks[i]),
-            departmentId: parseInt(deptId),
-          },
-          data: {
-            archived: true,
-          },
-        });
-
-        const superTaskMap = await prisma.supervisorTaskMapping.updateMany({
-          where: {
-            taskId: parseInt(allSelectedTasks[i]),
-            departmentId: parseInt(deptId),
-          },
-          data: {
-            archived: true,
-          },
-        });
-
-        const onboardMap =
-          await prisma.onboardingEmployeeTaskMapping.updateMany({
+        try {
+          const deptTaskMap = await prisma.departmentTaskMapping.updateMany({
             where: {
               taskId: parseInt(allSelectedTasks[i]),
               departmentId: parseInt(deptId),
@@ -643,12 +625,35 @@ module.exports = {
             },
           });
 
-        res.status(200).json('Sucessfully archived task from department');
-      } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: 'Error archiving task from department' });
+          const superTaskMap = await prisma.supervisorTaskMapping.updateMany({
+            where: {
+              taskId: parseInt(allSelectedTasks[i]),
+              departmentId: parseInt(deptId),
+            },
+            data: {
+              archived: true,
+            },
+          });
+
+          const onboardMap =
+            await prisma.onboardingEmployeeTaskMapping.updateMany({
+              where: {
+                taskId: parseInt(allSelectedTasks[i]),
+                departmentId: parseInt(deptId),
+              },
+              data: {
+                archived: true,
+              },
+            });
+
+          res.status(200).json('Sucessfully archived task from department');
+        } catch (error) {
+          console.log(error);
+          res
+            .status(500)
+            .json({ error: 'Error archiving task from department' });
+        }
       }
-    }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
@@ -675,8 +680,16 @@ module.exports = {
             dateCompleted: new Date(),
           },
         });
-
-        res.status(200).json('Sucessfully completed task');
+        const getTask = await prisma.onboardingEmployeeTaskMapping.findMany({
+          where: {
+            userId: parseInt(userId),
+            taskId: parseInt(taskId),
+          },
+        });
+        console.log(getTask);
+        console.log('userId', userId);
+        console.log('taskId', taskId);
+        res.status(200).json({ message: 'Sucessfully completed task', task });
       } catch (error) {
         console.log(error);
         res.status(500).json({ error: 'Error completing task' });
