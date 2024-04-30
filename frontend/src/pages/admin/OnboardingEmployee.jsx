@@ -80,7 +80,6 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
             <Table.Td className="">
               <div>
                 <Checkbox
-                  color="green"
                   checked={task.taskCompleted}
                   onChange={() => {
                     setReload(true);
