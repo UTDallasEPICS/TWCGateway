@@ -39,11 +39,11 @@ export function AddUser({ token, setReloadData }) {
     email: '',
     role: '',
     department: 0,
-    tasks: [],
   });
 
   useEffect(() => {
     const fetchDeps = async () => {
+      try{
       const response = await axios.get(
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllDepartments`,
         {
@@ -53,9 +53,15 @@ export function AddUser({ token, setReloadData }) {
         }
       );
       setDepartments(response.data);
-      // console.log('response', response.data);
+      console.log('response', response.data);
+      
+      }
+      catch(error){
+        console.error('Error fetching departments', error);
+      }
     };
     fetchDeps();
+
   }, [token]);
 
   const handleChange = (e, field) => {
@@ -82,18 +88,10 @@ export function AddUser({ token, setReloadData }) {
   const handleDepartmentChange = selectedOptions => {
     setFormData({
       ...formData,
-      // departments: selectedOptions ? selectedOptions.map(option => option) : [],
       department: selectedOptions || [],
     });
   };
 
-  const handleTaskChange = selectedOptions => {
-    console.log('selectedOptions', selectedOptions);
-    setFormData({
-      ...formData,
-      tasks: selectedOptions ? selectedOptions.map(option => option) : [],
-    });
-  };
 
   const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.role) {
@@ -130,12 +128,6 @@ export function AddUser({ token, setReloadData }) {
       }
     }
 
-    if (formData.role === 'SUPERVISOR' && formData.tasks.length === 0) {
-      alert('Please select tasks for Supervisor');
-      return;
-    }
-    console.log('formData', formData);
-
     if (formData.role === 'SUPERVISOR') {
       try {
         await axios.post(
@@ -152,7 +144,11 @@ export function AddUser({ token, setReloadData }) {
 
     if (formData.role === 'ADMIN') {
       try {
-        await axios.post();
+        await axios.post(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/addAdmin`,
+          formData,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
       } catch (error) {
         console.error(`Failed adding admin to the database. \n ${error}`);
         alert(`Failed adding admin to the database. \n ${error}`);
@@ -161,7 +157,7 @@ export function AddUser({ token, setReloadData }) {
     }
 
     close();
-    setFormData({ name: '', email: '', role: '', department: 0, tasks: [] });
+    setFormData({ name: '', email: '', role: '', department: 0});    
     setReloadData(true);
   };
 
@@ -174,7 +170,16 @@ export function AddUser({ token, setReloadData }) {
       </Tooltip>
       <Modal
         opened={opened}
-        onClose={close}
+        onClose={() => {
+          console.log('form data', formData);
+          close();
+          setFormData({
+            name: '',
+            email: '',
+            role: '',
+            department: 0,
+          });
+        }}
         title="Add User"
         centered
         size="auto"
@@ -210,7 +215,6 @@ export function AddUser({ token, setReloadData }) {
             withAsterisk
             searchable
             nothingFoundMessage="No such department. Create one in the Departments page."
-            hidePickedOptions
             clearable
             data={departments.map(department => {
               return {
@@ -223,29 +227,8 @@ export function AddUser({ token, setReloadData }) {
               handleDepartmentChange(selectedOptions);
             }}
           />
-        ) : formData.role === 'SUPERVISOR' ? (
-          <MultiSelect
-            label="Tasks"
-            withAsterisk
-            searchable
-            nothingFoundMessage="No such task. Create one in the Departments page."
-            hidePickedOptions
-            clearable
-            data={departments.map(department => {
-              return {
-                group: department.name,
-                items: department.DepartmentTaskMapping.map(taskMapping => {
-                  return {
-                    value: taskMapping.task.id.toString(),
-                    label: taskMapping.task.desc,
-                  };
-                }),
-              };
-            })}
-            onChange={handleTaskChange}
-          />
         ) : null}
-        {formData.department !== 0 || formData.tasks.length !== 0 ? (
+        {formData.department !== 0 || formData.role === 'SUPERVISOR' || formData.role === 'ADMIN' ? (         
           <div className="flex justify-center mt-10">
             <Button onClick={handleSubmit}>Submit</Button>
           </div>
@@ -261,7 +244,7 @@ EditUser.propTypes = {
   setReloadData: PropTypes.func,
 };
 
-export function EditUser({ token }) {
+export function EditUser({ token, setReloadData }) {
   const [opened, { open, close }] = useDisclosure();
   const [allUsers, setAllUsers] = useState([]);
   const [allDeps, setAllDeps] = useState([]);
@@ -273,14 +256,9 @@ export function EditUser({ token }) {
     name: '',
     email: '',
     role: null,
-    departments: [],
+    department: '',
   });
-  const [formErrors, setFormErrors] = useState({
-    name: '',
-    email: '',
-    role: '',
-    departments: '',
-  });
+
 
   useEffect(() => {
     console.log('useeffect formData', formData);
@@ -323,7 +301,7 @@ export function EditUser({ token }) {
         name: '',
         email: '',
         role: null,
-        departments: [],
+        department: '',
       });
     } else {
       try {
@@ -337,14 +315,23 @@ export function EditUser({ token }) {
           }
         );
         setUserData(res.data);
-        setFormData({
-          name: res.data.name,
-          email: res.data.email,
-          role: res.data.role,
-          departments: res.data.DepartmentUserMapping.map(dep => {
-            return { value: dep.department.id.toString() };
-          }),
-        });
+        console.log(res.data)
+        if(res.data.role === 'EMPLOYEE'){
+          setFormData({
+            name: res.data.name,
+            email: res.data.email,
+            role: res.data.role,
+            department: res.data.DepartmentUserMapping.department.id.toString()
+          });
+        }
+        else{
+          setFormData({
+            name: res.data.name,
+            email: res.data.email,
+            role: res.data.role,
+          });          
+        }
+
         setIsFetchingUser(false);
         console.log('usedata res.data', res.data);
       } catch (error) {
@@ -355,7 +342,7 @@ export function EditUser({ token }) {
             name: '',
             email: '',
             role: null,
-            departments: [],
+            department: '',
           },
         ]);
         setIsFetchingUser(false);
@@ -369,8 +356,8 @@ export function EditUser({ token }) {
       alert('Please fill out all the fields.');
       return;
     }
-    if (formData.role === 'EMPLOYEE' && formData.departments.length === 0) {
-      alert('Please select departments for Employee');
+    if (formData.role === 'EMPLOYEE' && !formData.department) {
+      alert('Please select department for Employee');
       return;
     }
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
@@ -400,6 +387,56 @@ export function EditUser({ token }) {
         return;
       }
     }
+    else if (formData.role === 'SUPERVISOR') {
+      try {
+        await axios.put(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateSupervisor/${
+            userData.id
+          }`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(`Failed updating employee to the database.\n ${error}`);
+        alert(
+          `Failed updating onboarding employee to the database.\n ${error}`
+        );
+        return;
+      }
+    }
+    else { //formData.role === 'ADMIN'
+      try {
+        await axios.put(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateAdmin/${
+            userData.id
+          }`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error(`Failed updating employee to the database.\n ${error}`);
+        alert(
+          `Failed updating onboarding employee to the database.\n ${error}`
+        );
+        return;
+      }
+    }
+    setReloadData(true)
+    setFormData({
+      name: '',
+      email: '',
+      role: null,
+      department: '',
+    });
+    close();
   };
 
   return (
@@ -428,7 +465,7 @@ export function EditUser({ token }) {
             name: '',
             email: '',
             role: null,
-            departments: [],
+            department: '',
           });
         }}
         title="Edit User"
@@ -486,37 +523,34 @@ export function EditUser({ token }) {
               disabled={formData.role === null ? true : false}
               onChange={(_value, option) => {
                 if (option) {
-                  setFormData({ ...formData, role: option.value });
+                  setFormData({ ...formData, role: option.value});
                 } else {
                   setFormData({ ...formData, role: '' });
                 }
               }}
             />
-            {formData.role === 'EMPLOYEE' && formData.departments ? (
-              <MultiSelect
-                label="Departments"
-                data={allDeps.map(dep => {
-                  return {
-                    value: dep.id.toString(),
-                    label: dep.name,
-                  };
-                })}
-                defaultValue={formData.departments.map(dep => dep.value)}
-                searchable
-                nothingFoundMessage="No such department. Create it in the Departments page."
-                hidePickedOptions
-                clearable
-                disabled={formData.departments === null ? true : false}
-                onChange={selectedOptions => {
-                  setFormData({
-                    ...formData,
-                    departments: {
-                      value: selectedOptions.map(option => option),
-                    },
-                  });
-                }}
-              />
-            ) : null}
+            {formData.role === 'EMPLOYEE' ? (
+            <Select
+              label="Department"
+              data={allDeps.map(dep => {
+                return {
+                  value: dep.id.toString(),
+                  label: dep.name,
+                };
+              })}
+              value={formData.department}
+              searchable
+              clearable
+              disabled={formData.department === null ? true : false}
+              onChange={(option) => {
+                if(option){
+                  setFormData({...formData, department : option});
+                }
+                else{
+                  setFormData({...formData, department : ''});
+                }
+              }}
+            />) : null}
           </div>
           <div className="flex justify-center">
             <Button color="green" onClick={handleUpdate}>
@@ -538,6 +572,9 @@ ArchiveSelectedUsers.propTypes = {
 };
 
 export function ArchiveSelectedUsers({
+  setSelectedEmps,
+  setSelectedSups,
+  setSelectedAdms,
   allSelectedRows,
   setAllSelectedRows,
   setReloadData,
@@ -564,6 +601,9 @@ export function ArchiveSelectedUsers({
       console.error('Errored archiving selected users', error);
     }
     setAllSelectedRows([]);
+    setSelectedEmps([]);
+    setSelectedSups([]);
+    setSelectedAdms([]);
     close();
   };
 
@@ -639,6 +679,9 @@ export default function Users() {
         leftComp2={<EditUser token={token} setReloadData={setReloadData} />}
         leftComp3={
           <ArchiveSelectedUsers
+            setSelectedEmps={setSelectedEmps}
+            setSelectedSups={setSelectedSups}
+            setSelectedAdms={setSelectedAdms}
             allSelectedRows={allSelectedRows}
             setAllSelectedRows={setAllSelectedRows}
             setReloadData={setReloadData}

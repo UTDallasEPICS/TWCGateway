@@ -73,7 +73,10 @@ export default function OnboardingEmployees({
   };
 
   const handleCellClick = (event, rowData) => {
-    navigate(`/admin/onboarding-employee/${rowData.id}`);
+    if(archived === false)
+      navigate(`/admin/onboarding-employee/${rowData.id}`);
+    else
+      navigate(`/admin/archived-onboarding-employee/${rowData.id}`);
   };
 
   console.log('emps', emps);

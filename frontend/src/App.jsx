@@ -9,6 +9,8 @@ import Archive from '@/pages/admin/Archive';
 import EmployeeHomepage from '@/pages/employee/EmployeeHomepage';
 import OnboardingEmployee from './pages/admin/OnboardingEmployee';
 import Supervisor from './pages/admin/Supervisor';
+import ArchivedOnboardingEmployee from './pages/admin/ArchivedOnboardingEmployee'
+import ArchivedSupervisor from './pages/admin/ArchivedSupervisor'
 import SupervisorHomepage from './pages/supervisor/SupervisorHomepage';
 
 function App() {
@@ -30,6 +32,8 @@ function App() {
         <Route path="/admin/departments" element={<Departments />} />
         <Route path="/admin/department/:id" element={<Department />} />
         <Route path="/admin/archive" element={<Archive />} />
+        <Route path="/admin/archived-onboarding-employee/:id" element={<ArchivedOnboardingEmployee />}/>
+        <Route path="/admin/archived-supervisor/:id" element={<ArchivedSupervisor/>}/>
         <Route path="/supervisor" element={<SupervisorHomepage />} />
         <Route path="/onboarding-employee" element={<EmployeeHomepage />} />
       </Routes>

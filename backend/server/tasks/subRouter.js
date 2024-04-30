@@ -15,12 +15,16 @@ const addRoutes = router => {
     '/getAllTasksForAllDepartments',
     controller.getAllTasksForAllDepartments
   );
+
   router.get(
     '/getAllTaskTagsForEmployee/:id',
     controller.getAllTaskTagsForEmployee
   );
   router.get('/getAllTaskTagsForDepartment/:id', controller.getAllTaskTagsForDepartment);
-
+  
+  router.post('/getAllTasksForArchivedEmployee/:id', controller.getAllTasksForArchivedEmployee);
+  router.get('/getAllTaskTagsForArchivedEmployee/:id',controller.getAllTaskTagsForArchivedEmployee);
+  router.post('/getAllTasksForArchivedSupervisor/:id',controller.getAllTasksForArchivedSupervisor);
   //POST
   router.post('/addTaskForDepartment', controller.addTaskForDepartment);
   router.post('/addTaskForSupervisor', controller.addTaskForSupervisor);
