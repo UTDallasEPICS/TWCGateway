@@ -916,6 +916,27 @@ module.exports = {
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
+
+        const prevUser = await prisma.user.findFirst({
+          where: {
+            id: parseInt(id)
+          }
+        })
+        console.log("prevUser", prevUser)
+        if(prevUser.role === 'EMPLOYEE'){
+          const deleteDeptUserMaps = await prisma.departmentUserMapping.deleteMany({
+            where:{
+              userId : parseInt(id)
+            }
+          });
+
+          const deleteOnBoardMaps = await prisma.onboardingEmployeeTaskMapping.deleteMany({
+            where:{
+              userId: parseInt(id)
+            }
+          })
+        }
+        
         const updatedUser = await prisma.user.update({
           where: {
             id: parseInt(id),
