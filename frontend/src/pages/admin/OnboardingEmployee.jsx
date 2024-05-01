@@ -164,49 +164,49 @@ export default function OnboardingEmployee() {
     const getUser = async () => {
       setIsLoading(true);
       try {
-          const response1 = await axios.get(
-            `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getUser/${id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setUser(response1.data);
-          console.log('response1', response1.data);
-          document.title = `${response1.data.name}'s Tasks | TWCGateway`;
-          console.log('response1', response1.data.id);
-          const response2 = await axios.get(
-            `${
-              import.meta.env.VITE_APP_EXPRESS_BASE_URL
-            }/getAllTaskTagsForEmployee/${response1.data.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          console.log('selectedTab', selectedTab);
-          const response3 = await axios.post(
-            `${
-              import.meta.env.VITE_APP_EXPRESS_BASE_URL
-            }/getAllTasksForEmployee/${
-              response1.data.id
-            }?page=${page}&pageSize=2`,
-            {
-              tag: selectedTab,
-              searchTerm: searchTerm,
+        const response1 = await axios.get(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getUser/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
             },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-          setTags(response2.data);
-          console.log('tags', response2.data);
-          setTasks(response3.data);
-          console.log('tasks', response3.data);  
+          }
+        );
+        setUser(response1.data);
+        console.log('response1', response1.data);
+        document.title = `${response1.data.name}'s Tasks | TWCGateway`;
+        console.log('response1', response1.data.id);
+        const response2 = await axios.get(
+          `${
+            import.meta.env.VITE_APP_EXPRESS_BASE_URL
+          }/getAllTaskTagsForEmployee/${response1.data.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log('selectedTab', selectedTab);
+        const response3 = await axios.post(
+          `${
+            import.meta.env.VITE_APP_EXPRESS_BASE_URL
+          }/getAllTasksForEmployee/${
+            response1.data.id
+          }?page=${page}&pageSize=2`,
+          {
+            tag: selectedTab,
+            searchTerm: searchTerm,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setTags(response2.data);
+        console.log('tags', response2.data);
+        setTasks(response3.data);
+        console.log('tasks', response3.data);
       } catch (error) {
         console.error('Error in fetching user in User page', error);
       }

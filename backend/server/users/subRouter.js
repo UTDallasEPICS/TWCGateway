@@ -33,7 +33,7 @@ const addRoutes = router => {
     controller.getOnboardingEmployeeByEmail
   );
   router.post('/supervisor/getUserByEmail', controller.getSupervisorByEmail);
-  router.post('/supervisor/getSupervisorTasks', controller.getTasks);
+  router.post('/supervisor/getSupervisorTasks', controller.getSupervisorTasks);
   router.post('/supervisor/getEmployeeTasks', controller.getEmployeeTasks);
 };
 

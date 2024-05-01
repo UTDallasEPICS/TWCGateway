@@ -292,8 +292,8 @@ module.exports = {
     }
   },
 
-  getTasks: async (req, res) => {
-    const { id } = req.body;
+  getSupervisorTasks: async (req, res) => {
+    const { id, searchTerm } = req.body;
     const { page, pageSize } = req.query;
 
     const skip =
@@ -305,6 +305,12 @@ module.exports = {
         where: {
           userId: parseInt(id),
           archived: false,
+          task: {
+            desc: {
+              contains: searchTerm,
+              mode: 'insensitive',
+            },
+          },
         },
         include: {
           task: true,
@@ -313,19 +319,32 @@ module.exports = {
         take,
       });
 
-      const employeesPromises = tasks.map(async (task) => {
+      const employeesPromises = tasks.map(async task => {
         return await prisma.onboardingEmployeeTaskMapping.findMany({
           where: {
             taskId: task.taskId,
           },
           include: {
-            user: true,
+            user: {
+              include: {
+                DepartmentUserMapping: {
+                  include: {
+                    department: true,
+                  },
+                },
+                OnboardingEmployeeTaskMapping: {
+                  where: {
+                    taskId: task.taskId,
+                  },
+                },
+              },
+            },
           },
         });
-      })
+      });
       const employees = await Promise.all(employeesPromises);
 
-      res.status(200).json({tasks: tasks, employees: employees});
+      res.status(200).json({ tasks: tasks, employees: employees });
     } catch (error) {
       console.error('Error Getting Supervisor Tasks', error);
       res.status(500).json({ message: 'Error Getting Supervisor Tasks' });
@@ -869,17 +888,16 @@ module.exports = {
       let results = [];
       for (let i = 0; i < allSelectedUsers.length; i++) {
         try {
-
           const user = await prisma.user.findFirst({
-            where:{
-              id: parseInt(allSelectedUsers[i])
-            }
+            where: {
+              id: parseInt(allSelectedUsers[i]),
+            },
           });
-          let userUpdate
-          if(user.role === 'EMPLOYEE'){
+          let userUpdate;
+          if (user.role === 'EMPLOYEE') {
             userUpdate = await prisma.user.update({
-              where:{
-                id: parseInt(allSelectedUsers[i])
+              where: {
+                id: parseInt(allSelectedUsers[i]),
               },
               data: {
                 DepartmentUserMapping: {
@@ -905,13 +923,12 @@ module.exports = {
                 archived: true,
               },
             });
-          }
-          else if(user.role === 'SUPERVISOR'){
+          } else if (user.role === 'SUPERVISOR') {
             userUpdate = await prisma.user.update({
-              where:{
-                id: parseInt(allSelectedUsers[i])
+              where: {
+                id: parseInt(allSelectedUsers[i]),
               },
-              data:{
+              data: {
                 SupervisorTaskMapping: {
                   updateMany: {
                     where: {
@@ -923,20 +940,20 @@ module.exports = {
                   },
                 },
                 archived: true,
-              }
+              },
             });
-          }
-          else{//admin
+          } else {
+            //admin
             userUpdate = await prisma.user.update({
               where: {
                 id: parseInt(allSelectedUsers[i]),
-              },  
-              data:{
-                archived: true,    
-              } 
+              },
+              data: {
+                archived: true,
+              },
             });
           }
-       
+
           if (userUpdate === null || userUpdate.length === 0) {
             results.push({
               userId: allSelectedUsers[i],
@@ -971,15 +988,15 @@ module.exports = {
       for (let i = 0; i < allSelectedUsers.length; i++) {
         try {
           const user = await prisma.user.findFirst({
-            where:{
-              id: parseInt(allSelectedUsers[i])
-            }
+            where: {
+              id: parseInt(allSelectedUsers[i]),
+            },
           });
-          let userUpdate
-          if(user.role === 'EMPLOYEE'){
+          let userUpdate;
+          if (user.role === 'EMPLOYEE') {
             userUpdate = await prisma.user.update({
-              where:{
-                id: parseInt(allSelectedUsers[i])
+              where: {
+                id: parseInt(allSelectedUsers[i]),
               },
               data: {
                 DepartmentUserMapping: {
@@ -1005,13 +1022,12 @@ module.exports = {
                 archived: false,
               },
             });
-          }
-          else if(user.role === 'SUPERVISOR'){
+          } else if (user.role === 'SUPERVISOR') {
             userUpdate = await prisma.user.update({
-              where:{
-                id: parseInt(allSelectedUsers[i])
+              where: {
+                id: parseInt(allSelectedUsers[i]),
               },
-              data:{
+              data: {
                 SupervisorTaskMapping: {
                   updateMany: {
                     where: {
@@ -1023,17 +1039,17 @@ module.exports = {
                   },
                 },
                 archived: false,
-              }
+              },
             });
-          }
-          else{//admin
+          } else {
+            //admin
             userUpdate = await prisma.user.update({
               where: {
                 id: parseInt(allSelectedUsers[i]),
-              },  
-              data:{
-                archived: false,    
-              } 
+              },
+              data: {
+                archived: false,
+              },
             });
           }
 
@@ -1070,27 +1086,28 @@ module.exports = {
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
-
         const prevUser = await prisma.user.findFirst({
           where: {
-            id: parseInt(id)
-          }
-        })
-        console.log("prevUser", prevUser)
-        if(prevUser.role === 'EMPLOYEE'){
-          const deleteDeptUserMaps = await prisma.departmentUserMapping.deleteMany({
-            where:{
-              userId : parseInt(id)
-            }
-          });
+            id: parseInt(id),
+          },
+        });
+        console.log('prevUser', prevUser);
+        if (prevUser.role === 'EMPLOYEE') {
+          const deleteDeptUserMaps =
+            await prisma.departmentUserMapping.deleteMany({
+              where: {
+                userId: parseInt(id),
+              },
+            });
 
-          const deleteOnBoardMaps = await prisma.onboardingEmployeeTaskMapping.deleteMany({
-            where:{
-              userId: parseInt(id)
-            }
-          })
+          const deleteOnBoardMaps =
+            await prisma.onboardingEmployeeTaskMapping.deleteMany({
+              where: {
+                userId: parseInt(id),
+              },
+            });
         }
-        
+
         const updatedUser = await prisma.user.update({
           where: {
             id: parseInt(id),
@@ -1101,7 +1118,7 @@ module.exports = {
             role: role,
           },
         });
-        
+
         const deptUserMap = await prisma.departmentUserMapping.create({
           data: {
             userId: parseInt(id),
@@ -1142,25 +1159,26 @@ module.exports = {
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
-
         const prevUser = await prisma.user.findFirst({
           where: {
-            id: parseInt(id)
-          }
-        })
-        console.log("prevUser", prevUser)
-        if(prevUser.role === 'EMPLOYEE'){
-          const deleteDeptUserMaps = await prisma.departmentUserMapping.deleteMany({
-            where:{
-              userId : parseInt(id)
-            }
-          });
+            id: parseInt(id),
+          },
+        });
+        console.log('prevUser', prevUser);
+        if (prevUser.role === 'EMPLOYEE') {
+          const deleteDeptUserMaps =
+            await prisma.departmentUserMapping.deleteMany({
+              where: {
+                userId: parseInt(id),
+              },
+            });
 
-          const deleteOnBoardMaps = await prisma.onboardingEmployeeTaskMapping.deleteMany({
-            where:{
-              userId: parseInt(id)
-            }
-          })
+          const deleteOnBoardMaps =
+            await prisma.onboardingEmployeeTaskMapping.deleteMany({
+              where: {
+                userId: parseInt(id),
+              },
+            });
         }
 
         const updatedUser = await prisma.user.update({
@@ -1192,24 +1210,24 @@ module.exports = {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
-
       const prevUser = await prisma.user.findFirst({
         where: {
-          id: parseInt(id)
-        }
-      })
-      console.log("prevUser", prevUser)
-      if(prevUser.role === 'EMPLOYEE'){
+          id: parseInt(id),
+        },
+      });
+      console.log('prevUser', prevUser);
+      if (prevUser.role === 'EMPLOYEE') {
         const deleteMaps = await prisma.departmentUserMapping.deleteMany({
-          where:{
-            userId : parseInt(id)
-          }
-        })
-        const deleteOnBoardMaps = await prisma.onboardingEmployeeTaskMapping.deleteMany({
-          where:{
-            userId: parseInt(id)
-          }
-        })
+          where: {
+            userId: parseInt(id),
+          },
+        });
+        const deleteOnBoardMaps =
+          await prisma.onboardingEmployeeTaskMapping.deleteMany({
+            where: {
+              userId: parseInt(id),
+            },
+          });
       }
 
       const updatedUser = await prisma.user.update({
