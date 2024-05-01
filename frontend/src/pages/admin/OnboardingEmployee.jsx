@@ -82,6 +82,7 @@ export function TaskTable({ tasks, searchTerm, userId, setReload }) {
               <div>
                 <Checkbox
                   checked={task.taskCompleted}
+                  color="green"
                   onChange={() => {
                     console.log('checkbox clicked', task.id);
                     console.log('checkbox clicked', task);
