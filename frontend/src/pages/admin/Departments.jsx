@@ -53,7 +53,7 @@ export function EditDepartment({ setRefresh }) {
       }
     };
     getDepartments();
-  }, []);
+  }, [opened]);
 
   const handleSubmit = async () => {
     try {
@@ -97,7 +97,7 @@ export function EditDepartment({ setRefresh }) {
         <Select
           label="Choose department"
           data={
-            departments.length === 0 &&
+            departments.length !== 0 &&
             departments.map(department => ({
               value: String(department.id),
               label: department.name,
