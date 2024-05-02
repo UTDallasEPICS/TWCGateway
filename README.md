@@ -72,11 +72,11 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 - Put `1` in the `roleId` field
 - Click the green `Save changes` button -->
 
-13. Go back to the terminal and open a new terminal window in the backend folder
+10. Go back to the terminal and open a new terminal window in the backend folder
 
-14. Now run `npm run dev` to start the backend
+11. Now run `npm run dev` to start the backend
 
-15. Open a fourth terminal and go to the frontend folder and run `npm run dev` to start the frontend
+12. Open a fourth terminal and go to the frontend folder and run `npm run dev` to start the frontend
 
 <!-- </details>
 <details open>
