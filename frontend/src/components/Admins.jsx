@@ -58,12 +58,16 @@ export default function Admins({
     setReloadData(false);
   }, [reloadData, setReloadData, token]);
 
+  const filteredAdms = adms.filter(adm =>
+    adm.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const rows =
-    adms.length > 0 ? (
-      adms
-        .filter(adm =>
-          adm.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+    filteredAdms.length > 0 ? (
+      filteredAdms
+        // .filter(adm =>
+        //   adm.name.toLowerCase().includes(searchTerm.toLowerCase())
+        // )
         .map(adm => (
           <Table.Tr
             key={adm.id}
@@ -108,7 +112,7 @@ export default function Admins({
     ) : (
       <Table.Tr>
         <Table.Td colSpan={2} className="text-center">
-          No admins found
+          No Admins Found
         </Table.Td>
       </Table.Tr>
     );

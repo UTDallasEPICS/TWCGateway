@@ -68,12 +68,16 @@ export default function Supervisors({
     }
   };
 
+  const filteredSups = sups.filter(sup =>
+    sup.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const rows =
-    sups.length > 0 ? (
-      sups
-        .filter(sup =>
-          sup.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+    filteredSups.length > 0 ? (
+      filteredSups
+        // .filter(sup =>
+        //   sup.name.toLowerCase().includes(searchTerm.toLowerCase())
+        // )
         .map(sup => (
           <Table.Tr
             key={sup.id}
@@ -99,10 +103,8 @@ export default function Supervisors({
             <Table.Td
               className="hover:cursor-pointer hover:bg-purple-500"
               onClick={() => {
-                if(archived === false)
-                  navigate(`/admin/supervisor/${sup.id}`);
-                else
-                  navigate(`/admin/archived-supervisor/${sup.id}`);
+                if (archived === false) navigate(`/admin/supervisor/${sup.id}`);
+                else navigate(`/admin/archived-supervisor/${sup.id}`);
               }}
             >
               {sup.name}
@@ -112,7 +114,7 @@ export default function Supervisors({
     ) : (
       <Table.Tr>
         <Table.Td colSpan={2} className="text-center">
-          No supervisors found
+          No Supervisors Found
         </Table.Td>
       </Table.Tr>
     );

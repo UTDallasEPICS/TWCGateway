@@ -73,24 +73,28 @@ export default function OnboardingEmployees({
   };
 
   const handleCellClick = (event, rowData) => {
-    if(archived === false)
+    if (archived === false)
       navigate(`/admin/onboarding-employee/${rowData.id}`);
-    else
-      navigate(`/admin/archived-onboarding-employee/${rowData.id}`);
+    else navigate(`/admin/archived-onboarding-employee/${rowData.id}`);
   };
 
   console.log('emps', emps);
+
+  const filteredEmps = emps.filter(emp =>
+    emp.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const rows =
-    emps.length > 0 ? (
-      emps
+    filteredEmps.length > 0 ? (
+      filteredEmps
         // .filter(
-        //   emp =>
-        //     emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //     emp.DepartmentUserMapping.some(departmentUserMapping =>
-        //       departmentUserMapping.department.name
-        //         .toLowerCase()
-        //         .includes(searchTerm.toLowerCase())
-        //     )
+        //   emp => emp.name.toLowerCase().includes(searchTerm.toLowerCase())
+        //   // ||
+        //   // emp.DepartmentUserMapping.some(departmentUserMapping =>
+        //   //   departmentUserMapping.department.name
+        //   //     .toLowerCase()
+        //   //     .includes(searchTerm.toLowerCase())
+        //   // )
         // )
         .map(emp => (
           <Table.Tr
@@ -128,7 +132,7 @@ export default function OnboardingEmployees({
     ) : (
       <Table.Tr>
         <Table.Td colSpan={3} className="text-center">
-          No employees found
+          No Onboarding Employees Found
         </Table.Td>
       </Table.Tr>
     );
