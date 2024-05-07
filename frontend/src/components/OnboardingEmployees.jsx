@@ -80,7 +80,7 @@ export default function OnboardingEmployees({
 
   console.log('emps', emps);
 
-  const filteredEmps = emps.filter(emp =>
+  const filteredEmps = emps && emps.filter(emp =>
     emp.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

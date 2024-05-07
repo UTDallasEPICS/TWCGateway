@@ -68,7 +68,7 @@ export default function Supervisors({
     }
   };
 
-  const filteredSups = sups.filter(sup =>
+  const filteredSups = sups && sups.filter(sup =>
     sup.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

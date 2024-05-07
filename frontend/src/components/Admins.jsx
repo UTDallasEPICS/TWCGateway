@@ -58,7 +58,7 @@ export default function Admins({
     setReloadData(false);
   }, [reloadData, setReloadData, token]);
 
-  const filteredAdms = adms.filter(adm =>
+  const filteredAdms = adms && adms.filter(adm =>
     adm.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
