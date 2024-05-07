@@ -68,16 +68,20 @@ export default function Supervisors({
     }
   };
 
-  const filteredSups = sups && sups.filter(sup =>
-    sup.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredSups =
+  //   sups.message !== 'No Employee Found or all Employees Archived' &&
+  //   sups.filter(sup =>
+  //     sup.name.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
 
   const rows =
-    filteredSups.length > 0 ? (
-      filteredSups
-        // .filter(sup =>
-        //   sup.name.toLowerCase().includes(searchTerm.toLowerCase())
-        // )
+    // filteredSups.length > 0 ? (
+    sups.length > 0 ? (
+      // filteredSups
+      sups
+        .filter(sup =>
+          sup.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
         .map(sup => (
           <Table.Tr
             key={sup.id}

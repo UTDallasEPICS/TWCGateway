@@ -58,16 +58,20 @@ export default function Admins({
     setReloadData(false);
   }, [reloadData, setReloadData, token]);
 
-  const filteredAdms = adms && adms.filter(adm =>
-    adm.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredAdms =
+  //   adms.message !== 'No Employee Found or all Employees Archived' &&
+  //   adms.filter(adm =>
+  //     adm.name.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
 
   const rows =
-    filteredAdms.length > 0 ? (
-      filteredAdms
-        // .filter(adm =>
-        //   adm.name.toLowerCase().includes(searchTerm.toLowerCase())
-        // )
+    // filteredAdms.length > 0 ? (
+      adms.length > 0 ? (
+      // filteredAdms
+      adms
+        .filter(adm =>
+          adm.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
         .map(adm => (
           <Table.Tr
             key={adm.id}

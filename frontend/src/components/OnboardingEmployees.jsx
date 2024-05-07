@@ -80,9 +80,11 @@ export default function OnboardingEmployees({
 
   console.log('emps', emps);
 
-  const filteredEmps = emps && emps.filter(emp =>
-    emp.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredEmps =
+    emps.message !== 'No Employee Found or all Employees Archived' &&
+    emps.filter(emp =>
+      emp.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   const rows =
     filteredEmps.length > 0 ? (
