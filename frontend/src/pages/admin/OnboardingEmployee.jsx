@@ -152,6 +152,7 @@ export default function OnboardingEmployee() {
   const [user, setUser] = useState({});
   const [tasks, setTasks] = useState([]);
   const [tags, setTags] = useState([]);
+  const [defaultTag, setDefaultTag] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
@@ -160,6 +161,8 @@ export default function OnboardingEmployee() {
   );
   const [isLoading, setIsLoading] = useState(false);
   const [reload, setReload] = useState(false);
+
+  let tag = '';
 
   useEffect(() => {
     const getUser = async () => {
@@ -205,6 +208,10 @@ export default function OnboardingEmployee() {
           }
         );
         setTags(response2.data);
+        if (response2.data.length > 0) {
+          // tags && tags.length > 0 ? `${tags[0]}` : '';
+          setDefaultTag(response2.data[0]);
+        }
         console.log('tags', response2.data);
         setTasks(response3.data);
         console.log('tasks', response3.data);
@@ -261,8 +268,15 @@ export default function OnboardingEmployee() {
               <div className="bg-white bg-opacity-50 border-2 border-white p-2 rounded-lg md:flex md:justify-center">
                 <div className="md:w-3/4 border-white border-2 rounded-lg p-2 bg-blue-100 font-mono ">
                   {console.log(tags && tags.length > 0 ? `${tags[0]}` : '')}
+                  {/* {tags && tags.length > 0 ? `${(tag = tags[0])}` : ''} */}
+                  {/* {isLoading ? (
+                    <div className="flex justify-center items-center">
+                      <Loader />
+                    </div>
+                  ) : ( */}
                   <Tabs
-                    defaultValue={tags && tags.length > 0 ? `${tags[0]}` : ''}
+                    // defaultValue={tags && tags.length > 0 ? `${tags[0]}` : ''}
+                    defaultValue={defaultTag}
                     variant="pills"
                     color="violet"
                     radius="xl"
@@ -315,6 +329,7 @@ export default function OnboardingEmployee() {
                       </Tabs.Panel>
                     ))}
                   </Tabs>
+                  {/* )} */}
                 </div>
               </div>
             </div>
