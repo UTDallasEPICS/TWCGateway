@@ -312,6 +312,10 @@ module.exports = {
             },
           },
         },
+        orderBy: {
+          id: 'desc',
+        },
+
         include: {
           task: true,
         },
