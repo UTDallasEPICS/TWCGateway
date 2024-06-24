@@ -658,6 +658,25 @@ module.exports = {
             departmentId: parseInt(deptId),
           },
         });
+
+        //add to all existing department employees
+        const deptEmps = await prisma.departmentUserMapping.findMany({
+          where: {
+            departmentId : parseInt(deptId),
+            archived : false
+          }
+        });
+
+        for(let i = 0; i < deptEmps.length; i++){
+          const taskToCurEmp = await prisma.onboardingEmployeeTaskMapping.create({
+            data: {
+              userId : deptEmps[i].userId,
+              departmentId : parseInt(deptId),
+              taskId : task.id,
+            }
+          })
+        }
+
         res.status(200).json('Sucessfully added task to department');
       } catch (error) {
         console.log(error);
