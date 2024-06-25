@@ -509,11 +509,9 @@ module.exports = {
         res.status(200).json(result);
       } catch (err) {
         console.log(err);
-        res
-          .status(400)
-          .json({
-            error: 'Error getting tasks for archived onboarding employee',
-          });
+        res.status(400).json({
+          error: 'Error getting tasks for archived onboarding employee',
+        });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
@@ -552,11 +550,9 @@ module.exports = {
         res.status(200).json(result); //returns an array of unique tags
       } catch (err) {
         console.log(err);
-        res
-          .status(400)
-          .json({
-            error: 'Error getting task tags for archived onboarding employee',
-          });
+        res.status(400).json({
+          error: 'Error getting task tags for archived onboarding employee',
+        });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
@@ -661,6 +657,26 @@ module.exports = {
             departmentId: parseInt(deptId),
           },
         });
+
+        const listOfEmployees = await prisma.departmentUserMapping.findMany({
+          where: {
+            departmentId: deptId,
+          },
+          include: {
+            user: true,
+          },
+        });
+
+        listOfEmployees.map(async employee => {
+          const empTaskMap = await prisma.onboardingEmployeeTaskMapping.create({
+            data: {
+              userId: employee.id,
+              taskId: task.id,
+              departmentId: deptId,
+            },
+          });
+        });
+        // console.log(listOfEmployees);
         res.status(200).json('Sucessfully added task to department');
       } catch (error) {
         console.log(error);

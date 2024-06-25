@@ -398,7 +398,7 @@ export default function Departments() {
                       />
                     </Table.Td>
                     <Table.Td
-                      className="w-1/2 hover:cursor-pointer hover:bg-purple-500"
+                      className="w-1/2 hover:cursor-pointer hover:bg-purple-500 hover:text-white"
                       onClick={() => {
                         handleNameClick(department.id);
                       }}
