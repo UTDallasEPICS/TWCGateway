@@ -670,9 +670,9 @@ module.exports = {
         listOfEmployees.map(async employee => {
           const empTaskMap = await prisma.onboardingEmployeeTaskMapping.create({
             data: {
-              userId: employee.id,
-              taskId: task.id,
-              departmentId: deptId,
+              userId: parseInt(employee.user.id),
+              taskId: parseInt(task.id),
+              departmentId: parseInt(deptId),
             },
           });
         });
