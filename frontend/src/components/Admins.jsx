@@ -66,7 +66,7 @@ export default function Admins({
 
   const rows =
     // filteredAdms.length > 0 ? (
-      adms.length > 0 ? (
+    adms.length > 0 ? (
       // filteredAdms
       adms
         .filter(adm =>
@@ -122,8 +122,8 @@ export default function Admins({
     );
 
   return (
-    <div className="flex flex-col bg-white bg-opacity-50 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
-      <div className="text-white font-bold font-mono text-2xl">Admins</div>
+    <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
+      <div className="font-bold font-mono text-2xl">Admins</div>
       <div className="md:flex md:justify-center">
         <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
           <Table.Thead>

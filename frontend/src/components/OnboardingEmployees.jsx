@@ -121,7 +121,7 @@ export default function OnboardingEmployees({
               />
             </Table.Td>
             <Table.Td
-              className="hover:cursor-pointer hover:bg-purple-500 w-5/12"
+              className="hover:cursor-pointer hover:bg-purple-500 w-5/12 hover:text-white"
               onClick={event => handleCellClick(event, emp)}
             >
               {emp.name}
@@ -141,9 +141,7 @@ export default function OnboardingEmployees({
 
   return (
     <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
-      <div className="font-bold font-mono text-2xl">
-        Onboarding Employees
-      </div>
+      <div className="font-bold font-mono text-2xl">Onboarding Employees</div>
       <div className="md:flex md:justify-center">
         <Table
           // horizontalSpacing=""
