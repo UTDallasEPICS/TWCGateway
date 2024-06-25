@@ -140,8 +140,8 @@ export default function OnboardingEmployees({
     );
 
   return (
-    <div className="flex flex-col bg-white bg-opacity-50 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
-      <div className="text-white font-bold font-mono text-2xl">
+    <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
+      <div className="font-bold font-mono text-2xl">
         Onboarding Employees
       </div>
       <div className="md:flex md:justify-center">

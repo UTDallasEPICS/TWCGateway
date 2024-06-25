@@ -271,7 +271,6 @@ module.exports = {
     }
   },
 
-
   getAllTasksForAllDepartments: async (req, res) => {
     const { page, pageSize } = req.query;
     const { searchTerm, superId } = req.body;
@@ -512,7 +511,9 @@ module.exports = {
         console.log(err);
         res
           .status(400)
-          .json({ error: 'Error getting tasks for archived onboarding employee' });
+          .json({
+            error: 'Error getting tasks for archived onboarding employee',
+          });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
@@ -553,7 +554,9 @@ module.exports = {
         console.log(err);
         res
           .status(400)
-          .json({ error: 'Error getting task tags for archived onboarding employee' });
+          .json({
+            error: 'Error getting task tags for archived onboarding employee',
+          });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
@@ -619,14 +622,14 @@ module.exports = {
         res.status(200).json(result);
       } catch (err) {
         console.log(err);
-        res.status(400).json({ error: 'Error getting tasks for archived supervisor' });
+        res
+          .status(400)
+          .json({ error: 'Error getting tasks for archived supervisor' });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
   },
-
-  
 
   //POST
   addTaskForDepartment: async (req, res) => {
@@ -943,12 +946,11 @@ module.exports = {
         });
 
         if (superId !== undefined) {
-          const deleteSuperMap =
-            await prisma.supervisorTaskMapping.deleteMany({
-              where: {
-                taskId: parseInt(id),
-              },
-            });
+          const deleteSuperMap = await prisma.supervisorTaskMapping.deleteMany({
+            where: {
+              taskId: parseInt(id),
+            },
+          });
 
           const makeNewTaskSuperMap = await prisma.supervisorTaskMapping.create(
             {
@@ -956,7 +958,6 @@ module.exports = {
                 taskId: parseInt(id),
                 userId: parseInt(superId),
                 departmentId: parseInt(departmentId),
-                
               },
             }
           );
