@@ -1,0 +1,2 @@
+- Used this blog post to install all dependencies: https://vicvijayakumar.com/blog/eslint-airbnb-style-guide-prettier/
+- To format all the files you can run: `npx prettier --write .`

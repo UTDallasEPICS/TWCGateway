@@ -1,0 +1,34 @@
+.gradient-background {
+  background: linear-gradient(300deg,#7f3f98,#2cb8e6,#49b85b);
+  background-size: 180% 180%;
+  animation: gradient-animation 15s ease infinite;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+
+.redirect-grow-shrink {
+  animation: grow-shrink 2s ease-in-out infinite;
+}
+
+@keyframes grow-shrink {
+  0% {
+    transform: scale(1); /* Start at normal size */
+  }
+  50% {
+    transform: scale(1.2); /* Grow to 1.2 times the original size */
+  }
+  100% {
+    transform: scale(1); /* Shrink back to normal size */
+  }
+}

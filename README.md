@@ -1,8 +1,10 @@
 # Conceptual Overview
-This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). The objective is to improve and streamline their current manual onboarding process, aiming for enhanced user efficiency and overall ease of use. The application has three types of users: admins, supervisors, and employees. Admins control all the CRUD modifications on the app. Supervisors can perform only one update action, but they have the ability to view all the pages accessible to the admin. Employees can perform no modifications and can only see their page. 
+
+This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). The objective is to improve and streamline their current manual onboarding process, aiming for enhanced user efficiency and overall ease of use. The application has three types of users: admins, supervisors, and employees. Admins control all the CRUD modifications on the app. Supervisors can perform only one update action, but they have the ability to view all the pages accessible to the admin. Employees can perform no modifications and can only see their page.
 
 # Project Setup
-<!-- 
+
+<!--
 <details open>
 <summary>Prerequisites</summary> -->
 
@@ -21,12 +23,13 @@ If you haven't yet installed Node.js, Docker, and VS Code, you can download them
 - Visual Studio Code for [Windows](https://code.visualstudio.com/docs/setup/windows) or [Mac](https://code.visualstudio.com/docs/setup/mac)
 
 Note: for Windows users, dedicating time to set up Windows Subsystem for Linux (WSL) will prove to be a worthwhile investment. This is not required to run the project, but is recommended.
-<!-- 
+
+<!--
 Note: for Windows users, dedicating time to set up Windows Subsystem for Linux (WSL) will prove to be a worthwhile investment. This is not required to run the project, but is recommended. Roughly you will need to follow these steps to set up WSL:
   - Install [WSL 2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) (it is just `wsl --install` in PowerShell as admin but you should read the docs)
   - Install docker compose in WSL 2 by following [these steps](https://docs.docker.com/compose/install/) -->
 
-<!-- 
+<!--
 </details>
 <details open>
 <summary>Running the Project for the First Time</summary> -->
@@ -51,28 +54,29 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 
 8. Keep the docker terminal open and make a new terminal window
 
-9. Go to the backend folder and run the command `npx prisma migrate dev` to create the database
+9. Go to the backend folder and run the command `npx prisma migrate reset` to create the database
 
-10. Run the command `npx prisma studio` to open the database in the browser
+<!-- 10. Run the command `npx prisma studio` to open the database in the browser
 
 11. Click on the `User` table and then click on the `Add record` button to add a new user
-  - Do not change the `id #` field
-  - Put your name or any name in the `name` field
-  - The sign-in system (Auth0) currently has "Sign in with Google" and "Sign in with Microsoft" enabled. So, you can use either a Google or a Microsoft account in the `email` field.
-  - Click the green `Save changes` button
 
-12. Open a new tab and click on the `UserRoleMapping` table and then click on the `Add record` button to add a new user role mapping
-  - Do not change the `id #` field
-  - Put the `id #` of the user you just created in the `userId` field
-  - Put `1` in the `roleId` field
-  - Click the green `Save changes` button
+- Do not change the `id #` field
+- Put your name or any name in the `name` field
+- The sign-in system (Auth0) currently has "Sign in with Google" and "Sign in with Microsoft" enabled. So, you can use either a Google or a Microsoft account in the `email` field.
+- Click the green `Save changes` button -->
 
-13. Go back to the terminal and open a new terminal window in the backend folder
+<!-- 12. Open a new tab and click on the `UserRoleMapping` table and then click on the `Add record` button to add a new user role mapping -->
 
-14. Now run `npm run dev` to start the backend
+<!-- - Do not change the `id #` field
+- Put the `id #` of the user you just created in the `userId` field
+- Put `1` in the `roleId` field
+- Click the green `Save changes` button -->
 
-15. Open a fourth terminal and go to the frontend folder and run `npm start` to start the frontend (this may take a while)
+10. Go back to the terminal and open a new terminal window in the backend folder
 
+11. Now run `npm run dev` to start the backend
+
+12. Open a fourth terminal and go to the frontend folder and run `npm run dev` to start the frontend
 
 <!-- </details>
 <details open>
@@ -82,78 +86,92 @@ Once you have VS Code, Docker, and Node.js installed, you can setup the project 
 
 1. Open the folder where you initially cloned the repository in VS Code
 2. In three different terminals:
-    1. Run `docker compose up` in the root of the project
-    2. Run `npm run dev` in the /backend folder
-    3. Run `npm run start` in the /frontend folder (this may take a while)
-    <!-- </details> -->
+   1. Run `docker compose up` in the root of the project
+   2. Run `npm run dev` in the /backend folder
+   3. Run `npm run dev` in the /frontend folder (this may take a while)
+   <!-- </details> -->
 
 **If any part of the setup does not make sense or is yielding errors, you can paste these steps in ChatGPT or Bing Chat. These tools are a great first step in debugging the problem.**
-
 
 # Functional Requirements
 
 ## Roles and Permissions
 
 ### Admin
+
 User with the most permissions. Can perform all CRUD operations on all pages.
+
 ### Supervisor
-User with the second most permissions. Sees everything the admin can. However, can perform the action of completing a task for a user only if they are assigned to that specific task. 
+
+User with the second most permissions. Sees everything the admin can. However, can perform the action of completing a task for a user only if they are assigned to that specific task.
+
 ### Employee
+
 User with the least permissions. Can only see their own page. Can't perform any CRUD operations.
 
 ## Pages
 
-### Admin and Supervisor
-#### Users and Departments
-On the Users page: <br>
-The admins and supervisors will be able to see all the users currently in the system. The admin will have the ability to CRUD users on this page, whereas the supervisor will only be able to view the users. Upon clicking on a specific user, their task list will open up. The admin will be able to mark every task as completed. Whereas, the supervisor will only be able to mark the tasks they are assigned to. 
+### Users
 
-On the Departments page: <br>
-The admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
+On this page the admins and supervisors will be able to see all the users currently in the system. The admin will have the ability to CRUD users on this page, whereas the supervisor will only be able to view the users. Upon clicking on a specific user, their task list will open up. The admin will be able to mark every task as completed. Whereas, the supervisor will only be able to mark the tasks they are assigned to.
+
+### Departments
+
+On this page the admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
 
 ### Archive
+
 This page will have three tabs: Archived Users, Archived Departments, Archived Tasks. The admins and supervisors will be able to see all the archived users, departments, and tasks. The admin will have the ability to either permanently delete or restore users, departments, and tasks. Whereas the supervisor will only be able to view the archived users, departments, and tasks.
 
 ### Employee Specific Page (Not implemented yet)
-Employees can't edit anything on this page. They can only interact with the profile button and the supervisor's name. The profile button will open a modal with their profile information. Upon clicking the supervisor's name, it will open a modal with the supervisor's profile information. The idea is that the employee can see their tasks and then be able to see their supervisor's information in case they need to contact them.
+
+Employees will not be able to see any other page except this one. They can't edit anything on this page. They can only interact with the profile button and the supervisor's name. The profile button will open a modal with their profile information. Upon clicking the supervisor's name, it will open a modal with the supervisor's profile information. The idea is that the employee can see their tasks and then be able to see their supervisor's information in case they need to contact them.
 
 ## Database Tables
 
-| **Tables**                    | **Attributes**                                   |
-|-------------------------------|-------------------------------------------------|
-| **User**                       |  Name, <br>Email (unique) <br>Archived (boolean)  |
-| **Department**                 | Name <br>Archived (boolean)                    |
-| **Task**                       | Description <br>Archived (boolean)            |
-| **Role**                       | roleName <br>Archived (boolean)                |
-| **UserRoleMapping**            | Relates a user to a role - <br>(userId, roleId)   |
-| **DepartmentTaskMapping**      | Relates a department to a task - <br>(departmentId, taskId) |
-| **DepartmentUserMapping**      | Relates a user to a department - <br>(userId, departmentId) |
-| **ApproverTaskMapping**        | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId) |
-| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId) |
+| **Tables**                        | **Attributes**                                                                |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| **User**                          | Name, <br>Email (unique) <br>Archived (boolean)                               |
+| **Department**                    | Name <br>Archived (boolean)                                                   |
+| **Task**                          | Description <br>Archived (boolean)                                            |
+| **Role**                          | roleName <br>Archived (boolean)                                               |
+| **UserRoleMapping**               | Relates a user to a role - <br>(userId, roleId)                               |
+| **DepartmentTaskMapping**         | Relates a department to a task - <br>(departmentId, taskId)                   |
+| **DepartmentUserMapping**         | Relates a user to a department - <br>(userId, departmentId)                   |
+| **ApproverTaskMapping**           | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId) |
+| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId)    |
 
 ## Stack
 
 ### Frontend
+
 - React (framework)
-- Chakra UI (component library)
+- HeadlessUI (component library)
+- TailwindCSS (styling)
 - Javascript (language)
+
 ### Backend
+
 - Node.js (runtime)
 - Express.js (framework)
 - Prisma (ORM)
 - PostgreSQL (database)
 - Javascript (language)
+
 ### VS Code Extensions
+
 - Thunder Client (similar to Postman for testing API endpoints)
-- Prettier (code formatter)
-- GitLens (additional git features)
 - Copilot and Copilot Chat (AI) (Student GitHub account recieve access for free)
+- Prettier (code formatter)
+- ESLint (code linter)
+- GitLens (additional git features)
 
 These are the most important extensions that everyone on the team should have. Other extensions are up to personal preference.
 
 ## Third party integrations
 
 - Auth0 for authentication
+  - Microsoft sign-in (The Warren Center uses Office 365, so we only need this to authenticate them)
 
 ## Deployment
 

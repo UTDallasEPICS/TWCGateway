@@ -1,5 +1,5 @@
 services:
-  warren-db:
+  twcg-db:
     image: postgres
     restart: always
     environment:
@@ -9,7 +9,7 @@ services:
     ports:
       - '5005:5432'
     volumes:
-      - warren-db:/var/lib/postgresql/data
+      - twcg-db:/var/lib/postgresql/data
 volumes:
-  warren-db:
+  twcg-db:
     driver: local

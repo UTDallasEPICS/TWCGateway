@@ -1,0 +1,5 @@
+ChakraUI feels too restrictive. 
+
+For example, the table for tasks needs to have subheadings too. I don't see how I can do that with ChakraUI.
+
+Shadcn looks like a better alternative anyways. Also, using typescript will be better.
