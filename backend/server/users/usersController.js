@@ -328,6 +328,9 @@ module.exports = {
           where: {
             taskId: task.taskId,
           },
+          orderBy: {
+            userId : 'desc'
+          },
           include: {
             user: {
               include: {

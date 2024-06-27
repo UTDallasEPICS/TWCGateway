@@ -87,17 +87,11 @@ export default function OnboardingEmployees({
     );
 
   const rows =
-    filteredEmps.length > 0 ? (
-      filteredEmps
-        // .filter(
-        //   emp => emp.name.toLowerCase().includes(searchTerm.toLowerCase())
-        //   // ||
-        //   // emp.DepartmentUserMapping.some(departmentUserMapping =>
-        //   //   departmentUserMapping.department.name
-        //   //     .toLowerCase()
-        //   //     .includes(searchTerm.toLowerCase())
-        //   // )
-        // )
+    emps.length > 0 ? (
+      emps
+      .filter(emp =>
+        emp.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
         .map(emp => (
           <Table.Tr
             key={emp.id}
