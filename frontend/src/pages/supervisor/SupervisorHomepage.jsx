@@ -178,7 +178,7 @@ export default function SupervisorHomepage() {
           </ActionIcon>
         </Tooltip>
       </div>
-      <div className="flex flex-col p-3 m-3 bg-white bg-opacity-50 rounded-lg">
+      {/* <div className="flex flex-col p-3 m-3 bg-white bg-opacity-50 rounded-lg"> */}
         {localUser &&
           localUserTasks &&
           localUserTasks.tasks &&
@@ -277,7 +277,7 @@ export default function SupervisorHomepage() {
               </Table>
             </details>
           ))}
-      </div>
+      {/* </div> */}
     </div>
   );
 }
