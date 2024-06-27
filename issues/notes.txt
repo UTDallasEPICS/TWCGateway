@@ -1,3 +1,0 @@
-Cosmetic/Functional
-
-1. (Admin View) On supervisor page pagination does not disable when no result.
