@@ -11,18 +11,22 @@ export default function EmployeeHomepage() {
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
   const [userTasks, setUserTasks] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(1);
   const [tags, setTags] = useState(null);
   const [refresh, setRefresh] = useState(0);
+  const [activeTab, setActiveTab] = useState('');
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
+    setLoading(true);
     const getUser = async () => {
       try {
         const response = await axios.post(
           `${
             import.meta.env.VITE_APP_EXPRESS_BASE_URL
-          }/onboardingEmployee/getUserByEmail?page=${page}&pageSize=2`,
+          }/onboardingEmployee/getUserByEmail?page=${page}&pageSize=1`,
           {
             searchTerm,
+            activeTab,
             email: user.email,
           }
         );
@@ -59,7 +63,8 @@ export default function EmployeeHomepage() {
     if (user) {
       getUser();
     }
-  }, [user, refresh]);
+    console.log('active tab is', activeTab);
+  }, [user, refresh, activeTab]);
 
   // const tags = [...new Set(userTasks && userTasks.map(task => task.task.tag))];
   // console.log('tags', tags);
@@ -130,6 +135,10 @@ export default function EmployeeHomepage() {
           <div className="md:w-3/4 border-white border-2 rounded-lg p-2 bg-blue-100 font-mono">
             <Tabs
               defaultValue={tags && tags.length > 0 ? `${tags[0]}` : ''}
+              onChange={e => {
+                setActiveTab(e);
+                setPage(1);
+              }}
               variant="pills"
               color="violet"
               radius="xl"
@@ -184,29 +193,42 @@ export default function EmployeeHomepage() {
                           </Table.Tbody>
                         </Table>
                       </div>
+                      <div className="flex justify-center mt-2 items-center bg-white bg-opacity-50 p-2 ">
+                        <ActionIcon
+                          onClick={() => {
+                            setPage(page - 1);
+                            setRefresh(refresh + 1);
+                          }}
+                          disabled={page - 1 === 0}
+                        >
+                          <LeftAngle />
+                        </ActionIcon>
+                        <span className="font-mono mr-2 ml-2">
+                          {page}/{localUser && localUser.totalPages}
+                        </span>
+                        <ActionIcon
+                          onClick={() => {
+                            setPage(page + 1);
+                            setRefresh(refresh + 1);
+                          }}
+                          disabled={page === localUser.totalPages}
+                        >
+                          {console.log('page', page)}
+                          {console.log(
+                            'localUser.totalPages',
+                            localUser && localUser.totalPages
+                          )}
+                          {console.log(
+                            'disabled={page === localUser.totalPages}',
+                            page === localUser.totalPages
+                          )}
+                          <RightAngle />
+                        </ActionIcon>
+                      </div>
                     </Tabs.Panel>
                   </>
                 ))}
             </Tabs>
-            <div className="flex justify-center mt-2 items-center bg-white bg-opacity-50 p-2 ">
-              <ActionIcon
-              // onClick={() => (page - 1 !== 0 ? setPage(page - 1) : null)}
-              // disabled={page - 1 === 0}
-              >
-                <LeftAngle />
-              </ActionIcon>
-              <span className="font-mono mr-2 ml-2">
-                {/* {page}/{tasks.totalPages} */}
-              </span>
-              <ActionIcon
-              // onClick={() =>
-              //   page !== tasks.totalPages ? setPage(page + 1) : null
-              // }
-              // disabled={page === tasks.totalPages}
-              >
-                <RightAngle />
-              </ActionIcon>
-            </div>
           </div>
         </div>
       </div>

@@ -183,8 +183,7 @@ module.exports = {
   },
 
   getOnboardingEmployeeByEmail: async (req, res) => {
-    // console.log("getting hit")
-    const { email, searchTerm } = req.body;
+    const { email, searchTerm, activeTab } = req.body;
     const { page, pageSize } = req.query;
 
     // const skip =
@@ -197,34 +196,6 @@ module.exports = {
     const take = pageSize ? parseInt(pageSize) : 10;
 
     try {
-      // const user = await prisma.user.findUnique({
-      //   where: {
-      //     email: email,
-      //   },
-      //   include: {
-      //     DepartmentUserMapping: {
-      //       include: {
-      //         department: true,
-      //       },
-      //     },
-      //     OnboardingEmployeeTaskMapping: {
-      //       include: {
-      //         task: {
-      //           include: {
-      //             SupervisorTaskMapping: {
-      //               include: {
-      //                 user: true,
-      //               },
-      //             },
-      //           },
-      //           skip,
-      //           take,
-      //         },
-      //       },
-      //     },
-      //   },
-      // });
-
       const user = await prisma.user.findUnique({
         where: {
           email: email,
@@ -247,6 +218,9 @@ module.exports = {
                 contains: searchTerm,
                 mode: 'insensitive',
               },
+              tag: {
+                contains: activeTab,
+              },
             },
           },
           include: {
@@ -262,9 +236,29 @@ module.exports = {
           },
           skip,
           take,
+          orderBy: {
+            id: 'asc',
+          },
         });
 
+        const countedTasks = await prisma.onboardingEmployeeTaskMapping.count({
+          where: {
+            userId: user.id,
+            task: {
+              desc: {
+                contains: searchTerm,
+                mode: 'insensitive',
+              },
+              tag: {
+                contains: activeTab,
+              },
+            },
+          },
+        });
+        const totalPages = Math.ceil(countedTasks / pageSize);
+
         user.OnboardingEmployeeTaskMapping = tasks;
+        user.totalPages = totalPages;
       }
 
       if (user === null || user.length === 0) {
