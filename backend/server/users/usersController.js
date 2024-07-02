@@ -184,11 +184,16 @@ module.exports = {
 
   getOnboardingEmployeeByEmail: async (req, res) => {
     // console.log("getting hit")
-    const { email } = req.body;
+    const { email, searchTerm } = req.body;
     const { page, pageSize } = req.query;
 
+    // const skip =
+    //   page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
     const skip =
-      page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
+      page && pageSize
+        ? Math.max((parseInt(page) - 1) * parseInt(pageSize), 0)
+        : 0;
+
     const take = pageSize ? parseInt(pageSize) : 10;
 
     try {
@@ -237,6 +242,12 @@ module.exports = {
         const tasks = await prisma.onboardingEmployeeTaskMapping.findMany({
           where: {
             userId: user.id,
+            task: {
+              desc: {
+                contains: searchTerm,
+                mode: 'insensitive',
+              },
+            },
           },
           include: {
             task: {
@@ -329,7 +340,7 @@ module.exports = {
             taskId: task.taskId,
           },
           orderBy: {
-            userId : 'desc'
+            userId: 'desc',
           },
           include: {
             user: {
