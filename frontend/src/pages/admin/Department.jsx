@@ -221,9 +221,8 @@ export function TaskTable({
             </Table.Td>
             <Table.Td
               onDoubleClick={() => {
-                
                 setEditMode({ ...editMode, [task.task.id]: true });
-              }} 
+              }}
               // onClick={() => {
               //   //setSelectedRows(
               //     selectedRows.includes(task.id) || editMode[task.task.id]
@@ -290,7 +289,8 @@ export function TaskTable({
                       <CancelIcon />
                     </Button>
                     <Button
-                      onClick={() => { console.log(task)
+                      onClick={() => {
+                        console.log(task);
                         handleSave(
                           task.task.id,
                           task.task.desc,
@@ -596,7 +596,10 @@ export default function Department() {
                   variant="pills"
                   color="violet"
                   radius="xl"
-                  onChange={setSelectedTab}
+                  onChange={e => {
+                    setSelectedTab(e);
+                    setPage(1);
+                  }}
                 >
                   <Tabs.List grow>
                     {tags.map(tag => (
