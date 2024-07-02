@@ -20,8 +20,9 @@ const addRoutes = router => {
     '/getAllTaskTagsForEmployee/:id',
     controller.getAllTaskTagsForEmployee
   );
+  router.get('/getAllOnboardingEmployeeTasks/:id', controller.getAllOnboardingEmployeeTasks)
   router.get('/getAllTaskTagsForDepartment/:id', controller.getAllTaskTagsForDepartment);
-  
+
   router.post('/getAllTasksForArchivedEmployee/:id', controller.getAllTasksForArchivedEmployee);
   router.get('/getAllTaskTagsForArchivedEmployee/:id',controller.getAllTaskTagsForArchivedEmployee);
   router.post('/getAllTasksForArchivedSupervisor/:id',controller.getAllTasksForArchivedSupervisor);

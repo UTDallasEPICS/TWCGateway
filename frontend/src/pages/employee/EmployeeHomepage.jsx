@@ -1,4 +1,6 @@
-import { Button, Avatar, Table, Tabs } from '@mantine/core';
+import { Button, Avatar, Table, Tabs, ActionIcon } from '@mantine/core';
+import RightAngle from '../../assets/icons/RightAngle';
+import LeftAngle from '../../assets/icons/LeftAngle';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -9,17 +11,39 @@ export default function EmployeeHomepage() {
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
   const [userTasks, setUserTasks] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [page, setPage] = useState(0);
+  const [tags, setTags] = useState(null);
+  const [refresh, setRefresh] = useState(0);
   useEffect(() => {
     const getUser = async () => {
       try {
         const response = await axios.post(
           `${
             import.meta.env.VITE_APP_EXPRESS_BASE_URL
-          }/onboardingEmployee/getUserByEmail`,
+          }/onboardingEmployee/getUserByEmail?page=${page}&pageSize=2`,
           {
+            searchTerm,
             email: user.email,
           }
         );
+        let fetchedTags;
+        try {
+          fetchedTags = await axios.get(
+            `${
+              import.meta.env.VITE_APP_EXPRESS_BASE_URL
+            }/getAllTaskTagsForEmployee/${response.data.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          console.log('fetchedTags', fetchedTags.data);
+        } catch (error) {
+          console.log('error getting tags', error);
+        }
+        setTags(fetchedTags.data);
+
         console.log('response.data', response.data);
         console.log(
           'response.data.OnboardingEmployeeTaskMapping',
@@ -35,11 +59,11 @@ export default function EmployeeHomepage() {
     if (user) {
       getUser();
     }
-  }, [user]);
+  }, [user, refresh]);
 
-  const tags = [...new Set(userTasks && userTasks.map(task => task.task.tag))];
+  // const tags = [...new Set(userTasks && userTasks.map(task => task.task.tag))];
   // console.log('tags', tags);
-
+  if (tags) console.log('tags', tags);
   const getFormattedDate = date => {
     const dateObj = new Date(date);
     const formattedDate = dateObj.toLocaleDateString('en-US', {
@@ -56,17 +80,14 @@ export default function EmployeeHomepage() {
 
   return (
     <div>
-      <div className="flex flex-col m-3 p-3 rounded-lg bg-white bg-opacity-50 relative">
-        <div className="flex">
-          <Avatar
-            src={user && user.picture}
-            alt={localUser && localUser.name}
-            size="lg"
-          />
-          <div className="absolute right-10 mt-3">
-            <Button color="red" onClick={() => logout()}>
-              Log out
-            </Button>
+      <div className="flex flex-col m-3 p-3 rounded-lg bg-white bg-opacity-50">
+        <div className="flex items-center">
+          <div className="">
+            <Avatar
+              src={user && user.picture}
+              alt={localUser && localUser.name}
+              size="lg"
+            />
           </div>
           <div className="ml-3 overflow-auto">
             <h1 className="text-2xl font-bold">
@@ -74,18 +95,35 @@ export default function EmployeeHomepage() {
             </h1>
             <p className="text-gray-500">{localUser && localUser.email}</p>
           </div>
+          <div className="flex grow justify-center">
+            <input
+              className="w-full md:w-1/2 rounded-lg p-1 border-2 hover:border-pink-300 focus:border-pink-500 focus:outline-none text-center"
+              placeholder="Search"
+              onChange={e => {
+                setSearchTerm(e.target.value);
+                setRefresh(refresh + 1);
+              }}
+              value={searchTerm}
+            />
+          </div>
+          <div className="right-10 ">
+            <Button color="red" onClick={() => logout()}>
+              Log out
+            </Button>
+          </div>
         </div>
       </div>
-      <div className="flex bg-white bg-opacity-50 m-3 p-3 rounded-lg justify-center items-center">
-        <div className="hidden md:block text-white p-2">Search</div>
-        <input
-          className="w-full md:w-1/2 rounded-lg p-1 border-2 hover:border-pink-300 focus:border-pink-500 focus:outline-none "
-          onChange={e => setSearchTerm(e.target.value)}
-          value={searchTerm}
-        />
-      </div>
-      <div className="flex flex-col m-3 p-3 rounded-lg bg-white bg-opacity-50">
-        <div className="text-2xl text-white font-mono">
+      {/* <div className="flex bg-white bg-opacity-50 m-3 p-3 rounded-lg justify-center items-center"> */}
+      {/* <div className="hidden md:block text-white p-2">Search</div> */}
+      {/* <input
+        className="w-full md:w-1/2 rounded-lg p-1 border-2 hover:border-pink-300 focus:border-pink-500 focus:outline-none text-center"
+        placeholder="Search"
+        onChange={e => setSearchTerm(e.target.value)}
+        value={searchTerm}
+      /> */}
+      {/* </div> */}
+      <div className="flex flex-col m-3 p-3 rounded-lg bg-white bg-opacity-100">
+        <div className="text-2xl font-mono">
           {localUser && localUser.DepartmentUserMapping.department.name}
         </div>
         <div className="bg-white bg-opacity-0  p-2 rounded-lg md:flex md:justify-center">
@@ -95,6 +133,7 @@ export default function EmployeeHomepage() {
               variant="pills"
               color="violet"
               radius="xl"
+              className=""
             >
               <Tabs.List grow>
                 {tags &&
@@ -107,7 +146,7 @@ export default function EmployeeHomepage() {
                   <>
                     {/* <Tabs.Tab value={tag}>{tag}</Tabs.Tab> */}
                     <Tabs.Panel value={tag}>
-                      <div className="bg-white mt-3">
+                      <div className="bg-white mt-3 overflow-auto">
                         <Table withColumnBorders withRowBorders>
                           <Table.Thead>
                             <Table.Tr>
@@ -149,6 +188,25 @@ export default function EmployeeHomepage() {
                   </>
                 ))}
             </Tabs>
+            <div className="flex justify-center mt-2 items-center bg-white bg-opacity-50 p-2 ">
+              <ActionIcon
+              // onClick={() => (page - 1 !== 0 ? setPage(page - 1) : null)}
+              // disabled={page - 1 === 0}
+              >
+                <LeftAngle />
+              </ActionIcon>
+              <span className="font-mono mr-2 ml-2">
+                {/* {page}/{tasks.totalPages} */}
+              </span>
+              <ActionIcon
+              // onClick={() =>
+              //   page !== tasks.totalPages ? setPage(page + 1) : null
+              // }
+              // disabled={page === tasks.totalPages}
+              >
+                <RightAngle />
+              </ActionIcon>
+            </div>
           </div>
         </div>
       </div>

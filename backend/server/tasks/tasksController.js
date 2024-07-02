@@ -39,6 +39,29 @@ const isRoleAdminOrSupervisor = async token => {
   return userRole === 'ADMIN' || userRole === 'SUPERVISOR';
 };
 
+const isRoleAdminOrSupervisorOrEmployee = async token => {
+  let userRole = '';
+  try {
+    const decodedToken = jwt.decode(token);
+    const userEmail = decodedToken.email;
+    const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
+      email: userEmail,
+    });
+    if (response.data.role === 'ADMIN') {
+      userRole = 'ADMIN';
+    } else if (response.data.role === 'SUPERVISOR') {
+      userRole = 'SUPERVISOR';
+    } else if (response.data.role === 'EMPLOYEE') {
+      userRole = 'EMPLOYEE';
+    }
+  } catch (error) {
+    console.error('Error in tasksController -> isRoleAdminOrSupervisor', error);
+  }
+  return (
+    userRole === 'ADMIN' || userRole === 'SUPERVISOR' || userRole === 'EMPLOYEE'
+  );
+};
+
 module.exports = {
   //GET
   getAllTasksForEmployee: async (req, res) => {
@@ -359,7 +382,9 @@ module.exports = {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
     if (
-      await isRoleAdminOrSupervisor(req.headers.authorization.split(' ')[1])
+      await isRoleAdminOrSupervisorOrEmployee(
+        req.headers.authorization.split(' ')[1]
+      )
     ) {
       try {
         const employeeTasks =
@@ -392,6 +417,10 @@ module.exports = {
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
+  },
+
+  getAllOnboardingEmployeeTasks: async (req, res) => {
+
   },
 
   getAllTaskTagsForDepartment: async (req, res) => {
