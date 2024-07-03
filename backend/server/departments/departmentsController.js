@@ -61,6 +61,9 @@ module.exports = {
             //   },
             // },
             DepartmentUserMapping: {
+              where: {
+                archived: false,
+              },
               include: {
                 user: true,
               },

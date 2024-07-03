@@ -24,6 +24,7 @@ import PlusIcon from '../../assets/icons/PlusIcon';
 import CheckIcon from '../../assets/icons/CheckIcon';
 import CancelIcon from '../../assets/icons/CancelIcon';
 import EditIcon from '../../assets/icons/EditIcon';
+import DeleteIcon from '../../assets/icons/DeleteIcon'
 
 export function ArchiveTasks({
   selectedRows,
@@ -68,12 +69,13 @@ export function ArchiveTasks({
         <ActionIcon
           variant="filled"
           size="xl"
-          color="gray"
+          color="red"
           disabled={selectedRows.length === 0 ? true : false}
           loading={isLoading}
           onClick={open}
         >
-          <SendToArchiveIcon />
+          {/* <SendToArchiveIcon /> */}
+          <DeleteIcon />
         </ActionIcon>
       </Tooltip>
       <Modal
@@ -85,7 +87,7 @@ export function ArchiveTasks({
         padding="md"
       >
         <span>Are you sure you want to </span>
-        <span className="font-bold">archive </span>
+        <span className="font-bold">delete </span>
         <span>all selected tasks?</span>
         <div className="flex mt-3 justify-between">
           <Button onClick={handleClick} color="red">
@@ -111,7 +113,7 @@ export function TaskTable({
   const [updatedTasks, setUpdatedTasks] = useState(tasks.tasks);
   const [supervisors, setSupervisors] = useState([]);
   const [reload, setReload] = useState(0);
-
+  console.log('tasks.tasks', tasks.tasks);
   const handleDescriptionChange = (taskId, newDesc) => {
     setEditMode({ ...editMode, [taskId]: true });
 
@@ -197,7 +199,7 @@ export function TaskTable({
   }, [token]);
 
   const rows =
-    updatedTasks.length > 0 ? (
+updatedTasks.length > 0 ? (
       updatedTasks
         // .filter(task =>
         //   task.task.desc.toLowerCase().includes(searchTerm.toLowerCase())
@@ -207,7 +209,6 @@ export function TaskTable({
             <Table.Td className="w-1/12">
               <div>
                 <Checkbox
-                  color="green"
                   onChange={event => {
                     setSelectedRows(
                       event.currentTarget.checked
@@ -323,7 +324,7 @@ export function TaskTable({
 
   const handleSelectAll = event => {
     if (event.currentTarget.checked) {
-      setSelectedRows(tasks.map(task => task.id));
+      setSelectedRows(updatedTasks.map(task => task.id));
     } else {
       setSelectedRows([]);
     }
@@ -337,7 +338,7 @@ export function TaskTable({
             <Table.Th>
               <Checkbox
                 aria-label="Select all rows"
-                checked={selectedRows.length === tasks.length}
+                checked={selectedRows.length === updatedTasks.length}
                 onChange={handleSelectAll}
               />
             </Table.Th>
@@ -484,7 +485,7 @@ export default function Department() {
   const [tasks, setTasks] = useState([]);
   const [tags, setTags] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
+  const [pageSize, setPageSize] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedTab, setSelectedTab] = useState(
@@ -562,7 +563,7 @@ export default function Department() {
             className="flex-col bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5"
           >
             <div className="md:flex-col md:items-center md:space-x-5 md:space-y-1 mb-10">
-              <div className="text-2xl font-bold text-white">
+              <div className="text-2xl font-bold">
                 {department.name}
               </div>
             </div>
