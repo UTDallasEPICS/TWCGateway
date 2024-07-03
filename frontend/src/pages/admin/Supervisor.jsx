@@ -310,7 +310,7 @@ export default function Supervisor() {
         </div>
         <div className="flex justify-center mt-3  items-center bg-white bg-opacity-50 p-2 ">
           <ActionIcon
-            onClick={() => (page - 1 !== 0 ? setPage(page - 1) : null)}
+            onClick={() => setPage(page - 1)}
             disabled={page - 1 === 0}
           >
             <LeftAngle />
@@ -319,8 +319,8 @@ export default function Supervisor() {
             {page}/{totalPages}
           </span>
           <ActionIcon
-            onClick={() => (page !== totalPages ? setPage(page + 1) : null)}
-            disabled={page === totalPages}
+            onClick={() => setPage(page + 1)}
+            disabled={page === totalPages || totalPages === 0}
           >
             <RightAngle />
           </ActionIcon>

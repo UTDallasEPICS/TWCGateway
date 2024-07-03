@@ -217,7 +217,7 @@ module.exports = {
   getAllTasksForDepartment: async (req, res) => {
     const { id } = req.params;
     const { page, pageSize } = req.query;
-    const { tag } = req.body;
+    const { tag, searchTerm } = req.body;
 
     const skip =
       page && pageSize ? (parseInt(page) - 1) * parseInt(pageSize) : 0;
@@ -237,6 +237,10 @@ module.exports = {
               archived: false,
               task: {
                 tag: tag,
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
               },
             },
           },
@@ -251,6 +255,12 @@ module.exports = {
               archived: false,
               task: {
                 tag: tag,
+              },
+              task: {
+                desc: {
+                  contains: searchTerm,
+                  mode: 'insensitive',
+                },
               },
             },
           },
@@ -419,9 +429,7 @@ module.exports = {
     }
   },
 
-  getAllOnboardingEmployeeTasks: async (req, res) => {
-
-  },
+  getAllOnboardingEmployeeTasks: async (req, res) => {},
 
   getAllTaskTagsForDepartment: async (req, res) => {
     const { id } = req.params;

@@ -199,9 +199,9 @@ export function TaskTable({
   const rows =
     updatedTasks.length > 0 ? (
       updatedTasks
-        .filter(task =>
-          task.task.desc.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        // .filter(task =>
+        //   task.task.desc.toLowerCase().includes(searchTerm.toLowerCase())
+        // )
         .map(task => (
           <Table.Tr key={task.id}>
             <Table.Td className="w-1/12">
@@ -527,6 +527,7 @@ export default function Department() {
           }/getAllTasksForDepartment/${id}?page=${page}&pageSize=${pageSize}`,
           {
             tag: selectedTab,
+            searchTerm,
           },
           {
             headers: {
@@ -543,7 +544,7 @@ export default function Department() {
     };
     getDepartment();
     setReload(false);
-  }, [id, selectedTab, page, reload]);
+  }, [id, selectedTab, page, reload, searchTerm]);
 
   useEffect(() => {
     setPage(1);
@@ -627,9 +628,7 @@ export default function Department() {
                       )}
                       <div className="flex justify-center mt-10 items-center bg-white bg-opacity-50 p-2 ">
                         <ActionIcon
-                          onClick={() =>
-                            page - 1 !== 0 ? setPage(page - 1) : null
-                          }
+                          onClick={() => setPage(page - 1)}
                           disabled={page - 1 === 0}
                         >
                           <LeftAngle />
@@ -638,10 +637,10 @@ export default function Department() {
                           {page}/{tasks.totalPages}
                         </span>
                         <ActionIcon
-                          onClick={() =>
-                            page !== tasks.totalPages ? setPage(page + 1) : null
+                          onClick={() => setPage(page + 1)}
+                          disabled={
+                            page === tasks.totalPages || tasks.totalPages === 0
                           }
-                          disabled={page === tasks.totalPages}
                         >
                           <RightAngle />
                         </ActionIcon>
