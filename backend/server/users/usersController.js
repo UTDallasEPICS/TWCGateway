@@ -192,13 +192,13 @@ module.exports = {
       page && pageSize
         ? Math.max((parseInt(page) - 1) * parseInt(pageSize), 0)
         : 0;
-
     const take = pageSize ? parseInt(pageSize) : 10;
 
     try {
       const user = await prisma.user.findUnique({
         where: {
           email: email,
+          archived: false,
         },
         include: {
           DepartmentUserMapping: {
@@ -213,6 +213,7 @@ module.exports = {
         const tasks = await prisma.onboardingEmployeeTaskMapping.findMany({
           where: {
             userId: user.id,
+            archived: false,
             task: {
               desc: {
                 contains: searchTerm,
@@ -236,14 +237,15 @@ module.exports = {
           },
           skip,
           take,
-          orderBy: {
-            id: 'asc',
-          },
+          // orderBy: {
+          //   id: 'asc',
+          // },
         });
 
         const countedTasks = await prisma.onboardingEmployeeTaskMapping.count({
           where: {
             userId: user.id,
+            archived: false,
             task: {
               desc: {
                 contains: searchTerm,
@@ -255,6 +257,7 @@ module.exports = {
             },
           },
         });
+
         const totalPages = Math.ceil(countedTasks / pageSize);
 
         user.OnboardingEmployeeTaskMapping = tasks;
@@ -1140,6 +1143,7 @@ module.exports = {
         const tasks = await prisma.departmentTaskMapping.findMany({
           where: {
             departmentId: parseInt(department),
+            archived: false,
           },
         });
         tasks.forEach(async task => {

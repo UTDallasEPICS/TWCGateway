@@ -245,7 +245,7 @@ module.exports = {
             },
           },
         });
-
+        console.log('totalTasks', totalTasks);
         const totalPages = Math.ceil(totalTasks / take);
 
         const departmentTasks = await prisma.departmentTaskMapping.findMany({
@@ -255,8 +255,6 @@ module.exports = {
               archived: false,
               task: {
                 tag: tag,
-              },
-              task: {
                 desc: {
                   contains: searchTerm,
                   mode: 'insensitive',
