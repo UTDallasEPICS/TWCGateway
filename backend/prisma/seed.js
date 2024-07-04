@@ -253,7 +253,7 @@ async function main() {
   await prisma.departmentTaskMapping.create({
     data: {
       task: { connect: { id: task6.id } },
-      department: { connect: { id: department1.id } },
+      department: { connect: { id: department2.id } },
     },
   });
 
