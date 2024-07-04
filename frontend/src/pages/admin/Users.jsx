@@ -24,6 +24,7 @@ import SearchBar from '@/components/SearchBar';
 import OnboardingEmployees from '@/components/OnboardingEmployees';
 import Supervisors from '@/components/Supervisors';
 import Admins from '@/components/Admins';
+import DeleteIcon from '../../assets/icons/DeleteIcon';
 // ------------------------------------------------------------- //
 //AddUser
 AddUser.propTypes = {
@@ -43,25 +44,22 @@ export function AddUser({ token, setReloadData }) {
 
   useEffect(() => {
     const fetchDeps = async () => {
-      try{
-      const response = await axios.get(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllDepartments`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      setDepartments(response.data);
-      console.log('response', response.data);
-      
-      }
-      catch(error){
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllDepartments`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setDepartments(response.data);
+        console.log('response', response.data);
+      } catch (error) {
         console.error('Error fetching departments', error);
       }
     };
     fetchDeps();
-
   }, [token]);
 
   const handleChange = (e, field) => {
@@ -91,7 +89,6 @@ export function AddUser({ token, setReloadData }) {
       department: selectedOptions || [],
     });
   };
-
 
   const handleSubmit = async () => {
     if (!formData.name || !formData.email || !formData.role) {
@@ -157,7 +154,7 @@ export function AddUser({ token, setReloadData }) {
     }
 
     close();
-    setFormData({ name: '', email: '', role: '', department: 0});    
+    setFormData({ name: '', email: '', role: '', department: 0 });
     setReloadData(true);
   };
 
@@ -228,7 +225,9 @@ export function AddUser({ token, setReloadData }) {
             }}
           />
         ) : null}
-        {formData.department !== 0 || formData.role === 'SUPERVISOR' || formData.role === 'ADMIN' ? (         
+        {formData.department !== 0 ||
+        formData.role === 'SUPERVISOR' ||
+        formData.role === 'ADMIN' ? (
           <div className="flex justify-center mt-10">
             <Button onClick={handleSubmit}>Submit</Button>
           </div>
@@ -258,7 +257,6 @@ export function EditUser({ token, setReloadData }) {
     role: null,
     department: '',
   });
-
 
   useEffect(() => {
     console.log('useeffect formData', formData);
@@ -315,21 +313,20 @@ export function EditUser({ token, setReloadData }) {
           }
         );
         setUserData(res.data);
-        console.log(res.data)
-        if(res.data.role === 'EMPLOYEE'){
+        console.log(res.data);
+        if (res.data.role === 'EMPLOYEE') {
           setFormData({
             name: res.data.name,
             email: res.data.email,
             role: res.data.role,
-            department: res.data.DepartmentUserMapping.department.id.toString()
+            department: res.data.DepartmentUserMapping.department.id.toString(),
           });
-        }
-        else{
+        } else {
           setFormData({
             name: res.data.name,
             email: res.data.email,
             role: res.data.role,
-          });          
+          });
         }
 
         setIsFetchingUser(false);
@@ -386,8 +383,7 @@ export function EditUser({ token, setReloadData }) {
         );
         return;
       }
-    }
-    else if (formData.role === 'SUPERVISOR') {
+    } else if (formData.role === 'SUPERVISOR') {
       try {
         await axios.put(
           `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateSupervisor/${
@@ -407,8 +403,8 @@ export function EditUser({ token, setReloadData }) {
         );
         return;
       }
-    }
-    else { //formData.role === 'ADMIN'
+    } else {
+      //formData.role === 'ADMIN'
       try {
         await axios.put(
           `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateAdmin/${
@@ -429,7 +425,7 @@ export function EditUser({ token, setReloadData }) {
         return;
       }
     }
-    setReloadData(true)
+    setReloadData(true);
     setFormData({
       name: '',
       email: '',
@@ -523,34 +519,34 @@ export function EditUser({ token, setReloadData }) {
               disabled={formData.role === null ? true : false}
               onChange={(_value, option) => {
                 if (option) {
-                  setFormData({ ...formData, role: option.value});
+                  setFormData({ ...formData, role: option.value });
                 } else {
                   setFormData({ ...formData, role: '' });
                 }
               }}
             />
             {formData.role === 'EMPLOYEE' ? (
-            <Select
-              label="Department"
-              data={allDeps.map(dep => {
-                return {
-                  value: dep.id.toString(),
-                  label: dep.name,
-                };
-              })}
-              value={formData.department}
-              searchable
-              clearable
-              disabled={formData.department === null ? true : false}
-              onChange={(option) => {
-                if(option){
-                  setFormData({...formData, department : option});
-                }
-                else{
-                  setFormData({...formData, department : ''});
-                }
-              }}
-            />) : null}
+              <Select
+                label="Department"
+                data={allDeps.map(dep => {
+                  return {
+                    value: dep.id.toString(),
+                    label: dep.name,
+                  };
+                })}
+                value={formData.department}
+                searchable
+                clearable
+                disabled={formData.department === null ? true : false}
+                onChange={option => {
+                  if (option) {
+                    setFormData({ ...formData, department: option });
+                  } else {
+                    setFormData({ ...formData, department: '' });
+                  }
+                }}
+              />
+            ) : null}
           </div>
           <div className="flex justify-center">
             <Button color="green" onClick={handleUpdate}>
@@ -616,12 +612,13 @@ export function ArchiveSelectedUsers({
         <ActionIcon
           variant="filled"
           size="xl"
-          color="gray"
+          color="red"
           disabled={allSelectedRows.length === 0 ? true : false}
           loading={isLoading}
           onClick={open}
         >
-          <SendToArchiveIcon />
+          {/* <SendToArchiveIcon /> */}
+          <DeleteIcon />
         </ActionIcon>
       </Tooltip>
       <Modal
@@ -633,7 +630,7 @@ export function ArchiveSelectedUsers({
         padding="md"
       >
         <span>Are you sure you want to </span>
-        <span className="font-bold">archive </span>
+        <span className="font-bold">delete </span>
         <span>all selected users?</span>
         <div className="flex mt-3 justify-between">
           <Button onClick={handleClick} color="red">

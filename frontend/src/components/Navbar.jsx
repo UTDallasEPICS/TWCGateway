@@ -8,16 +8,13 @@ import Profile from '@/components/Profile';
 export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const buttonClass = (routes) =>
+  const buttonClass = routes =>
     routes.includes(location.pathname) ? 'violet' : 'blue';
   return (
     <div className="flex p-2 m-5 bg-white bg-opacity-70 rounded-lg justify-between ">
       <Profile />
       <div className="space-x-3">
-        <Tooltip
-          label="Users Page"
-          openDelay="700"
-        >
+        <Tooltip label="Users Page" openDelay="700">
           <ActionIcon
             variant="filled"
             size="xl"
@@ -29,10 +26,7 @@ export default function Navbar() {
             <UsersIcon />
           </ActionIcon>
         </Tooltip>
-        <Tooltip
-          label="Departments Page"
-          openDelay="700"
-        >
+        <Tooltip label="Departments Page" openDelay="700">
           <ActionIcon
             variant="filled"
             size="xl"
@@ -46,10 +40,12 @@ export default function Navbar() {
         </Tooltip>
       </div>
       <Tooltip
-        label="Archive"
+        // label="Archive"
+        label="Archive feature under construction"
         openDelay="700"
       >
         <ActionIcon
+          disabled={true}
           variant="filled"
           size="xl"
           color={buttonClass('/admin/archive')}

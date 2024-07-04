@@ -42,7 +42,57 @@ const isRoleAdminOrSupervisor = async token => {
 
 module.exports = {
   //GET
-  getAllDepartments: async (req, res) => {
+  getDepartmentEmployeesNumber: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      // const { id } = req.params;
+      const { selectedRows } = req.body;
+      // try {
+      // const assignedEmps = await prisma.departmentUserMapping.count({
+      //   where: {
+      //     departmentId: parseInt(id),
+      //     archived: false,
+      //     user: {
+      //       role: 'EMPLOYEE',
+      //     },
+      //   },
+      // });
+      //   res.status(200).json({ assignedEmps: assignedEmps });
+      // } catch (error) {
+      //   console.log('Error Getting Assigned Employees', error);
+      //   res.status(500).json({ message: 'Error Getting Assigned Employees' });
+      // }
+      let isOkay = true;
+      try {
+        for (i = 0; i < selectedRows.length; i++) {
+          console.log('inside of for loop');
+          const assignedEmps = await prisma.departmentUserMapping.count({
+            where: {
+              departmentId: parseInt(selectedRows[i]),
+              archived: false,
+              user: {
+                role: 'EMPLOYEE',
+              },
+            },
+          });
+          if (assignedEmps != 0) isOkay = false;
+        }
+        res.status(200).json({ isOkay });
+      } catch (error) {
+        console.log('error in checking department employees number');
+        res
+          .status(500)
+          .json({ message: 'error in checking department employees number' });
+      }
+      // res.status(200).json({message: selectedRows.length})
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+    getAllDepartments: async (req, res) => {
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }

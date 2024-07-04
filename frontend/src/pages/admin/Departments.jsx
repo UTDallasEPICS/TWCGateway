@@ -20,6 +20,7 @@ import PlusIcon from '../../assets/icons/PlusIcon';
 import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '../../assets/icons/DeleteIcon';
 
 EditDepartment.propTypes = {
   setRefresh: PropTypes.func.isRequired,
@@ -220,10 +221,12 @@ export function ArchiveDepartment({
   setRefresh,
   selectedRows,
   setSelectedRows,
+  departmentId,
 }) {
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
   const [isLoading, setIsLoading] = useState(false);
   const [opened, { open, close }] = useDisclosure();
+  const [employeesCheck, setEmployeesCheck] = useState(null);
 
   const handleClick = async () => {
     try {
@@ -246,6 +249,31 @@ export function ArchiveDepartment({
     close();
   };
 
+  const checkEmployees = async () => {
+    try {
+      const num = await axios.post(
+        `${
+          import.meta.env.VITE_APP_EXPRESS_BASE_URL
+        }/getDepartmentEmployeesNumber`,
+        {
+          selectedRows,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log('num', num.data.isOkay);
+      if (num.data.isOkay === false) {
+        setEmployeesCheck(true);
+      }
+      console.log('ffal;kdjflakdsfj', num.data.isOkay === false);
+    } catch (error) {
+      console.log('errored checkingEmployees', error);
+    }
+  };
+
   return (
     <div>
       <Tooltip
@@ -259,12 +287,16 @@ export function ArchiveDepartment({
         <ActionIcon
           variant="filled"
           size="xl"
-          color="gray"
+          color="red"
           disabled={selectedRows.length === 0 ? true : false}
           loading={isLoading}
-          onClick={open}
+          onClick={() => {
+            open();
+            checkEmployees();
+          }}
         >
-          <SendToArchiveIcon />
+          {/* <SendToArchiveIcon /> */}
+          <DeleteIcon />
         </ActionIcon>
       </Tooltip>
       <Modal
@@ -275,15 +307,22 @@ export function ArchiveDepartment({
         size="auto"
         padding="md"
       >
-        <span>Are you sure you want to </span>
-        <span className="font-bold">archive </span>
-        <span>all selected departments?</span>
-        <div className="flex mt-3 justify-between">
-          <Button onClick={handleClick} color="red">
-            Yes
-          </Button>
-          <Button onClick={close}>No</Button>
-        </div>
+        {employeesCheck ? (
+          // console.log("checkEmployees",checkEmployees)
+          <div>Cannot Delete! Please remove all assigned employees from the department before deleting.</div>
+        ) : (
+          <div>
+            <span>Are you sure you want to </span>
+            <span className="font-bold">delete </span>
+            <span>all selected departments?</span>
+            <div className="flex mt-3 justify-between">
+              <Button onClick={handleClick} color="red">
+                Yes
+              </Button>
+              <Button onClick={close}>No</Button>
+            </div>
+          </div>
+        )}
       </Modal>
     </div>
   );
