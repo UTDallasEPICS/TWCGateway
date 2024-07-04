@@ -495,6 +495,10 @@ export default function Department() {
   const [selectedRows, setSelectedRows] = useState([]);
 
   useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
+  useEffect(() => {
     const getDepartment = async () => {
       setIsLoading(true);
       try {

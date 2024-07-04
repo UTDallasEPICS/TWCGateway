@@ -16,6 +16,11 @@ export default function EmployeeHomepage() {
   const [refresh, setRefresh] = useState(0);
   const [activeTab, setActiveTab] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
   useEffect(() => {
     setLoading(true);
     const getUser = async () => {
