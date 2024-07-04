@@ -507,24 +507,26 @@ export function EditUser({ token, setReloadData }) {
                 setFormData({ ...formData, email: e.target.value })
               }
             />
-            <Select
-              label="Role"
-              data={[
-                { value: 'EMPLOYEE', label: 'Onboarding Employee' },
-                { value: 'SUPERVISOR', label: 'Supervisor' },
-                { value: 'ADMIN', label: 'Admin' },
-              ]}
-              value={formData.role}
-              clearable
-              disabled={formData.role === null ? true : false}
-              onChange={(_value, option) => {
-                if (option) {
-                  setFormData({ ...formData, role: option.value });
-                } else {
-                  setFormData({ ...formData, role: '' });
-                }
-              }}
-            />
+            {userData.role === 'EMPLOYEE' ? (
+              <Select
+                label="Role"
+                data={[
+                  { value: 'EMPLOYEE', label: 'Onboarding Employee' },
+                  { value: 'SUPERVISOR', label: 'Supervisor' },
+                  { value: 'ADMIN', label: 'Admin' },
+                ]}
+                value={formData.role}
+                clearable
+                disabled={formData.role === null ? true : false}
+                onChange={(_value, option) => {
+                  if (option) {
+                    setFormData({ ...formData, role: option.value });
+                  } else {
+                    setFormData({ ...formData, role: '' });
+                  }
+                }}
+              />
+            ) : null}
             {formData.role === 'EMPLOYEE' ? (
               <Select
                 label="Department"
@@ -582,15 +584,21 @@ export function ArchiveSelectedUsers({
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/archiveUsers/`,
-        { allSelectedUsers: allSelectedRows },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      try {
+        const response = await axios.patch(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/archiveUsers/`,
+          { allSelectedUsers: allSelectedRows },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        // if (response.data )
+      } catch (error) {
+        alert(`Supervisor has tasks assigned, cannot archive`);
+        console.log('Error archiving selected users', error);
+      }
       setIsLoading(false);
       setReloadData(true);
     } catch (error) {

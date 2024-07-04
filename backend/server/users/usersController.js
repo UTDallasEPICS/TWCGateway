@@ -939,24 +939,37 @@ module.exports = {
               },
             });
           } else if (user.role === 'SUPERVISOR') {
-            userUpdate = await prisma.user.update({
+            const taskMappings = await prisma.supervisorTaskMapping.findMany({
               where: {
-                id: parseInt(allSelectedUsers[i]),
-              },
-              data: {
-                SupervisorTaskMapping: {
-                  updateMany: {
-                    where: {
-                      userId: parseInt(allSelectedUsers[i]),
-                    },
-                    data: {
-                      archived: true,
-                    },
-                  },
-                },
-                archived: true,
+                userId: parseInt(allSelectedUsers[i]),
               },
             });
+            if (taskMappings.length === 0) {
+              userUpdate = await prisma.user.update({
+                where: {
+                  id: parseInt(allSelectedUsers[i]),
+                },
+                data: {
+                  SupervisorTaskMapping: {
+                    updateMany: {
+                      where: {
+                        userId: parseInt(allSelectedUsers[i]),
+                      },
+                      data: {
+                        archived: true,
+                      },
+                    },
+                  },
+                  archived: true,
+                },
+              });
+            } else {
+              results.push({
+                userId: allSelectedUsers[i],
+                status: 'Supervisor has tasks assigned, cannot archive',
+              });
+              return res.status(500).json(results);
+            }
           } else {
             //admin
             userUpdate = await prisma.user.update({
@@ -970,6 +983,7 @@ module.exports = {
           }
 
           if (userUpdate === null || userUpdate.length === 0) {
+            // if (userUpdate === null) {
             results.push({
               userId: allSelectedUsers[i],
               status:
