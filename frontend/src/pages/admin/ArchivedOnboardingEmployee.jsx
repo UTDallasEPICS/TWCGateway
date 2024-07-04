@@ -126,7 +126,7 @@ export default function ArchivedOnboardingEmployee() {
               import.meta.env.VITE_APP_EXPRESS_BASE_URL
             }/getAllTasksForArchivedEmployee/${
               response1.data.id
-            }?page=${page}&pageSize=2`,
+            }?page=${page}&pageSize=10`,
             {
               tag: selectedTab,
               searchTerm: searchTerm,
@@ -141,8 +141,8 @@ export default function ArchivedOnboardingEmployee() {
           console.log('tags', response2.data);
           setTasks(response3.data);
           console.log('tasks', response3.data);
-        
-        
+
+
       } catch (error) {
         console.error('Error in fetching user in Archived User page', error);
       }

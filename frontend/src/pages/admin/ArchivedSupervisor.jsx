@@ -13,7 +13,7 @@ TaskTable.propTypes = {
     tasks: PropTypes.array,
     searchTerm: PropTypes.string,
   };
-  
+
   export function TaskTable({ tasks, searchTerm }) {
     console.log('tasks in tastable', tasks);
     const rows = tasks ? (
@@ -46,7 +46,7 @@ TaskTable.propTypes = {
       </div>
     );
   }
-  
+
   export default function Supervisor() {
     const { id } = useParams();
     const [user, setUser] = useState(null);
@@ -56,14 +56,14 @@ TaskTable.propTypes = {
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-  
+
     useEffect(() => {
       getUser();
     }, [searchTerm, page]);
     useEffect(() => {
       setPage(1);
     }, [searchTerm]);
-  
+
     const getUser = async () => {
       setIsLoading(true);
       try {
@@ -78,7 +78,7 @@ TaskTable.propTypes = {
         const fetchPaginatedTasks = await axios.post(
           `${
             import.meta.env.VITE_APP_EXPRESS_BASE_URL
-          }/getAllTasksForArchivedSupervisor/${id}?page=${page}&pageSize=2`,
+          }/getAllTasksForArchivedSupervisor/${id}?page=${page}&pageSize=10`,
           {
             searchTerm: searchTerm,
           },
@@ -104,7 +104,7 @@ TaskTable.propTypes = {
         setIsLoading(false);
       }
     };
-  
+
     return (
       <>
         <Navbar />
@@ -156,4 +156,3 @@ TaskTable.propTypes = {
       </>
     );
   }
-  

@@ -196,7 +196,7 @@ export default function OnboardingEmployee() {
             import.meta.env.VITE_APP_EXPRESS_BASE_URL
           }/getAllTasksForEmployee/${
             response1.data.id
-          }?page=${page}&pageSize=2`,
+          }?page=${page}&pageSize=10`,
           {
             tag: selectedTab,
             searchTerm: searchTerm,

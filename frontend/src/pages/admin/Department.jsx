@@ -485,7 +485,7 @@ export default function Department() {
   const [tasks, setTasks] = useState([]);
   const [tags, setTags] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
   const [reload, setReload] = useState(false);
   const [selectedTab, setSelectedTab] = useState(

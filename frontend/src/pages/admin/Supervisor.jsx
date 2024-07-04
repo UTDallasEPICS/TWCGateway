@@ -89,7 +89,7 @@ export default function Supervisor() {
       const fetchPaginatedTasks = await axios.post(
         `${
           import.meta.env.VITE_APP_EXPRESS_BASE_URL
-        }/getAllTasksForSupervisor/${id}?page=${page}&pageSize=2`,
+        }/getAllTasksForSupervisor/${id}?page=${page}&pageSize=10`,
         {
           searchTerm: searchTerm,
         },

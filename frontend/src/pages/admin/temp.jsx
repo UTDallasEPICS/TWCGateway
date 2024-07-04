@@ -16,9 +16,9 @@ export default function Department() {
   const [selectedRows, setSelectedRows] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(3);
-  const [editMode, setEditMode] = useState({}); 
-  const [changedRows, setChangedRows] = useState([]); 
+  const [pageSize, setPageSize] = useState(10);
+  const [editMode, setEditMode] = useState({});
+  const [changedRows, setChangedRows] = useState([]);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Department() {
           });
         setTasks(tasksWithOriginalDesc);
         console.log('tasks', tasksWithOriginalDesc);
-    
+
       } catch (error) {
         console.error('Error in fetching tasks in Task page', error);
       }
@@ -99,7 +99,7 @@ export default function Department() {
   const handleSave = async (taskId, newDesc, newTag) => {
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`, 
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateTask`,
         {
           id: taskId,
           desc: newDesc,
@@ -137,7 +137,7 @@ export default function Department() {
   };
 
   const handleCancel = (taskId, ogDesc, ogTag) => {
-    setTasks(tasks.map(t => t.task.id === taskId ? { ...t, task: { ...t.task, desc: ogDesc, tag: ogTag } } : t)); 
+    setTasks(tasks.map(t => t.task.id === taskId ? { ...t, task: { ...t.task, desc: ogDesc, tag: ogTag } } : t));
   }
 
   return (
@@ -197,7 +197,7 @@ export default function Department() {
                         value={task.task.desc}
                         className="w-full"
                         style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}
-                        onChange={(e) => 
+                        onChange={(e) =>
                           {
                             handleDescriptionChange(task.task.id, e.target.value, task.task.originalDesc)
                           }
@@ -210,7 +210,7 @@ export default function Department() {
                         value={task.task.tag}
                         className="w-full"
                         style={{ backgroundColor: 'rgba(255, 255, 255, 0)' }}
-                        onChange={(e) => 
+                        onChange={(e) =>
                           {
                             handleTagChange(task.task.id, task.task.ogTag, e.target.value)
                           }
