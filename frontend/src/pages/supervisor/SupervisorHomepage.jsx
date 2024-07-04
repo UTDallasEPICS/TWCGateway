@@ -179,104 +179,107 @@ export default function SupervisorHomepage() {
         </Tooltip>
       </div>
       {/* <div className="flex flex-col p-3 m-3 bg-white bg-opacity-50 rounded-lg"> */}
-        {localUser &&
-          localUserTasks &&
-          localUserTasks.tasks &&
-          localUserTasks.tasks.map((task, index) => (
-            <details
-              key={task.id}
-              className="flex bg-white p-2 m-2 rounded-lg"
-              open={expandAll}
+      {localUser &&
+      localUserTasks &&
+      localUserTasks.tasks &&
+      localUserTasks.tasks.length > 0 ? (
+        localUserTasks.tasks.map((task, index) => (
+          <details
+            key={task.id}
+            className="flex bg-white p-2 m-2 rounded-lg"
+            open={expandAll}
+          >
+            <summary className="bg-pink-200 rounded-lg p-2 hover:cursor-pointer">
+              {task.task.desc}
+            </summary>
+            <Table
+              withColumnBorders
+              withRowBorders
+              withTableBorder
+              className="mt-1 rounded-lg"
             >
-              <summary className="bg-pink-200 rounded-lg p-2 hover:cursor-pointer">
-                {task.task.desc}
-              </summary>
-              <Table
-                withColumnBorders
-                withRowBorders
-                withTableBorder
-                className="mt-1 rounded-lg"
-              >
-                <Table.Thead>
-                  <Table.Tr>
-                    <Table.Th>Completed?</Table.Th>
-                    <Table.Th>Date Completed</Table.Th>
-                    <Table.Th>Name</Table.Th>
-                    <Table.Th>Email</Table.Th>
-                    <Table.Th>Department</Table.Th>
-                  </Table.Tr>
-                </Table.Thead>
-                <Table.Tbody>
-                  {localUser &&
-                  localUserTasks &&
-                  localUserTasks.employees &&
-                  localUserTasks.employees[index].length > 0 ? (
-                    localUserTasks.employees[index].map(employee => (
-                      <>
-                        {console.log('employee: ', employee)}
-                        <Table.Tr key={employee.id}>
-                          <Table.Td className="">
-                            {/* {employee.completed ? 'Yes' : 'No'} */}
-                            <Checkbox
-                              checked={employee.taskCompleted}
-                              onChange={() => {
-                                employee.taskCompleted
-                                  ? uncompleteTask(
-                                      employee.userId,
-                                      employee.taskId
-                                    )
-                                  : completeTask(
-                                      employee.userId,
-                                      employee.taskId
-                                    );
-                              }}
-                            />
-                          </Table.Td>
-                          <Table.Td>
-                            {/* {employee.dateCompleted !== null
+              <Table.Thead>
+                <Table.Tr>
+                  <Table.Th>Completed?</Table.Th>
+                  <Table.Th>Date Completed</Table.Th>
+                  <Table.Th>Name</Table.Th>
+                  <Table.Th>Email</Table.Th>
+                  <Table.Th>Department</Table.Th>
+                </Table.Tr>
+              </Table.Thead>
+              <Table.Tbody>
+                {localUser &&
+                localUserTasks &&
+                localUserTasks.employees &&
+                localUserTasks.employees[index].length > 0 ? (
+                  localUserTasks.employees[index].map(employee => (
+                    <>
+                      {console.log('employee: ', employee)}
+                      <Table.Tr key={employee.id}>
+                        <Table.Td className="">
+                          {/* {employee.completed ? 'Yes' : 'No'} */}
+                          <Checkbox
+                            checked={employee.taskCompleted}
+                            onChange={() => {
+                              employee.taskCompleted
+                                ? uncompleteTask(
+                                    employee.userId,
+                                    employee.taskId
+                                  )
+                                : completeTask(
+                                    employee.userId,
+                                    employee.taskId
+                                  );
+                            }}
+                          />
+                        </Table.Td>
+                        <Table.Td>
+                          {/* {employee.dateCompleted !== null
                               ? employee.dateCompleted
                               : 'N/A'} */}
-                            {employee.dateCompleted
-                              ? (() => {
-                                  const date = new Date(employee.dateCompleted);
-                                  const formattedDate = date.toLocaleDateString(
-                                    'en-US',
-                                    {
-                                      year: 'numeric',
-                                      month: 'numeric',
-                                      day: 'numeric',
-                                      // hour: '2-digit',
-                                      // minute: '2-digit',
-                                      // timeZoneName: 'short',
-                                    }
-                                  );
-                                  console.log('formattedDate', formattedDate);
-                                  return formattedDate;
-                                })()
-                              : '-'}
-                          </Table.Td>
-                          <Table.Td>{employee.user.name}</Table.Td>
-                          <Table.Td>{employee.user.email}</Table.Td>
-                          <Table.Td>
-                            {
-                              employee.user.DepartmentUserMapping.department
-                                .name
-                            }
-                          </Table.Td>
-                        </Table.Tr>
-                      </>
-                    ))
-                  ) : (
-                    <Table.Tr>
-                      <Table.Td colSpan={5} className="text-center">
-                        No Onboarding Employees Assigned to this Task
-                      </Table.Td>
-                    </Table.Tr>
-                  )}
-                </Table.Tbody>
-              </Table>
-            </details>
-          ))}
+                          {employee.dateCompleted
+                            ? (() => {
+                                const date = new Date(employee.dateCompleted);
+                                const formattedDate = date.toLocaleDateString(
+                                  'en-US',
+                                  {
+                                    year: 'numeric',
+                                    month: 'numeric',
+                                    day: 'numeric',
+                                    // hour: '2-digit',
+                                    // minute: '2-digit',
+                                    // timeZoneName: 'short',
+                                  }
+                                );
+                                console.log('formattedDate', formattedDate);
+                                return formattedDate;
+                              })()
+                            : '-'}
+                        </Table.Td>
+                        <Table.Td>{employee.user.name}</Table.Td>
+                        <Table.Td>{employee.user.email}</Table.Td>
+                        <Table.Td>
+                          {employee.user.DepartmentUserMapping.department.name}
+                        </Table.Td>
+                      </Table.Tr>
+                    </>
+                  ))
+                ) : (
+                  <Table.Tr>
+                    <Table.Td colSpan={5} className="text-center">
+                      No Onboarding Employees Assigned to this Task
+                    </Table.Td>
+                  </Table.Tr>
+                )}
+              </Table.Tbody>
+            </Table>
+          </details>
+        ))
+      ) : (
+        <div className="flex justify-center items-center bg-white bg-opacity-50 rounded-lg p-3 m-3">
+          <h1>No Tasks Assigned</h1>
+        </div>
+      )}
       {/* </div> */}
     </div>
   );
