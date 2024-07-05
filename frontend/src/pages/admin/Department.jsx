@@ -63,7 +63,8 @@ export function ArchiveTasks({
   return (
     <div>
       <Tooltip
-        label={selectedRows.length === 0 ? 'Select Rows' : 'Archive Tasks'}
+        // label={selectedRows.length === 0 ? 'Select Rows' : 'Archive Tasks'}
+        label={selectedRows.length === 0 ? 'Select Rows' : 'Delete Task(s)'}
         openDelay="700"
       >
         <ActionIcon

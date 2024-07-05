@@ -614,7 +614,8 @@ export function ArchiveSelectedUsers({
   return (
     <div>
       <Tooltip
-        label={allSelectedRows.length === 0 ? 'Select Rows' : 'Archive Users'}
+        // label={allSelectedRows.length === 0 ? 'Select Rows' : 'Archive Users'}
+        label={allSelectedRows.length === 0 ? 'Select Rows' : 'Delete User(s)'}
         openDelay="700"
       >
         <ActionIcon
