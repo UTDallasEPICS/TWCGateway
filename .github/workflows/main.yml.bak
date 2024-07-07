@@ -58,7 +58,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '20'
 
       - name: Install dependencies
         run: |
@@ -79,7 +79,7 @@ jobs:
       - name: Build and Push Docker image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry}}
-          REPOSITORY: mttp-repo
+          REPOSITORY: twc-repo
           IMAGE_TAG: ${{ github.sha}}
         run: |
           # Build a docker container and
