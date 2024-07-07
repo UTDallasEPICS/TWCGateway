@@ -51,7 +51,7 @@ jobs:
       - name: Invalidate CloudFront cache
         uses: chetan/invalidate-cloudfront-action@v2
         env:
-          DISTRIBUTION: ""
+          DISTRIBUTION: "ET4378B6T78I9"
           PATHS: '/*'
           AWS_REGION: 'us-east-2' # change this to your region
           AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
