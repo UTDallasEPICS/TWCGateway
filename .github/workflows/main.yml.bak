@@ -65,25 +65,26 @@ jobs:
           cd backend
           npm install
 
-      - name: Deploy to EC2
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::654654236858:role/GithubActions
+          role-session-name: GitHub_to_AWS_via_FederatedOIDC
+          aws-region: us-east-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and Push Docker image
         env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry}}
+          REPOSITORY: mttp-repo
+          IMAGE_TAG: ${{ github.sha}}
         run: |
-          # Install AWS CLI
-          pip install awscli
-
-          # Zip the backend folder
-          zip -r backend.zip backend
-
-          # Upload the zip to EC2
-          aws s3 cp backend.zip s3://your-s3-bucket/backend.zip
-
-          # SSH into EC2 and deploy
-          ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_SSH_KEY }} ec2-user@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-            aws s3 cp s3://your-s3-bucket/backend.zip backend.zip
-            unzip -o backend.zip -d /var/www/backend
-            cd /var/www/backend/backend
-            npm install
-            pm2 restart all
-          EOF
+          # Build a docker container and
+          # push it to ECR so that it can
+          # be deployed to ECS.
+          docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
