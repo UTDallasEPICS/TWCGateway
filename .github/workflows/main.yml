@@ -36,6 +36,7 @@ jobs:
           role-to-assume: arn:aws:iam::654654236858:role/GithubActions
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-2
+          output-credentials: true
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@master
         with:
