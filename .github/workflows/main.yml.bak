@@ -79,7 +79,7 @@ jobs:
       - name: Build and Push Docker image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry}}
-          REPOSITORY: twc-repo
+          REPOSITORY: wc-repo
           IMAGE_TAG: ${{ github.sha}}
         run: |
           # Build a docker container and
