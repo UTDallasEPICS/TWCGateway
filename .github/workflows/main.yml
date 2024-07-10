@@ -40,15 +40,7 @@ jobs:
       - name: Sync files to S3
         run: |
           aws s3 sync frontend/dist s3://warren-center-stage.npts.tech --acl public-read --follow-symlinks --delete
-
-      - name: Invalidate CloudFront cache
-        uses: chetan/invalidate-cloudfront-action@v2
-        env:
-          DISTRIBUTION: "ET4378B6T78I9"
-          PATHS: '/*'
-          AWS_REGION: 'us-east-2' # change this to your region
-          AWS_ACCESS_KEY_ID: ${{ steps.creds.outputs.aws-access-key-id }}
-          AWS_SECRET_ACCESS_KEY: ${{ steps.creds.outputs.aws-secret-access-key }}
+          aws cloudfront create-invalidation --distribution-id ET4378B6T78I9 --paths "/*"
 
   build-and-deploy-backend:
     permissions:
