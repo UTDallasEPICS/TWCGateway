@@ -36,7 +36,7 @@ jobs:
           role-to-assume: arn:aws:iam::654654236858:role/GithubActions
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: us-east-2
-        
+
       - name: Sync files to S3
         run: |
           aws s3 sync frontend/dist s3://warren-center-stage.npts.tech --acl public-read --follow-symlinks --delete
@@ -60,6 +60,7 @@ jobs:
         run: |
           cd backend
           npm install
+          npx prisma generate
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
