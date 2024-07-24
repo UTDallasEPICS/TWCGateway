@@ -14,8 +14,11 @@ import ArchivedSupervisor from './pages/admin/ArchivedSupervisor'
 import SupervisorHomepage from './pages/supervisor/SupervisorHomepage';
 
 function App() {
-  const { isAuthenticated, error } = useAuth0();
+  const { isAuthenticated, error, isAuthenticated } = useAuth0();
   console.log({error})
+  if (!isAuthenticated) {
+    return <button onClick={() => loginWithRedirect()}>Log in</button>;
+  }
   return (
     <BrowserRouter>
       <Routes>
