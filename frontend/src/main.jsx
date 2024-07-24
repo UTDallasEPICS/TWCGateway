@@ -12,7 +12,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Auth0Provider
         domain="dev-723z7f5wvs37uaci.us.auth0.com"
         clientId="Ehb9dR3K2X6AXwZzCXiyE1f6z4NcXGYN"
-        cacheLocation="localstorage"
         authorizationParams={{
           redirect_uri: `${import.meta.env.VITE_APP_BASE_URL}/login-redirect`,
         }}
