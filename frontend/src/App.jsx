@@ -15,9 +15,7 @@ import SupervisorHomepage from './pages/supervisor/SupervisorHomepage';
 
 function App() {
   const { isAuthenticated, error,loginWithRedirect } = useAuth0();
-  if (!isAuthenticated) {
-    loginWithRedirect()
-  }
+
   return (
     <BrowserRouter>
       <Routes>
