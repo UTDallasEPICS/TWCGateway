@@ -14,7 +14,8 @@ import ArchivedSupervisor from './pages/admin/ArchivedSupervisor'
 import SupervisorHomepage from './pages/supervisor/SupervisorHomepage';
 
 function App() {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated, error } = useAuth0();
+  console.log({error})
   return (
     <BrowserRouter>
       <Routes>
