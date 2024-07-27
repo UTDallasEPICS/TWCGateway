@@ -6,7 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import logo from '@/assets/twcglogo.svg';
 
-export default function LoginRedirect() {
+export default function LoginRedirect({ event }) {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const navigate = useNavigate();
 
@@ -23,27 +23,33 @@ export default function LoginRedirect() {
       console.error('Errored out in LoginRedirect -> fetchUser');
     }
   };
+  // useEffect(() => {
+  //   // if (isAuthenticated) {
+  //   //   getAccessTokenSilently().then(async token => {
+  //   //     Cookies.set('token', token);
+  //   //     const loggedinUser = await fetchUser();
+  //   //     console.log('loggedinUser', loggedinUser);
+  //   //     if (loggedinUser.role === 'ADMIN') {
+  //   //       navigate('/admin/users');
+  //   //     } else if (loggedinUser.role === 'SUPERVISOR') {
+  //   //       navigate('/supervisor');
+  //   //     } else if (loggedinUser.role === 'EMPLOYEE') {
+  //   //       navigate(`/onboarding-employee`);
+  //   //     } else {
+  //   //       console.error(
+  //   //         'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
+  //   //       );
+  //   //     }
+  //   //   });
+  //   // }
+  //   // const token = Cookies.get('token');
+  //   // if (!token) {
+  //   //   window.location.href = `https://the-warren-center.us.auth0.com/authorize?response_type=id_token&response_mode=form_post&client_id=hvsbhpQc5ImpK85Gpoo3Mrlebbfs1ogZ&scope=openid%20email&redirect_uri=http://localhost:5173/login-redirect&nonce=${genState()}`;
+  //   // } else {
+  //   //   console.log('event', event);
+  //   // }
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      getAccessTokenSilently().then(async token => {
-        Cookies.set('token', token);
-        const loggedinUser = await fetchUser();
-        console.log('loggedinUser', loggedinUser);
-        if (loggedinUser.role === 'ADMIN') {
-          navigate('/admin/users');
-        } else if (loggedinUser.role === 'SUPERVISOR') {
-          navigate('/supervisor');
-        } else if (loggedinUser.role === 'EMPLOYEE') {
-          navigate(`/onboarding-employee`);
-        } else {
-          console.error(
-            'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
-          );
-        }
-      });
-    }
-  }, [isAuthenticated, getAccessTokenSilently]);
+  // }, [isAuthenticated, getAccessTokenSilently]);
 
   return (
     <div className="flex flex-col h-screen justify-center items-center gradient-background">

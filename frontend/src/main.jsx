@@ -19,16 +19,17 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       >
         <App />
       </Auth0Provider> */}
-      <Auth0Provider
+      {/* <Auth0Provider
         domain="the-warren-center.us.auth0.com"
         clientId="hvsbhpQc5ImpK85Gpoo3Mrlebbfs1ogZ"
         cacheLocation="localstorage"
+        audience="https://the-warren-center.us.auth0.com/api/v2/"
         authorizationParams={{
           redirect_uri: `${import.meta.env.VITE_APP_BASE_URL}/login-redirect`,
         }}
-      >
+      > */}
         <App />
-      </Auth0Provider>
+      {/* </Auth0Provider> */}
     </MantineProvider>
   </React.StrictMode>
 );
