@@ -1,0 +1,4 @@
+<template>
+  <AdminNavbar />
+  Departments
+</template>
