@@ -34,8 +34,8 @@ function App() {
   const { isAuthenticated, error, loginWithRedirect } = useAuth0();
 
   const token = Cookies.get('token');
-  if (!token) {
-    window.location.href = `https://the-warren-center.us.auth0.com/authorize?response_type=id_token&response_mode=form_post&client_id=hvsbhpQc5ImpK85Gpoo3Mrlebbfs1ogZ&scope=openid%20email&redirect_uri=http://localhost:5173/login-redirect&nonce=${genState()}`;
+  if (!token && !window.location.href.includes('/login-redirect')) {
+    loginWithRedirect();
   }
 
   return (
@@ -46,6 +46,7 @@ function App() {
           element={isAuthenticated ? <LoginRedirect /> : <Login />}
         />
         <Route path="/login-redirect" element={<LoginRedirect />} />
+
         <Route path="/admin/users" element={<Users />} />
         <Route
           path="/admin/onboarding-employee/:id"
