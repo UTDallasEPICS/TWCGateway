@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import logo from '@/assets/twcglogo.svg';
 
 export default function LoginRedirect({ event }) {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently,getIdTokenClaims } = useAuth0();
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -24,8 +24,8 @@ export default function LoginRedirect({ event }) {
     }
   };
   useEffect(() => {
-      if (isAuthenticated) {
-        getAccessTokenSilently().then(async token => {
+    if (isAuthenticated) {
+        getIdTokenClaims().then(async token => {
           const loggedinUser = await fetchUser();
           console.log('loggedinUser', loggedinUser);
           if (loggedinUser.role === 'ADMIN') {
@@ -39,7 +39,7 @@ export default function LoginRedirect({ event }) {
               'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
             );
           }
-          Cookies.set('token', token);
+          Cookies.set('token', token.__raw);
           Cookies.set('user', JSON.stringify(loggedinUser))
         });
       }
