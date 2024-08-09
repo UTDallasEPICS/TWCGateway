@@ -26,7 +26,6 @@ export default function LoginRedirect({ event }) {
   useEffect(() => {
       if (isAuthenticated) {
         getAccessTokenSilently().then(async token => {
-          Cookies.set('token', token);
           const loggedinUser = await fetchUser();
           console.log('loggedinUser', loggedinUser);
           if (loggedinUser.role === 'ADMIN') {
@@ -40,6 +39,8 @@ export default function LoginRedirect({ event }) {
               'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
             );
           }
+          Cookies.set('token', token);
+          Cookies.set('user', JSON.stringify(loggedinUser))
         });
       }
       /* const token = Cookies.get('token');

@@ -25,6 +25,7 @@ import OnboardingEmployees from '@/components/OnboardingEmployees';
 import Supervisors from '@/components/Supervisors';
 import Admins from '@/components/Admins';
 import DeleteIcon from '../../assets/icons/DeleteIcon';
+import Cookies from 'js-cookie';
 // ------------------------------------------------------------- //
 //AddUser
 AddUser.propTypes = {
@@ -663,8 +664,8 @@ export default function Users() {
   ]);
   const [reloadData, setReloadData] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
-
+  const token = Cookies.get('token')
+  
   useEffect(() => {
     document.title = 'Users | TWCGateway';
     setAllSelectedRows([...selectedAdms, ...selectedSups, ...selectedEmps]);

@@ -88,3 +88,15 @@ jobs:
           docker push $ECR_REGISTRY/$REPOSITORY:latest
           echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
           echo "image=$ECR_REGISTRY/$REPOSITORY:latest" >> $GITHUB_OUTPUT
+      - name: Bump Server
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          script: |
+            cd Warren-Automated-Onboard/backend
+            npx prisma migrate deploy
+            docker pull $ECR_REGISTRY/$REPOSITORY:latest
+            docker-compose up
+          host: twc-gateway-stage.npts.tech
+          cipher: ssh-ed25519
+          username: ubuntu
+          key: ${{ secrets.STAGE }}

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import PropTypes from 'prop-types';
+import Cookies from 'js-cookie';
 
 Admins.propTypes = {
   selectedAdms: PropTypes.array,
@@ -19,12 +20,13 @@ export default function Admins({
   setSelectedAdms,
   reloadData,
   setReloadData,
-  token,
   searchTerm,
   archived = false,
 }) {
   const [adms, setAdms] = useState([]);
-  const decodedToken = jwtDecode(token);
+  const token = Cookies.get('token')
+  const user = JSON.parse(Cookies.get('user') || "{}")
+  console.log(token)
 
   useEffect(() => {
     const fetchAdms = async () => {
@@ -82,7 +84,7 @@ export default function Admins({
             }
           >
             <Table.Td className="w-1/12">
-              {adm.email !== decodedToken.email && (
+              {adm.email !== user.email && (
                 <Checkbox
                   aria-label="Select row"
                   onChange={event =>

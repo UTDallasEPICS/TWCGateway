@@ -25,6 +25,7 @@ const isRoleAdminOrSupervisor = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
+    console.log(decodedToken);
     const userEmail = decodedToken.email;
     const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
       email: userEmail,
