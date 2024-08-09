@@ -5,7 +5,6 @@ const axios = require('axios');
 const prisma = new PrismaClient();
 
 const isRoleAdmin = async token => {
-  let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
     const user = await prisma.user.findUnique({
@@ -25,7 +24,6 @@ const isRoleAdmin = async token => {
 };
 
 const isRoleAdminOrSupervisor = async token => {
-  let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
     const user = await prisma.user.findUnique({
@@ -37,14 +35,37 @@ const isRoleAdminOrSupervisor = async token => {
     if (user === null || user.length === 0) {
       throw new Error('No User with this Email or User is Archived');
     }
-    return user.role === 'ADMIN' || userRole === 'SUPERVISOR';
+    return user.role === 'ADMIN' || user.role === 'SUPERVISOR';
   } catch (error) {
     console.error('Error in usersController -> isRoleAdmin', error);
   }
-  return userRole === 'ADMIN' || userRole === 'SUPERVISOR';
 };
 
 module.exports = {
+  //POST
+  auth: async (req, res) => {
+    const { email } = req.body;
+    try {
+      const user = await prisma.user.findUnique({
+        where: {
+          email: email,
+          archived: false,
+        },
+      });
+
+      if (user === null || user.length === 0) {
+        res.status(200).json({
+          //can't use 204 (no content) because message is not sent
+          message: 'No User with this Email or User is Archived',
+        });
+      } else {
+        res.status(200).json(user);
+      }
+    } catch (error) {
+      console.error('Error Retrieving User by Email', error);
+      res.status(500).json({ message: 'Error Retrieving User by Email' });
+    }
+  },
   checkEmail: async (req, res) => {
     const { email } = req.body;
     try {
