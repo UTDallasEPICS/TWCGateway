@@ -1,7 +1,6 @@
 const controller = require('./usersController');
 
 const addRoutes = router => {
-  router.post('/auth', controller.auth);
   router.post('/checkEmail', controller.checkEmail);
   router.post('/addEmployee', controller.addEmployee);
   router.post('/addSupervisor', controller.addSupervisor);

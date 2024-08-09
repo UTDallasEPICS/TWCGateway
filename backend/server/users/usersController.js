@@ -8,33 +8,36 @@ const isRoleAdmin = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
-    const userEmail = decodedToken.email;
-    const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
-      email: userEmail,
+    const user = await prisma.user.findUnique({
+      where: {
+        email: decodedToken.email,
+        archived: false,
+      },
     });
-    if (response.data.role === 'ADMIN') {
-      userRole = 'ADMIN';
+
+    if (user === null || user.length === 0) {
+      throw new Error('No User with this Email or User is Archived');
     }
+    return user.role === 'ADMIN';
   } catch (error) {
     console.error('error in usersController -> isRoleAdmin', error);
   }
-  return userRole === 'ADMIN';
 };
 
 const isRoleAdminOrSupervisor = async token => {
   let userRole = '';
   try {
     const decodedToken = jwt.decode(token);
-    console.log(decodedToken);
-    const userEmail = decodedToken.email;
-    const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
-      email: userEmail,
+    const user = await prisma.user.findUnique({
+      where: {
+        email: decodedToken.email,
+        archived: false,
+      },
     });
-    if (response.data.role === 'ADMIN') {
-      userRole = 'ADMIN';
-    } else if (response.data.role === 'SUPERVISOR') {
-      userRole = 'SUPERVISOR';
+    if (user === null || user.length === 0) {
+      throw new Error('No User with this Email or User is Archived');
     }
+    return user.role === 'ADMIN' || userRole === 'SUPERVISOR';
   } catch (error) {
     console.error('Error in usersController -> isRoleAdmin', error);
   }
@@ -42,31 +45,6 @@ const isRoleAdminOrSupervisor = async token => {
 };
 
 module.exports = {
-  //POST
-  auth: async (req, res) => {
-    const { email } = req.body;
-    try {
-      const user = await prisma.user.findUnique({
-        where: {
-          email: email,
-          archived: false,
-        },
-      });
-
-      if (user === null || user.length === 0) {
-        res.status(200).json({
-          //can't use 204 (no content) because message is not sent
-          message: 'No User with this Email or User is Archived',
-        });
-      } else {
-        res.status(200).json(user);
-      }
-    } catch (error) {
-      console.error('Error Retrieving User by Email', error);
-      res.status(500).json({ message: 'Error Retrieving User by Email' });
-    }
-  },
-
   checkEmail: async (req, res) => {
     const { email } = req.body;
     try {
