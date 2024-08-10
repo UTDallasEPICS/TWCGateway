@@ -100,7 +100,7 @@ jobs:
             npx prisma migrate deploy
             cd ~
             docker pull $ECR_REGISTRY/$REPOSITORY:latest
-            docker compose up nuxt --force-recreate
+            docker compose up -d nuxt --force-recreate
           host: twc-gateway-stage-api.npts.tech
           cipher: ssh-ed25519
           username: ubuntu
