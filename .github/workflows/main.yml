@@ -98,6 +98,7 @@ jobs:
             alias npm=pnpm
             cd Warren-Automated-Onboard/backend
             npx prisma migrate deploy
+            cd ~
             docker pull $ECR_REGISTRY/$REPOSITORY:latest
             docker compose up nuxt --force-recreate
           host: twc-gateway-stage-api.npts.tech
