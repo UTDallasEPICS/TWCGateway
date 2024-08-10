@@ -99,7 +99,7 @@ jobs:
             cd Warren-Automated-Onboard/backend
             npx prisma migrate deploy
             docker pull $ECR_REGISTRY/$REPOSITORY:latest
-            docker-compose up
+            docker compose up
           host: twc-gateway-stage-api.npts.tech
           cipher: ssh-ed25519
           username: ubuntu
