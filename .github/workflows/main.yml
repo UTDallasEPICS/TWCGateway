@@ -92,6 +92,10 @@ jobs:
         uses: appleboy/ssh-action@v0.1.4
         with:
           script: |
+            export NVM_DIR=~/.nvm
+            export PATH=$PATH:~/.local/share/pnpm/:~/.nvm/versions/node/v18.16.1/bin/pnpm
+            source ~/.nvm/nvm.sh
+            alias npm=pnpm
             cd Warren-Automated-Onboard/backend
             npx prisma migrate deploy
             docker pull $ECR_REGISTRY/$REPOSITORY:latest
