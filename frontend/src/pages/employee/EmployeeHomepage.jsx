@@ -4,11 +4,13 @@ import LeftAngle from '../../assets/icons/LeftAngle';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default function EmployeeHomepage() {
   const { user, logout } = useAuth0();
   const [localUser, setLocalUser] = useState(null);
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [userTasks, setUserTasks] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);

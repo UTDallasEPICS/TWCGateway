@@ -7,11 +7,13 @@ import { Table, Checkbox, Button, Mark } from '@mantine/core';
 import CheckIcon from '../../assets/icons/CheckIcon';
 import PropTypes from 'prop-types';
 import CancelIcon from '../../assets/icons/CancelIcon';
+import Cookies from 'js-cookie';
 
 export default function Department() {
   const { id } = useParams();
   const [department, setDepartment] = useState({});
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [tasks, setTasks] = useState([]);

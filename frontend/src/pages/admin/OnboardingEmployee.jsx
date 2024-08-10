@@ -19,6 +19,7 @@ import RightAngle from '../../assets/icons/RightAngle';
 import EditIcon from '../../assets/icons/EditIcon';
 import PlusIcon from '../../assets/icons/PlusIcon';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 TaskTable.propTypes = {
   tasks: PropTypes.array.isRequired,
@@ -29,7 +30,8 @@ TaskTable.propTypes = {
 
 export function TaskTable({ tasks, searchTerm, userId, setReload }) {
   const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
 
   const completeTask = async taskId => {
     try {
@@ -155,7 +157,8 @@ export default function OnboardingEmployee() {
   const [defaultTag, setDefaultTag] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [selectedTab, setSelectedTab] = useState(
     tags && tags.length > 0 ? `${tags[0]}` : ''
   );

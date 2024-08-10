@@ -19,6 +19,7 @@ import { useDisclosure } from '@mantine/hooks';
 import LeftAngle from '../../assets/icons/LeftAngle';
 import RightAngle from '../../assets/icons/RightAngle';
 import EditIcon from '../../assets/icons/EditIcon';
+import Cookies from 'js-cookie';
 
 TaskTable.propTypes = {
   tasks: PropTypes.array,
@@ -62,7 +63,8 @@ export default function Supervisor() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
   const [tasks, setTasks] = useState(null);
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(null);

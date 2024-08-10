@@ -21,13 +21,15 @@ import SendToArchiveIcon from '../../assets/icons/SendToArchiveIcon';
 import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '../../assets/icons/DeleteIcon';
+import Cookies from 'js-cookie';
 
 EditDepartment.propTypes = {
   setRefresh: PropTypes.func.isRequired,
 };
 
 export function EditDepartment({ setRefresh }) {
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [opened, { open, close }] = useDisclosure(false);
   const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState(null);
@@ -146,7 +148,8 @@ AddDepartment.propTypes = {
 };
 
 export function AddDepartment({ setRefresh }) {
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [opened, { open, close }] = useDisclosure(false);
   const [departmentName, setDepartmentName] = useState('');
 
@@ -223,7 +226,8 @@ export function ArchiveDepartment({
   setSelectedRows,
   departmentId,
 }) {
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [isLoading, setIsLoading] = useState(false);
   const [opened, { open, close }] = useDisclosure();
   const [employeesCheck, setEmployeesCheck] = useState(null);
@@ -309,7 +313,10 @@ export function ArchiveDepartment({
       >
         {employeesCheck ? (
           // console.log("checkEmployees",checkEmployees)
-          <div>Cannot Delete! Please remove all assigned employees from the department before deleting.</div>
+          <div>
+            Cannot Delete! Please remove all assigned employees from the
+            department before deleting.
+          </div>
         ) : (
           <div>
             <span>Are you sure you want to </span>
@@ -331,7 +338,8 @@ export function ArchiveDepartment({
 export default function Departments() {
   const navigate = useNavigate();
   const [departments, setDepartments] = useState([]);
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRows, setSelectedRows] = useState([]);
   const [refresh, setRefresh] = useState(false);

@@ -14,6 +14,7 @@ import { useDisclosure } from '@mantine/hooks';
 import UserIcon from '../../assets/icons/UserIcon';
 import CollapseAllIcon from '../../assets/icons/CollapseAllIcon';
 import ExpandAllIcon from '../../assets/icons/ExpandAllIcon';
+import Cookies from 'js-cookie';
 
 export default function SupervisorHomepage() {
   const { user, logout } = useAuth0();
@@ -22,7 +23,8 @@ export default function SupervisorHomepage() {
   const [localUserTasks, setLocalUserTasks] = useState([]);
   const [expandAll, setExpandAll] = useState(false);
   const [refresh, setRefresh] = useState(0);
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {

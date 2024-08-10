@@ -24,7 +24,8 @@ import PlusIcon from '../../assets/icons/PlusIcon';
 import CheckIcon from '../../assets/icons/CheckIcon';
 import CancelIcon from '../../assets/icons/CancelIcon';
 import EditIcon from '../../assets/icons/EditIcon';
-import DeleteIcon from '../../assets/icons/DeleteIcon'
+import DeleteIcon from '../../assets/icons/DeleteIcon';
+import Cookies from 'js-cookie';
 
 export function ArchiveTasks({
   selectedRows,
@@ -200,7 +201,7 @@ export function TaskTable({
   }, [token]);
 
   const rows =
-updatedTasks.length > 0 ? (
+    updatedTasks.length > 0 ? (
       updatedTasks
         // .filter(task =>
         //   task.task.desc.toLowerCase().includes(searchTerm.toLowerCase())
@@ -481,7 +482,9 @@ export function AddTask({ token, setReload, deptId, tags }) {
 export default function Department() {
   const { id } = useParams();
   const [department, setDepartment] = useState({});
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const token = Cookies.get('token');
+  console.log('this is the token fetched in the departments', token);
   const [searchTerm, setSearchTerm] = useState('');
   const [tasks, setTasks] = useState([]);
   const [tags, setTags] = useState([]);
@@ -568,9 +571,7 @@ export default function Department() {
             className="flex-col bg-white bg-opacity-50 rounded-lg border-2 border-gray-100 p-2 ml-5 m-5"
           >
             <div className="md:flex-col md:items-center md:space-x-5 md:space-y-1 mb-10">
-              <div className="text-2xl font-bold">
-                {department.name}
-              </div>
+              <div className="text-2xl font-bold">{department.name}</div>
             </div>
             <div>
               <SearchBar
