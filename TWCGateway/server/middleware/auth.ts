@@ -49,15 +49,21 @@ function checkRestrictedRoute(event: any, userRole: string | undefined) {
 export default defineEventHandler(async event => {
   event.context.prisma = prismaClient;
   const token = getCookie(event, 'token') || '';
-  console.log("Curr URL: ", event.node.req.url);
-  console.log("Status of !token: ", !token);
-  console.log("Status of !event.node.req.url?.includes('/api/auth/callback'): ", !event.node.req.url?.includes('/api/auth/callback'));
+  console.log('--------------------');
+  console.log('Curr URL: ', event.node.req.url);
+  console.log('Status of !token: ', !token);
+  console.log(
+    "Status of !event.node.req.url?.includes('/api/auth/callback'): ",
+    !event.node.req.url?.includes('/api/auth/callback')
+  );
   // const role = getCookie(event, 'role') || '';
   if (!token && !event.node.req.url?.includes('/api/auth/callback')) {
     await sendRedirect(event, loginRedirectUrl());
   } else {
     if (token) {
       console.log('got it before logout.get.ts');
+      console.log('--------------------');
+
       try {
         const claims = jwt.verify(
           token,
@@ -73,6 +79,7 @@ export default defineEventHandler(async event => {
       }
     } else {
       console.log('token not found');
+      console.log('--------------------');
     }
   }
 });
