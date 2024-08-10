@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 export default function EmployeeHomepage() {
   const { user, logout } = useAuth0();
   const [localUser, setLocalUser] = useState(null);
-  // const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  // const token = JSON.parse(localStorage.getItem(ww.key(1))).id_token;
   const token = Cookies.get('token');
   const [userTasks, setUserTasks] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');

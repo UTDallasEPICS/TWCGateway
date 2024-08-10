@@ -1,13 +1,18 @@
 const { PrismaClient } = require('@prisma/client');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const fs = require('fs');
 
 const prisma = new PrismaClient();
 
 const isRoleAdmin = async token => {
   let userRole = '';
   try {
-    const decodedToken = jwt.decode(token);
+    // const decodedToken = jwt.decode(token);
+    const decodedToken = jwt.verify(
+      token,
+      fs.readFileSync(process.cwd() + '/cert-dev.pem')
+    );
     const userEmail = decodedToken.email;
     const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
       email: userEmail,
@@ -16,7 +21,7 @@ const isRoleAdmin = async token => {
       userRole = 'ADMIN';
     }
   } catch (error) {
-    console.error('error in usersController -> isRoleAdmin', error);
+    console.error('error in departmentsController -> isRoleAdmin', error);
   }
   return userRole === 'ADMIN';
 };
@@ -24,7 +29,11 @@ const isRoleAdmin = async token => {
 const isRoleAdminOrSupervisor = async token => {
   let userRole = '';
   try {
-    const decodedToken = jwt.decode(token);
+    // const decodedToken = jwt.decode(token);
+    const decodedToken = jwt.verify(
+      token,
+      fs.readFileSync(process.cwd() + '/cert-dev.pem')
+    );
     const userEmail = decodedToken.email;
     const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
       email: userEmail,
@@ -35,7 +44,10 @@ const isRoleAdminOrSupervisor = async token => {
       userRole = 'SUPERVISOR';
     }
   } catch (error) {
-    console.error('Error in usersController -> isRoleAdmin', error);
+    console.error(
+      'Error in departmentsController -> isRoleAdminOrSupervisor',
+      error
+    );
   }
   return userRole === 'ADMIN' || userRole === 'SUPERVISOR';
 };
@@ -92,7 +104,7 @@ module.exports = {
     }
   },
 
-    getAllDepartments: async (req, res) => {
+  getAllDepartments: async (req, res) => {
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }

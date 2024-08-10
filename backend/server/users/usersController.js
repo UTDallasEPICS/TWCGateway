@@ -1,12 +1,18 @@
 const { PrismaClient } = require('@prisma/client');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const fs = require('fs');
 
 const prisma = new PrismaClient();
 
 const isRoleAdmin = async token => {
   try {
-    const decodedToken = jwt.decode(token);
+    // const decodedToken = jwt.decode(token);
+    // console.log('This is the process.cwd()', process.cwd());
+    const decodedToken = jwt.verify(
+      token,
+      fs.readFileSync(process.cwd() + '/cert-dev.pem')
+    );
     const user = await prisma.user.findUnique({
       where: {
         email: decodedToken.email,
@@ -25,7 +31,11 @@ const isRoleAdmin = async token => {
 
 const isRoleAdminOrSupervisor = async token => {
   try {
-    const decodedToken = jwt.decode(token);
+    // const decodedToken = jwt.decode(token);
+    const decodedToken = jwt.verify(
+      token,
+      fs.readFileSync(process.cwd() + '/cert-dev.pem')
+    );
     const user = await prisma.user.findUnique({
       where: {
         email: decodedToken.email,

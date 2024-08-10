@@ -2,11 +2,16 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const fs = require('fs');
 
 const isRoleAdmin = async token => {
   let userRole = '';
   try {
-    const decodedToken = jwt.decode(token);
+    // const decodedToken = jwt.decode(token);
+    const decodedToken = jwt.verify(
+      token,
+      fs.readFileSync(process.cwd() + '/cert-dev.pem')
+    );
     const userEmail = decodedToken.email;
     const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
       email: userEmail,
@@ -23,7 +28,11 @@ const isRoleAdmin = async token => {
 const isRoleAdminOrSupervisor = async token => {
   let userRole = '';
   try {
-    const decodedToken = jwt.decode(token);
+    // const decodedToken = jwt.decode(token);
+    const decodedToken = jwt.verify(
+      token,
+      fs.readFileSync(process.cwd() + '/cert-dev.pem')
+    );
     const userEmail = decodedToken.email;
     const response = await axios.post(`${process.env.EXPRESS_BASE_URL}/auth`, {
       email: userEmail,
