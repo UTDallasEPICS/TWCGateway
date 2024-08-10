@@ -7,7 +7,8 @@ import Cookies from 'js-cookie';
 import logo from '@/assets/twcglogo.svg';
 
 export default function LoginRedirect({ event }) {
-  const { user, isAuthenticated, getAccessTokenSilently,getIdTokenClaims } = useAuth0();
+  const { user, isAuthenticated, getAccessTokenSilently, getIdTokenClaims } =
+    useAuth0();
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -23,34 +24,47 @@ export default function LoginRedirect({ event }) {
       console.error('Errored out in LoginRedirect -> fetchUser');
     }
   };
+
+  async function handleLogin(token) {
+    if (token) {
+      console.log('token from login-redirect', token);
+      const loggedinUser = await fetchUser();
+      console.log('loggedinUser', loggedinUser);
+      if (loggedinUser.role === 'ADMIN') {
+        navigate('/admin/users');
+      } else if (loggedinUser.role === 'SUPERVISOR') {
+        navigate('/supervisor');
+      } else if (loggedinUser.role === 'EMPLOYEE') {
+        navigate(`/onboarding-employee`);
+      } else {
+        console.error(
+          'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
+        );
+      }
+      Cookies.set('token', token);
+      Cookies.set('user', JSON.stringify(loggedinUser));
+    }
+  }
+
   useEffect(() => {
     if (isAuthenticated) {
-        getIdTokenClaims().then(async token => {
-          const loggedinUser = await fetchUser();
-          console.log('loggedinUser', loggedinUser);
-          if (loggedinUser.role === 'ADMIN') {
-            navigate('/admin/users');
-          } else if (loggedinUser.role === 'SUPERVISOR') {
-            navigate('/supervisor');
-          } else if (loggedinUser.role === 'EMPLOYEE') {
-            navigate(`/onboarding-employee`);
-          } else {
-            console.error(
-              'Errored in LoginRedirect -> useEffect (Neither admin, supervisor, nor employee)'
-            );
-          }
-          Cookies.set('token', token.__raw);
-          Cookies.set('user', JSON.stringify(loggedinUser))
+      getIdTokenClaims()
+        .then(token => {
+          handleLogin(token.__raw);
+        })
+        .catch(error => {
+          console.error(
+            'Errored out in LoginRedirect -> useEffect -> getAccessTokenSilently',
+            error
+          );
         });
-      }
-      /* const token = Cookies.get('token');
-      if (!token) {
-        window.location.href = `https:the-warren-center.us.auth0.comauthorize?response_type=id_token&response_mode=form_post&client_id=hvsbhpQc5ImpK85Gpoo3Mrlebbfs1ogZ&scope=openid%20email&redirect_uri=http:localhost:5173login-redirect&nonce=${genState()}`;
-      } else {
-        console.log('event', event);
-      }
- */
-   }, [isAuthenticated, getAccessTokenSilently]);
+    } else {
+      // console.log('Not authenticated');
+      // Cookies.remove('token');
+      // Cookies.remove('user');
+      // navigate('/');
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className="flex flex-col h-screen justify-center items-center gradient-background">
