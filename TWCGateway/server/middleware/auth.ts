@@ -56,9 +56,8 @@ export default defineEventHandler(async event => {
     "Status of !event.node.req.url?.includes('/api/auth/callback'): ",
     !event.node.req.url?.includes('/api/auth/callback')
   );
-  // const role = getCookie(event, 'role') || '';
   if (!token && !event.node.req.url?.includes('/api/auth/callback')) {
-    await sendRedirect(event, loginRedirectUrl());
+    await sendRedirect(event, loginRedirectUrl() || '');
   } else {
     if (token) {
       console.log('got it before logout.get.ts');
