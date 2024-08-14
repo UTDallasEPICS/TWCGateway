@@ -27,9 +27,10 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         authorizationParams={{
           redirect_uri: `${import.meta.env.VITE_APP_BASE_URL}/login-redirect`,
         }}
-      > 
+
+      >
         <App />
-       </Auth0Provider> 
+       </Auth0Provider>
     </MantineProvider>
   </React.StrictMode>
 );

@@ -24,9 +24,9 @@ export default function Admins({
   archived = false,
 }) {
   const [adms, setAdms] = useState([]);
-  const token = Cookies.get('token')
-  const user = JSON.parse(Cookies.get('user') || "{}")
-  console.log(token)
+  const token = Cookies.get('token');
+  const user = JSON.parse(Cookies.get('user') || '{}');
+  // console.log(token)
 
   useEffect(() => {
     const fetchAdms = async () => {
