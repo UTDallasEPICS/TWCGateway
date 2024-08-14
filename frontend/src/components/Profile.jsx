@@ -30,15 +30,8 @@ export default function Profile() {
 
   return (
     <>
-      <Tooltip
-        label="Profile"
-        openDelay="700"
-      >
-        <ActionIcon
-          variant="filled"
-          size="xl"
-          onClick={open}
-        >
+      <Tooltip label="Profile" openDelay="700">
+        <ActionIcon variant="filled" size="xl" onClick={open}>
           <UserIcon />
         </ActionIcon>
       </Tooltip>
@@ -83,7 +76,11 @@ export default function Profile() {
           <Button
             variant="filled"
             color="red"
-            onClick={logout}
+            onClick={() =>
+              logout({
+                returnTo: `${import.meta.env.VITE_APP_BASE_URL}/login-redirect`,
+              })
+            }
           >
             Logout
           </Button>
