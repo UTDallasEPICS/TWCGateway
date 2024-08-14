@@ -7,8 +7,13 @@ import Cookies from 'js-cookie';
 import logo from '@/assets/twcglogo.svg';
 
 export default function LoginRedirect({ event }) {
-  const { user, isAuthenticated, getAccessTokenSilently, getIdTokenClaims } =
-    useAuth0();
+  const {
+    user,
+    isAuthenticated,
+    getAccessTokenSilently,
+    getIdTokenClaims,
+    isLoading,
+  } = useAuth0();
   const navigate = useNavigate();
 
   const fetchUser = async () => {
@@ -47,6 +52,7 @@ export default function LoginRedirect({ event }) {
   }
 
   useEffect(() => {
+    if (isLoading) return;
     if (isAuthenticated) {
       getIdTokenClaims()
         .then(token => {
@@ -59,12 +65,12 @@ export default function LoginRedirect({ event }) {
           );
         });
     } else {
-      // console.log('Not authenticated');
-      // Cookies.remove('token');
-      // Cookies.remove('user');
-      // navigate('/');
+      console.log('Not authenticated');
+      Cookies.remove('token');
+      Cookies.remove('user');
+      navigate('/');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isLoading]);
 
   return (
     <div className="flex flex-col h-screen justify-center items-center gradient-background">

@@ -18,3 +18,4 @@ Thumbs.db
 
 # Ignore dependencies in the global scope
 /.vscode/
+.env
