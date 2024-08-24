@@ -11,31 +11,15 @@ async function main() {
   const userAdmin1 = await prisma.user.create({
     data: {
       name: 'Tushar Wani',
-      email: 'reachtusharwani@gmail',
+      email: 'reachtusharwani@gmail.com',
       role: UserRole.ADMIN,
     },
   });
 
   const userAdmin2 = await prisma.user.create({
     data: {
-      name: 'Samikshaa Saiprakash',
-      email: 'samikshaa.saiprakash@gmail.com',
-      role: UserRole.ADMIN,
-    },
-  });
-
-  const userAdmin3 = await prisma.user.create({
-    data: {
-      name: 'Sarah Park',
-      email: 'pentasky2022@gmail.com',
-      role: UserRole.ADMIN,
-    },
-  });
-
-  const userAdmin4 = await prisma.user.create({
-    data: {
-      name: 'Isi Emordi',
-      email: 'isi.emord1@gmail.com',
+      name: 'Brandy Lindsey',
+      email: 'Brandy.Lindsey@thewarrencenter.org',
       role: UserRole.ADMIN,
     },
   });
@@ -44,24 +28,24 @@ async function main() {
 
   const userSupervisor1 = await prisma.user.create({
     data: {
-      name: 'John',
-      email: 'john@john.com',
+      name: 'Dana Dodgen',
+      email: 'dana.dodgen@thewarrencenter.org',
       role: UserRole.SUPERVISOR,
     },
   });
 
   const userSupervisor2 = await prisma.user.create({
     data: {
-      name: 'Avery',
-      email: 'avery@avery.com',
+      name: 'Maddie Trigg',
+      email: 'maddie.trigg@thewarrencenter.org',
       role: UserRole.SUPERVISOR,
     },
   });
 
   const userSupervisor3 = await prisma.user.create({
     data: {
-      name: 'Tushar (supervisor)',
-      email: 'tws@gmail.com',
+      name: 'Brandy Lindsey',
+      email: 'bl@twc.org',
       role: UserRole.SUPERVISOR,
     },
   });
@@ -70,24 +54,8 @@ async function main() {
 
   const userEmployee1 = await prisma.user.create({
     data: {
-      name: 'Employee1',
-      email: 'employee1@employee1.com',
-      role: UserRole.EMPLOYEE,
-    },
-  });
-
-  const userEmployee2 = await prisma.user.create({
-    data: {
-      name: 'Employee2',
-      email: 'employee2@employee2.com',
-      role: UserRole.EMPLOYEE,
-    },
-  });
-
-  const userEmployee3 = await prisma.user.create({
-    data: {
-      name: 'Tushar (employee)',
-      email: 'twe@gmail.com',
+      name: 'Vivianne Cottingham',
+      email: 'vivianne.cottingham@thewarrencenter.org',
       role: UserRole.EMPLOYEE,
     },
   });
@@ -100,14 +68,10 @@ async function main() {
     },
   });
 
-  const department2 = await prisma.department.create({
-    data: {
-      name: 'Clinic',
-    },
-  });
-
   // ----------------------------------------------------
 
+  // Basic Onboarding
+  // Pre-Hire
   const task1 = await prisma.task.create({
     data: {
       desc: 'Reviews Job Description',
@@ -117,7 +81,7 @@ async function main() {
 
   const task2 = await prisma.task.create({
     data: {
-      desc: 'Completes Requisition Form*',
+      desc: 'Completes Requisition Form',
       tag: 'Pre-Hire',
     },
   });
@@ -131,66 +95,406 @@ async function main() {
 
   const task4 = await prisma.task.create({
     data: {
-      desc: 'Insperity portal introduction ',
-      tag: 'First Day',
+      desc: 'Forwards Approved Requisition Packet to COO',
+      tag: 'Pre-Hire',
     },
   });
 
   const task5 = await prisma.task.create({
     data: {
-      desc: `Collect HR documents: Driver's license & Auto Insurance, license,transcripts, CPR, direct deposit `,
-      tag: 'First Day',
+      desc: 'Reviews Resumes',
+      tag: 'Pre-Hire',
     },
   });
 
   const task6 = await prisma.task.create({
     data: {
-      desc: `Schedule 30 minutes for Amy Spawn to meet new staff`,
-      tag: 'First Day',
+      desc: 'Send Application to Candidate',
+      tag: 'Pre-Hire',
     },
   });
 
   const task7 = await prisma.task.create({
     data: {
-      desc: `Tour Office (supplies, office equipment, alarm, etc.) `,
-      tag: 'First Day',
+      desc: 'Screens Candidates',
+      tag: 'Pre-Hire',
     },
   });
 
   const task8 = await prisma.task.create({
     data: {
-      desc: `Computer usage (VPN, Email Signature, Drives, Room scheduling calendar)`,
-      tag: 'First Day',
+      desc: 'Collects Application from Candidate',
+      tag: 'Pre-Hire',
     },
   });
 
   const task9 = await prisma.task.create({
     data: {
-      desc: `Required Trainings (Confidentiality, Universal Precautions, Safety, etc)`,
-      tag: 'First Day',
+      desc: 'Interviews Candidates',
+      tag: 'Pre-Hire',
     },
   });
 
   const task10 = await prisma.task.create({
     data: {
-      desc: `How to work with translators and guidelines for…(ie., need one and talking to parents, not translators)`,
-      tag: 'First Week',
+      desc: 'Completes 3 Reference Checks',
+      tag: 'Pre-Hire',
     },
   });
 
   const task11 = await prisma.task.create({
     data: {
-      desc: `Scheduled Observations: Visits, Initial Evaluation, Re-evaluation, parent communicationmomen`,
-      tag: 'First Week',
+      desc: 'Completes Candidate Form',
+      tag: 'Pre-Hire',
     },
   });
 
   const task12 = await prisma.task.create({
     data: {
-      desc: `Insurance 101 - timelines, scoring cut-offs, billing codes, etc. `,
-      tag: 'First Week',
+      desc: 'Sends Candidate Packet to Executives for approval',
+      tag: 'Pre-Hire',
     },
   });
+
+  const task13 = await prisma.task.create({
+    data: {
+      desc: 'Makes Verbal Offer',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task14 = await prisma.task.create({
+    data: {
+      desc: 'Sends Fingerprinting instructions (within 48 hours)',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task15 = await prisma.task.create({
+    data: {
+      desc: 'Forwards Candidate Packet to COO',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task16 = await prisma.task.create({
+    data: {
+      desc: 'Post Job Internally & Externally',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task17 = await prisma.task.create({
+    data: {
+      desc: 'Generates Written Offer letter for CEO to sign',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task18 = await prisma.task.create({
+    data: {
+      desc: 'Sends candidate welcome email (offer letter, I-9 info and first day paperwork)',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task19 = await prisma.task.create({
+    data: {
+      desc: 'Submits New User Creation Information to Meriplex',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task20 = await prisma.task.create({
+    data: {
+      desc: 'Verifies Email Groups are Setup',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task21 = await prisma.task.create({
+    data: {
+      desc: 'Sends Josette and Anthony new hire information',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task22 = await prisma.task.create({
+    data: {
+      desc: 'Runs VeriFYI background check',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task23 = await prisma.task.create({
+    data: {
+      desc: 'Verifies License',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task24 = await prisma.task.create({
+    data: {
+      desc: 'Insider Announcement',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task25 = await prisma.task.create({
+    data: {
+      desc: 'Add employee to Org Chart',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task26 = await prisma.task.create({
+    data: {
+      desc: 'Sets up Orientation/Trainings with other departments',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task27 = await prisma.task.create({
+    data: {
+      desc: 'Welcome Email with first day instructions',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task28 = await prisma.task.create({
+    data: {
+      desc: 'Identify Desk',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task29 = await prisma.task.create({
+    data: {
+      desc: 'Welcome Sign',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task30 = await prisma.task.create({
+    data: {
+      desc: 'TWC T-shirt',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  const task31 = await prisma.task.create({
+    data: {
+      desc: 'Prepares Desk',
+      tag: 'Pre-Hire',
+    },
+  });
+
+  // First Day
+  const task32 = await prisma.task.create({
+    data: {
+      desc: 'Insperity portal introduction',
+      tag: 'First Day',
+    },
+  });
+
+  const task33 = await prisma.task.create({
+    data: {
+      desc: 'Tuberculosis Questionnaire',
+      tag: 'First Day',
+    },
+  });
+
+  const task34 = await prisma.task.create({
+    data: {
+      desc: "Collect HR documents: Driver's license & auto Insurance, license, transcripts, CPR, direct deposit",
+      tag: 'First Day',
+    },
+  });
+
+  const task35 = await prisma.task.create({
+    data: {
+      desc: "Schedule 15 minutes to meet each C-Suite during staff's first week",
+      tag: 'First Day',
+    },
+  });
+
+  const task36 = await prisma.task.create({
+    data: {
+      desc: 'Add employee to RingCentral app + setup sim card',
+      tag: 'First Day',
+    },
+  });
+
+  const task37 = await prisma.task.create({
+    data: {
+      desc: 'Add to check-in iPad',
+      tag: 'First Day',
+    },
+  });
+
+  const task38 = await prisma.task.create({
+    data: {
+      desc: 'Favorites Form completed & saved in Common Drive',
+      tag: 'First Day',
+    },
+  });
+
+  const task39 = await prisma.task.create({
+    data: {
+      desc: 'Strengths Finder completed & top 5 saved on spreadsheet in common drive',
+      tag: 'First Day',
+    },
+  });
+
+  const task40 = await prisma.task.create({
+    data: {
+      desc: 'E-Verify',
+      tag: 'First Day',
+    },
+  });
+
+  const task41 = await prisma.task.create({
+    data: {
+      desc: 'Issues IT equipment and logins',
+      tag: 'First Day',
+    },
+  });
+
+  const task42 = await prisma.task.create({
+    data: {
+      desc: 'Collects Asset/Equipment Agreement',
+      tag: 'First Day',
+    },
+  });
+
+  const task43 = await prisma.task.create({
+    data: {
+      desc: 'Add staff new CEU spreadsheet',
+      tag: 'First Day',
+    },
+  });
+
+  const task44 = await prisma.task.create({
+    data: {
+      desc: 'Explain CEU Requirement',
+      tag: 'First Day',
+    },
+  });
+
+  const task45 = await prisma.task.create({
+    data: {
+      desc: 'Order Business Cards',
+      tag: 'First Day',
+    },
+  });
+
+  const task46 = await prisma.task.create({
+    data: {
+      desc: 'Explains 401k',
+      tag: 'First Day',
+    },
+  });
+
+  const task47 = await prisma.task.create({
+    data: {
+      desc: 'Explains Aflac',
+      tag: 'First Day',
+    },
+  });
+
+  const task48 = await prisma.task.create({
+    data: {
+      desc: 'Enters new staff into Aflac + Fidelity portal (even if they are not opting in)',
+      tag: 'First Day',
+    },
+  });
+
+  const task49 = await prisma.task.create({
+    data: {
+      desc: 'Issues Keycard',
+      tag: 'First Day',
+    },
+  });
+
+  const task50 = await prisma.task.create({
+    data: {
+      desc: 'Email to employee supervisor: Favorites Form, Top 5 Strengths',
+      tag: 'First Day',
+    },
+  });
+
+  const task51 = await prisma.task.create({
+    data: {
+      desc: 'HIPAA Policy & Procedures Agreements',
+      tag: 'First Day',
+    },
+  });
+
+  const task52 = await prisma.task.create({
+    data: {
+      desc: "Complete Strength's Finder",
+      tag: 'First Day',
+    },
+  });
+
+  const task53 = await prisma.task.create({
+    data: {
+      desc: 'Explains RingCentral App',
+      tag: 'First Day',
+    },
+  });
+
+  const task54 = await prisma.task.create({
+    data: {
+      desc: 'Risk Management Explanation + Overview',
+      tag: 'First Day',
+    },
+  });
+
+  const task55 = await prisma.task.create({
+    data: {
+      desc: 'Explains Triplog App and mileage procedures for ECI staff',
+      tag: 'First Day',
+    },
+  });
+
+  const task56 = await prisma.task.create({
+    data: {
+      desc: 'Provide t-shirt to new hire, take picture wearing shirt, save in Common Drive, print and attach to employee poster',
+      tag: 'First Day',
+    },
+  });
+
+  const task57 = await prisma.task.create({
+    data: {
+      desc: 'Assign HIPAA and IT Security Courses',
+      tag: 'First Day',
+    },
+  });
+
+  const task58 = await prisma.task.create({
+    data: {
+      desc: 'Staff completes KnowBe4 training',
+      tag: 'First Day',
+    },
+  });
+
+  // 90 Days Post-Start
+
+  const task59 = await prisma.task.create({
+    data: {
+      desc: '90 Follow-up questions and meeting',
+      tag: '90 Days Post-Start',
+    },
+  });
+
+  const task60 = await prisma.task.create({
+    data: {
+      desc: '401k deductions to begin - confirm staff would like to enroll in 401k',
+      tag: '90 Days Post-Start',
+    },
+  });
+
   // ----------------------------------------------------
 
   await prisma.departmentUserMapping.create({
@@ -200,367 +504,126 @@ async function main() {
     },
   });
 
-  await prisma.departmentUserMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
+  // ----------------------------------------------------
 
-  await prisma.departmentUserMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
+  for (let i = 1; i <= 60; i++) {
+    await prisma.departmentTaskMapping.create({
+      data: {
+        task: { connect: { id: eval(`task${i}.id`) } },
+        department: { connect: { id: department1.id } },
+      },
+    });
+  }
 
   // ----------------------------------------------------
-  await prisma.departmentTaskMapping.create({
+
+  for (let i = 1; i <= 60; i++) {
+    await prisma.onboardingEmployeeTaskMapping.create({
+      data: {
+        user: { connect: { id: userEmployee1.id } },
+        task: { connect: { id: eval(`task${i}.id`) } },
+        department: { connect: { id: department1.id } },
+      },
+    });
+  }
+
+  // ----------------------------------------------------
+
+  // Brandy Lindsey
+  await prisma.supervisorTaskMapping.create({
     data: {
+      user: { connect: { id: userSupervisor3.id } },
       task: { connect: { id: task1.id } },
       department: { connect: { id: department1.id } },
     },
   });
 
-  await prisma.departmentTaskMapping.create({
+  await prisma.supervisorTaskMapping.create({
     data: {
-      task: { connect: { id: task2.id } },
+      user: { connect: { id: userSupervisor3.id } },
+      task: { connect: { id: task14.id } },
       department: { connect: { id: department1.id } },
     },
   });
 
-  await prisma.departmentTaskMapping.create({
+  for (let i = 16; i <= 25; i++) {
+    await prisma.supervisorTaskMapping.create({
+      data: {
+        user: { connect: { id: userSupervisor3.id } },
+        task: { connect: { id: eval(`task${i}.id`) } },
+        department: { connect: { id: department1.id } },
+      },
+    });
+  }
+
+  await prisma.supervisorTaskMapping.create({
     data: {
-      task: { connect: { id: task3.id } },
+      user: { connect: { id: userSupervisor3.id } },
+      task: { connect: { id: task27.id } },
       department: { connect: { id: department1.id } },
     },
   });
 
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task4.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
+  for (let i = 29; i <= 30; i++) {
+    await prisma.supervisorTaskMapping.create({
+      data: {
+        user: { connect: { id: userSupervisor3.id } },
+        task: { connect: { id: eval(`task${i}.id`) } },
+        department: { connect: { id: department1.id } },
+      },
+    });
+  }
 
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task5.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
+  for (let i = 32; i <= 60; i++) {
+    await prisma.supervisorTaskMapping.create({
+      data: {
+        user: { connect: { id: userSupervisor3.id } },
+        task: { connect: { id: eval(`task${i}.id`) } },
+        department: { connect: { id: department1.id } },
+      },
+    });
+  }
 
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task6.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
+  // Dana Dodgen
+  for (let i = 2; i <= 13; i++) {
+    await prisma.supervisorTaskMapping.create({
+      data: {
+        user: { connect: { id: userSupervisor1.id } },
+        task: { connect: { id: eval(`task${i}.id`) } },
+        department: { connect: { id: department1.id } },
+      },
+    });
+  }
 
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task7.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task8.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task9.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task10.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task11.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.departmentTaskMapping.create({
-    data: {
-      task: { connect: { id: task12.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-  // ----------------------------------------------------
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee1.id } },
-      task: { connect: { id: task1.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee1.id } },
-      task: { connect: { id: task2.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee1.id } },
-      task: { connect: { id: task3.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee1.id } },
-      task: { connect: { id: task4.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee1.id } },
-      task: { connect: { id: task5.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee1.id } },
-      task: { connect: { id: task6.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      task: { connect: { id: task7.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      task: { connect: { id: task8.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      task: { connect: { id: task9.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      task: { connect: { id: task10.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      task: { connect: { id: task11.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee2.id } },
-      task: { connect: { id: task12.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      task: { connect: { id: task7.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      task: { connect: { id: task8.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      task: { connect: { id: task9.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      task: { connect: { id: task10.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      task: { connect: { id: task11.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.OnboardingEmployeeTaskMapping.create({
-    data: {
-      user: { connect: { id: userEmployee3.id } },
-      task: { connect: { id: task12.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  // ----------------------------------------------------
-
-  await prisma.SupervisorTaskMapping.create({
+  await prisma.supervisorTaskMapping.create({
     data: {
       user: { connect: { id: userSupervisor1.id } },
-      task: { connect: { id: task1.id } },
+      task: { connect: { id: task15.id } },
       department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor1.id } },
-      task: { connect: { id: task7.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor1.id } },
-      task: { connect: { id: task2.id } },
-      department: { connect: { id: department1.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor1.id } },
-      task: { connect: { id: task8.id } },
-      department: { connect: { id: department2.id } },
     },
   });
 
   await prisma.supervisorTaskMapping.create({
     data: {
       user: { connect: { id: userSupervisor1.id } },
-      task: { connect: { id: task3.id } },
+      task: { connect: { id: task26.id } },
       department: { connect: { id: department1.id } },
     },
   });
 
-  await prisma.SupervisorTaskMapping.create({
+  await prisma.supervisorTaskMapping.create({
     data: {
       user: { connect: { id: userSupervisor1.id } },
-      task: { connect: { id: task9.id } },
-      department: { connect: { id: department2.id } },
+      task: { connect: { id: task28.id } },
+      department: { connect: { id: department1.id } },
     },
   });
 
-  await prisma.SupervisorTaskMapping.create({
+  await prisma.supervisorTaskMapping.create({
     data: {
-      user: { connect: { id: userSupervisor2.id } },
-      task: { connect: { id: task4.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor2.id } },
-      task: { connect: { id: task10.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor2.id } },
-      task: { connect: { id: task5.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  // await prisma.SupervisorTaskMapping.create({
-  //   data: {
-  //     user: { connect: { id: userSupervisor2.id } },
-  //     task: { connect: { id: task11.id } },
-  //     department: { connect: { id: department2.id } },
-  //   },
-  // });
-
-  // await prisma.SupervisorTaskMapping.create({
-  //   data: {
-  //     user: { connect: { id: userSupervisor2.id } },
-  //     task: { connect: { id: task6.id } },
-  //     department: { connect: { id: department2.id } },
-  //   },
-  // });
-
-  // await prisma.SupervisorTaskMapping.create({
-  //   data: {
-  //     user: { connect: { id: userSupervisor2.id } },
-  //     task: { connect: { id: task12.id } },
-  //     department: { connect: { id: department2.id } },
-  //   },
-  // });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor3.id } },
-      task: { connect: { id: task11.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor3.id } },
-      task: { connect: { id: task6.id } },
-      department: { connect: { id: department2.id } },
-    },
-  });
-
-  await prisma.SupervisorTaskMapping.create({
-    data: {
-      user: { connect: { id: userSupervisor3.id } },
-      task: { connect: { id: task12.id } },
-      department: { connect: { id: department2.id } },
+      user: { connect: { id: userSupervisor1.id } },
+      task: { connect: { id: task31.id } },
+      department: { connect: { id: department1.id } },
     },
   });
 
