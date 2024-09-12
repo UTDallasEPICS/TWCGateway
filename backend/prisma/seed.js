@@ -40,6 +40,14 @@ async function main() {
     },
   });
 
+  const userAdmin5 = await prisma.user.create({
+    data: {
+      name: 'Yusuf Shaikh',
+      email: 'yshaikh113@outlook.com',
+      role: UserRole.ADMIN,
+    },
+  });
+
   // ----------------------------------------------------
 
   const userSupervisor1 = await prisma.user.create({
