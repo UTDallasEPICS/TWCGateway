@@ -48,6 +48,14 @@ async function main() {
     },
   });
 
+  const userAdmin6 = await prisma.user.create({
+    data: {
+      name: 'Ahsan Amir',
+      email: 'Ahsan.amir2004@gmail.com',
+      role: UserRole.ADMIN,
+    },
+  });
+
   // ----------------------------------------------------
 
   const userSupervisor1 = await prisma.user.create({
