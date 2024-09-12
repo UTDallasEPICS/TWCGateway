@@ -56,6 +56,14 @@ async function main() {
     },
   });
 
+  const userAdmin10 = await prisma.user.create({
+    data: {
+      name: 'Shresta Munikuntla',
+      email: 'shresta.munikuntla@gmail.com',
+      role: UserRole.ADMIN,
+    },
+  });
+
   // ----------------------------------------------------
 
   const userSupervisor1 = await prisma.user.create({
