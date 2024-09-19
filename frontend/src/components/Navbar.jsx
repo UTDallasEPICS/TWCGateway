@@ -38,24 +38,35 @@ export default function Navbar() {
             <DepartmentsIcon />
           </ActionIcon>
         </Tooltip>
-      </div>
-      <Tooltip
-        // label="Archive"
-        label="Archive feature under construction"
-        openDelay="700"
-      >
-        <ActionIcon
-          disabled={true}
-          variant="filled"
-          size="xl"
-          color={buttonClass('/admin/archive')}
-          onClick={() => {
-            navigate('/admin/archive');
-          }}
+        <Tooltip label="New Page" openDelay="700">
+          <ActionIcon
+            variant="filled"
+            size="xl"
+            color={buttonClass(['/admin/new-page'])}
+            onClick={() => {
+              // navigate('/admin/new-page'); 
+            }}
+          >
+            <UsersIcon /> 
+          </ActionIcon>
+        </Tooltip>
+        <Tooltip
+          label="Archive feature under construction"
+          openDelay="700"
         >
-          <ArchiveIcon />
-        </ActionIcon>
-      </Tooltip>
+          <ActionIcon
+            disabled={true}
+            variant="filled"
+            size="xl"
+            color={buttonClass(['/admin/archive'])}
+            onClick={() => {
+              navigate('/admin/archive');
+            }}
+          >
+            <ArchiveIcon />
+          </ActionIcon>
+        </Tooltip>
+      </div>
     </div>
   );
 }
