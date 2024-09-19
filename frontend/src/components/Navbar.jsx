@@ -38,6 +38,19 @@ export default function Navbar() {
             <DepartmentsIcon />
           </ActionIcon>
         </Tooltip>
+        {/* {NEW INVENTORY PAGE} */}
+        <Tooltip label="Inventory Page" openDelay="700">
+          <ActionIcon
+            variant="filled"
+            size="xl"
+            color={buttonClass(['/admin/departments', '/admin/department'])}
+            onClick={() => {
+              navigate('/admin/departments');
+            }}
+          >
+            <DepartmentsIcon />
+          </ActionIcon>
+        </Tooltip>
       </div>
       <Tooltip
         // label="Archive"
