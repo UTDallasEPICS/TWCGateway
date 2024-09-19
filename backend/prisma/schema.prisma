@@ -4,7 +4,7 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
 }
 
@@ -22,6 +22,7 @@ model User {
   DepartmentUserMapping         DepartmentUserMapping?
   SupervisorTaskMapping         SupervisorTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
+  checkouts                     Checkout[]
   archived                      Boolean                         @default(false)
 }
 
@@ -41,6 +42,7 @@ model Department {
   DepartmentUserMapping         DepartmentUserMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
   SupervisorTaskMapping         SupervisorTaskMapping[]
+  Device                        Device[]
   archived                      Boolean                         @default(false)
 }
 
@@ -84,4 +86,35 @@ model OnboardingEmployeeTaskMapping {
   taskCompleted Boolean    @default(false)
   dateCompleted DateTime?
   archived      Boolean    @default(false)
+}
+
+// new tables for device tracking 
+model Device {
+  id           Int        @id @default(autoincrement())
+  serialNumber String     @unique
+  name         String
+  department   Department @relation(fields: [departmentId], references: [id])
+  departmentId Int
+  location     Location   @relation(fields: [locationId], references: [id])
+  locationId   Int
+  checkout     Checkout[]
+  archived     Boolean    @default(false)
+}
+
+model Location {
+  id           Int      @id @default(autoincrement())
+  locationName String
+  address      String
+  Devices      Device[]
+  archived     Boolean  @default(false)
+}
+
+model Checkout {
+  id           Int      @id @default(autoincrement())
+  user         User?    @relation(fields: [userId], references: [id])
+  userId       Int
+  device       Device   @relation(fields: [deviceId], references: [id])
+  deviceId     Int
+  checkoutDate DateTime
+  archived     Boolean  @default(false)
 }
