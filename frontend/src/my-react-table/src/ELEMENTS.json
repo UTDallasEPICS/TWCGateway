@@ -1,0 +1,27 @@
+[
+    {
+      "id": 1,
+      "first_name": "Bessie",
+      "last_name": "Young-Jock",
+      "email": "shootus@example.com",
+      "gender": "Male",
+      "university": "University of Coola"
+    },
+    {
+      "id": 2,
+      "first_name": "Marlo",
+      "last_name": "Elrick",
+      "email": "mulah@example.com",
+      "gender": "Female",
+      "university": "University of Goowop"
+    },
+    {
+        "id": 34,
+        "first_name": "Riq",
+        "last_name": "Gift",
+        "email": "pullahh@example.com",
+        "gender": "Sweeney",
+        "university": "University of Pull-up"
+      }
+  ]
+  
