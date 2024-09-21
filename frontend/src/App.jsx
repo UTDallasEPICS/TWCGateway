@@ -13,6 +13,7 @@ import ArchivedOnboardingEmployee from './pages/admin/ArchivedOnboardingEmployee
 import ArchivedSupervisor from './pages/admin/ArchivedSupervisor';
 import SupervisorHomepage from './pages/supervisor/SupervisorHomepage';
 import QrCodePage from './pages/tracking/QrCodePage';
+import InventoryPage from './pages/tracking/InventoryPage';
 import Cookies from 'js-cookie';
 import { nanoid } from 'nanoid';
 
@@ -68,6 +69,7 @@ function App() {
         <Route path="/supervisor" element={<SupervisorHomepage />} />
         <Route path="/onboarding-employee" element={<EmployeeHomepage />} />
         <Route path="/generate-qr-code" element={<QrCodePage />} />
+        <Route path="/inventory-page" element={<InventoryPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -43,9 +43,8 @@ export default function Navbar() {
           <ActionIcon
             variant="filled"
             size="xl"
-            color={buttonClass(['/admin/departments', '/admin/department'])}
             onClick={() => {
-              navigate('/admin/departments');
+              navigate('/inventory-page');
             }}
           >
             <DepartmentsIcon />
