@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Text } from '@mantine/core';
+import Navbar from '../../components/Navbar';
 
 function InventoryPage() {
   const [inventory, setInventory] = useState([]);
@@ -79,24 +80,27 @@ function InventoryPage() {
   );
 
   return (
-    <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
-      <div className="font-bold font-mono text-2xl">Inventory</div>
-      <div className="md:flex md:justify-center">
-        <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
-          <Table.Thead>
-            <Table.Tr>
-              <Table.Th></Table.Th>
-              <Table.Th>Employee Name</Table.Th>
-              <Table.Th>Department</Table.Th>
-              <Table.Th>Status</Table.Th>
-              <Table.Th>Location</Table.Th>
-              <Table.Th>Device Make/Model</Table.Th>
-              <Table.Th>Serial Number</Table.Th>
-              <Table.Th>Checkout Date</Table.Th>
-            </Table.Tr>
-          </Table.Thead>
-          <Table.Tbody>{rows}</Table.Tbody>
-        </Table>
+    <div>
+      <Navbar />
+      <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
+        <div className="font-bold font-mono text-2xl">Inventory</div>
+        <div className="md:flex md:justify-center">
+          <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th></Table.Th>
+                <Table.Th>Employee Name</Table.Th>
+                <Table.Th>Department</Table.Th>
+                <Table.Th>Status</Table.Th>
+                <Table.Th>Location</Table.Th>
+                <Table.Th>Device Make/Model</Table.Th>
+                <Table.Th>Serial Number</Table.Th>
+                <Table.Th>Checkout Date</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>{rows}</Table.Tbody>
+          </Table>
+        </div>
       </div>
     </div>
   );

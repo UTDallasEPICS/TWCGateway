@@ -66,10 +66,10 @@ function App() {
           path="/admin/archived-supervisor/:id"
           element={<ArchivedSupervisor />}
         />
+        <Route path="/admin/generate-qr-code" element={<QrCodePage />} />
+        <Route path="/admin/inventory-page" element={<InventoryPage />} />
         <Route path="/supervisor" element={<SupervisorHomepage />} />
         <Route path="/onboarding-employee" element={<EmployeeHomepage />} />
-        <Route path="/generate-qr-code" element={<QrCodePage />} />
-        <Route path="/inventory-page" element={<InventoryPage />} />
       </Routes>
     </BrowserRouter>
   );

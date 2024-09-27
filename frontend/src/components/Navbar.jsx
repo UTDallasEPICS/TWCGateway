@@ -4,6 +4,7 @@ import UsersIcon from '@/assets/icons/UsersIcon';
 import DepartmentsIcon from '@/assets/icons/DepartmentsIcon';
 import ArchiveIcon from '@/assets/icons/ArchiveIcon';
 import Profile from '@/components/Profile';
+import InventoryIcon from '../assets/icons/InventoryIcon';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -43,11 +44,12 @@ export default function Navbar() {
           <ActionIcon
             variant="filled"
             size="xl"
+            color={buttonClass('/admin/inventory-page')}
             onClick={() => {
-              navigate('/inventory-page');
+              navigate('/admin/inventory-page');
             }}
           >
-            <DepartmentsIcon />
+           <InventoryIcon />
           </ActionIcon>
         </Tooltip>
       </div>
