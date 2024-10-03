@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Table, Checkbox, Text } from '@mantine/core';
+import { Table, Checkbox, Text, Button } from '@mantine/core';
 import Navbar from '../../components/Navbar';
+import { useNavigate } from 'react-router-dom';
 
 function InventoryPage() {
   const [inventory, setInventory] = useState([]);
   const [selectedInventory, setSelectedInventory] = useState([]);
+  const navigate = useNavigate();
 
   // Dummy data for employees and devices
   useEffect(() => {
@@ -100,6 +102,11 @@ function InventoryPage() {
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
+        </div>
+        <div className="flex justify-left mt-4">
+          <Button variant="filled" color="green" onClick={() => {navigate('/admin/register-device')}}>
+            Register new device
+          </Button>
         </div>
       </div>
     </div>
