@@ -35,6 +35,7 @@ const addRoutes = router => {
   router.post('/supervisor/getUserByEmail', controller.getSupervisorByEmail);
   router.post('/supervisor/getSupervisorTasks', controller.getSupervisorTasks);
   router.post('/supervisor/getEmployeeTasks', controller.getEmployeeTasks);
+  router.get('/getUserswithCheckedOutDevices', controller.getUsersWithCheckedOutDevices);
 };
 
 module.exports = {
