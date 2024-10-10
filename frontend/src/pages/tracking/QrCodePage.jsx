@@ -28,7 +28,7 @@ function QrCodePage() {
     <div>
       <Navbar />
       <div className="flex flex-col justify-center items-center w-screen bg-gray-300 h-screen">
-        <img src={src}/>
+        <img src={src} className="rounded-xl border-blue-700 border-8" />
         <Button className="mt-5" variant="filled" color="green" onClick={downloadPDF}>
           Download
         </Button>

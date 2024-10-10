@@ -33,7 +33,7 @@ function RegisterDevicePage() {
                 id="make"
                 value={make}
                 onChange={(e) => setMake(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-all"
+                className="w-full p-3  border-2 rounded-md focus:outline-none"
                 placeholder="eg. Apple"
                 required
             />
@@ -46,7 +46,7 @@ function RegisterDevicePage() {
                 id="model"
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3  border-2 rounded-md focus:outline-none"
                 placeholder="eg. Macbook Air"
                 required
             />
@@ -59,7 +59,7 @@ function RegisterDevicePage() {
                 id="serialNumber"
                 value={serialNumber}
                 onChange={(e) => setSerialNumber(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full p-3  border-2 rounded-md focus:outline-none"
                 placeholder="eg. C02WK32QJ1WL"
                 required
             />
