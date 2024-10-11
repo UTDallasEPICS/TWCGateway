@@ -135,21 +135,56 @@ createDevice: async (req, res) => {
   }
   if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
     try {
-      const { name, serialID,  } = req.body;
-      const device = await prisma.device.create({
+      const { name, serialNumber, departmentId, locationId } = req.body;
+      if (!name || !serialNumber || !departmentId || !locationId) {
+        return res.status(400).json({
+          message: 'Missing required fields: name, serialNumber, departmentId, locationId'
+        });
+      }
+      const newDevice = await prisma.device.create({
         data: {
-          newDevice,
+          name,
+          serialNumber,
+          departmentId,
+          locationId
         },
       });
 
       res.status(201).json(newDevice);
     } catch (error) {
       console.log('Error creating Device', error);
-      res.status(500).json({ message: 'Error creating Device' });
+      res.status(500).json({ message: 'Error creating Device', error: error.message });
     }
   } else {
     res.status(401).json({ message: 'Not Authorized for this Data' });
   }
+  },
+
+//add location
+  addLocation: async (req, res) => {
+    if (!req.headers.authorization) {
+    return res.status(400).json({ message: 'No Authorization Header Found' });
+  }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const { locationName, address } = req.body;
+        
+
+        const newLocation = await prisma.location.create({
+          data: {
+            locationName,
+            address
+          },
+        });
+
+        res.status(201).json(newLocation);
+      } catch (error) {
+        console.log("Error creating location", error);
+        res.status(500).json({ message: 'Error creating device', error: error.message });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
 },
 
 // update device - do we update user or name of device?
@@ -269,11 +304,12 @@ getDeviceByUser: async (req, res) => {
       }
     } catch (error) {
       console.error('Error getting devices for user ', error);
-      res.status(500).json({ message: 'Error getting devices for user' });
+      res.status(500).json({ message: 'Error getting devices for user', error: error.message });
     }
   } else {
     return res.status(401).json({ message: 'Not Authorized for this Data' });
   }
   },
   
-  };
+};
+  

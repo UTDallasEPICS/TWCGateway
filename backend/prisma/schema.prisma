@@ -118,3 +118,5 @@ model Checkout {
   checkoutDate DateTime
   archived     Boolean  @default(false)
 }
+
+

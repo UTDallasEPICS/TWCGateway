@@ -8,6 +8,7 @@ const addRoutes = router => {
   router.put('/updateDevice', controller.updateDevice);
   router.put('/deleteDevice', controller.deleteDevice);
   router.get('/getDeviceByUser/:userId', controller.getDeviceByUser);
+  router.post('/addLocation', controller.addLocation);
 };
 
 module.exports = {
