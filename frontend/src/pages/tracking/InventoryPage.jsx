@@ -85,7 +85,12 @@ function InventoryPage() {
     <div>
       <Navbar />
       <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
-        <div className="font-bold font-mono text-2xl">Inventory</div>
+      <div className="flex justify-between items-center">
+        <div className="font-bold font-mono text-2xl">Inventory</div> 
+        <Button variant="filled" color="green" onClick={() => {navigate('/admin/register-device')}}>
+            Register new device
+          </Button>
+        </div>
         <div className="md:flex md:justify-center">
           <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
             <Table.Thead>
@@ -102,11 +107,6 @@ function InventoryPage() {
             </Table.Thead>
             <Table.Tbody>{rows}</Table.Tbody>
           </Table>
-        </div>
-        <div className="flex justify-left mt-4">
-          <Button variant="filled" color="green" onClick={() => {navigate('/admin/register-device')}}>
-            Register new device
-          </Button>
         </div>
       </div>
     </div>
