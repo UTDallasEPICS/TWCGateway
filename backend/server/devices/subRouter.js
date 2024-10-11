@@ -1,9 +1,16 @@
 const controller = require('./deviceController');
 
-// get all devices 
-// get device based on id 
-// get device based on serial number 
-// create new device 
-// update device 
-// delete device based on id and serial number 
+const addRoutes = router => {
+  router.get('/getAllDevices', controller.getAllDevices);
+  router.get('/getDeviceID/:id', controller.getDeviceID);
+  router.get('/getDeviceSerial/:serialNumber', controller.getDeviceSerial);
+  router.post('/createDevice', controller.createDevice);
+  router.put('/updateDevice', controller.updateDevice);
+  router.put('/deleteDevice', controller.deleteDevice);
+  router.get('/getDeviceByUser/:userId', controller.getDeviceByUser);
+  router.post('/addLocation', controller.addLocation);
+};
 
+module.exports = {
+  addRoutes,
+};

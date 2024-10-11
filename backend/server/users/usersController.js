@@ -1287,4 +1287,44 @@ module.exports = {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
   },
+
+  //getting users who have checked out devices
+  getUsersWithCheckedOutDevices: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header found' });
+    }
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        //getting usr with non archived checkouts
+        const users = await prisma.user.findMany({
+          where: {
+            archived: false,
+          },
+          include: {
+            Checkouts: {
+              where: {
+                archived: false,
+              },
+            },
+          },
+        });
+        if ((users === null)| (users.length === 0)) {
+          return res
+            .status(404)
+            .json({ message: 'No users with checked out devices found' });
+        } else {
+          return res.status(200).json({
+            message: 'Users with checked out devices retrived successfully',
+          });
+        }
+      } catch (error) {
+        console.log('Error Getting all Checked out users', error);
+        res
+          .status(500)
+          .json({ message: 'Error Getting all checked out users' });
+      }
+    } else {
+      return res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
 };

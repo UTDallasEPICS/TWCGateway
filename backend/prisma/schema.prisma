@@ -22,7 +22,7 @@ model User {
   DepartmentUserMapping         DepartmentUserMapping?
   SupervisorTaskMapping         SupervisorTaskMapping[]
   OnboardingEmployeeTaskMapping OnboardingEmployeeTaskMapping[]
-  checkouts                     Checkout[]
+  Checkouts                     Checkout[]
   archived                      Boolean                         @default(false)
 }
 
@@ -118,3 +118,5 @@ model Checkout {
   checkoutDate DateTime
   archived     Boolean  @default(false)
 }
+
+
