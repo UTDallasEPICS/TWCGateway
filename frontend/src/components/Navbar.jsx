@@ -4,6 +4,7 @@ import UsersIcon from '@/assets/icons/UsersIcon';
 import DepartmentsIcon from '@/assets/icons/DepartmentsIcon';
 import ArchiveIcon from '@/assets/icons/ArchiveIcon';
 import Profile from '@/components/Profile';
+import InventoryIcon from '../assets/icons/InventoryIcon';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -38,35 +39,37 @@ export default function Navbar() {
             <DepartmentsIcon />
           </ActionIcon>
         </Tooltip>
-        <Tooltip label="New Page" openDelay="700">
+        {/* {NEW INVENTORY PAGE} */}
+        <Tooltip label="Inventory Page" openDelay="700">
           <ActionIcon
             variant="filled"
             size="xl"
-            color={buttonClass(['/admin/new-page'])}
+            color={buttonClass('/admin/inventory-page')}
             onClick={() => {
-              // navigate('/admin/new-page'); 
+              navigate('/admin/inventory-page');
             }}
           >
-            <UsersIcon /> 
-          </ActionIcon>
-        </Tooltip>
-        <Tooltip
-          label="Archive feature under construction"
-          openDelay="700"
-        >
-          <ActionIcon
-            disabled={true}
-            variant="filled"
-            size="xl"
-            color={buttonClass(['/admin/archive'])}
-            onClick={() => {
-              navigate('/admin/archive');
-            }}
-          >
-            <ArchiveIcon />
+           <InventoryIcon />
           </ActionIcon>
         </Tooltip>
       </div>
+      <Tooltip
+        // label="Archive"
+        label="Archive feature under construction"
+        openDelay="700"
+      >
+        <ActionIcon
+          disabled={true}
+          variant="filled"
+          size="xl"
+          color={buttonClass('/admin/archive')}
+          onClick={() => {
+            navigate('/admin/archive');
+          }}
+        >
+          <ArchiveIcon />
+        </ActionIcon>
+      </Tooltip>
     </div>
   );
 }

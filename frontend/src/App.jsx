@@ -12,6 +12,10 @@ import Supervisor from './pages/admin/Supervisor';
 import ArchivedOnboardingEmployee from './pages/admin/ArchivedOnboardingEmployee';
 import ArchivedSupervisor from './pages/admin/ArchivedSupervisor';
 import SupervisorHomepage from './pages/supervisor/SupervisorHomepage';
+import QrCodePage from './pages/tracking/QrCodePage';
+import InventoryPage from './pages/tracking/InventoryPage';
+import RegisterDevicePage from './pages/tracking/RegisterDevicePage';
+import CheckoutPage from './pages/tracking/CheckoutPage';
 import Cookies from 'js-cookie';
 import { nanoid } from 'nanoid';
 
@@ -64,6 +68,10 @@ function App() {
           path="/admin/archived-supervisor/:id"
           element={<ArchivedSupervisor />}
         />
+        <Route path="/admin/generate-qr-code/:id" element={<QrCodePage />} />
+        <Route path="/admin/inventory-page" element={<InventoryPage />} />
+        <Route path="/admin/register-device" element={<RegisterDevicePage />} />
+        <Route path="/admin/checkout/:serialNumber" element={<CheckoutPage />} />
         <Route path="/supervisor" element={<SupervisorHomepage />} />
         <Route path="/onboarding-employee" element={<EmployeeHomepage />} />
       </Routes>
