@@ -49,6 +49,16 @@ getAllDevices: async (req, res) => {
               archived: false,
             },
           },
+          department: {
+            select: {
+              name: true, // getting the department name 
+            },
+          },
+          location: {
+            select: {
+              locationName: true, //getting location name 
+            },
+          },
         },
       });
 
