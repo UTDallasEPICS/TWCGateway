@@ -1,3 +1,4 @@
+//cook here
 import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Text, Button } from '@mantine/core';
 import Navbar from '../../components/Navbar';
@@ -46,66 +47,82 @@ function InventoryPage() {
   };
 
   const rows = inventory.length > 0 ? (
-    inventory.map((item) => {
+    inventory.map((item, index) => {
       const selected = selectedInventory.includes(item.id);
 
       return (
-        <Table.Tr
+        <tr
           key={item.id}
           style={{
-            backgroundColor: selected ? 'var(--mantine-color-gray-5)' : 'transparent',
+            backgroundColor: selected ? '#E0E8F9' : index % 2 === 0 ? '#F9FAFB' : 'white', 
           }}
         >
-          <Table.Td>
+          <td style={{ padding: '10px' }}>
             <Checkbox
               aria-label="Select row"
               onChange={() => toggleRow(item.id)}
               checked={selected}
             />
-          </Table.Td>
-          <Table.Td>{item.employeeName}</Table.Td>
-          <Table.Td>{item.department}</Table.Td>
-          <Table.Td>{item.status}</Table.Td>
-          <Table.Td>{item.location}</Table.Td>
-          <Table.Td>{`${item.deviceMake} ${item.deviceModel}`}</Table.Td>
-          <Table.Td>{item.serialNumber}</Table.Td>
-          <Table.Td>{item.checkoutDate}</Table.Td>
-        </Table.Tr>
+          </td>
+          <td>{item.employeeName}</td>
+          <td>{item.department}</td>
+          <td>
+            <Button
+              variant={item.status === 'Checked In' ? 'filled' : 'outline'}
+              color={item.status === 'Checked In' ? 'blue' : 'gray'}
+              size="xs"
+            >
+              {item.status}
+            </Button>
+          </td>
+          <td>{item.location}</td>
+          <td>{`${item.deviceMake} ${item.deviceModel}`}</td>
+          <td style={{ color: 'red' }}>{item.serialNumber}</td>
+          <td>{item.checkoutDate}</td>
+        </tr>
       );
     })
   ) : (
-    <Table.Tr>
-      <Table.Td colSpan={8} className="text-center">
+    <tr>
+      <td colSpan={8} style={{ textAlign: 'center' }}>
         No Data Found
-      </Table.Td>
-    </Table.Tr>
+      </td>
+    </tr>
   );
 
   return (
     <div>
       <Navbar />
       <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
-      <div className="flex justify-between items-center">
-        <div className="font-bold font-mono text-2xl">Inventory</div> 
-        <Button variant="filled" color="green" onClick={() => {navigate('/admin/register-device')}}>
+        <div className="flex justify-between items-center">
+          <Text size="xl" weight={700}>
+            Inventory
+          </Text>
+          <Button
+            variant="filled"
+            color="green"
+            onClick={() => {
+              navigate('/admin/register-device');
+            }}
+          >
             Register new device
           </Button>
         </div>
         <div className="md:flex md:justify-center">
           <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th></Table.Th>
-                <Table.Th>Employee Name</Table.Th>
-                <Table.Th>Department</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Location</Table.Th>
-                <Table.Th>Device Make/Model</Table.Th>
-                <Table.Th>Serial Number</Table.Th>
-                <Table.Th>Checkout Date</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>{rows}</Table.Tbody>
+            <thead>
+              <tr>
+                <th style={{ padding: '10px 20px' }}></th>
+                <th style={{ padding: '10px 20px' }}>Employee Name</th>
+                <th style={{ padding: '10px 20px' }}>Department</th>
+                <th style={{ padding: '10px 20px' }}>Status</th>
+                <th style={{ padding: '10px 20px' }}>Location</th>
+                <th style={{ padding: '10px 20px' }}>Device Make/Model</th>
+                <th style={{ padding: '10px 20px', color: 'red' }}>Serial Number</th>
+                <th style={{ padding: '10px 20px' }}>Checkout Date</th>
+              </tr>
+            </thead>
+            <tbody>{rows}</tbody>
           </Table>
         </div>
       </div>
