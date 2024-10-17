@@ -49,6 +49,12 @@ getAllDevices: async (req, res) => {
             where: {
               archived: false,
             },
+            select: {
+              userId: true,
+              user: true,
+              checkoutDate: true,
+            },
+            
           },
           department: {
             select: {
