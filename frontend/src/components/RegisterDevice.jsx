@@ -1,11 +1,10 @@
 import React from 'react'
-import Navbar from '../../components/Navbar';
 import { useState } from 'react';
 import { Button } from '@mantine/core';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 
-function RegisterDevicePage() {
+function RegisterDevice() {
   const [make, setMake] = useState('');
   const [model, setModel] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
@@ -20,7 +19,6 @@ function RegisterDevicePage() {
 
   return (
     <div>
-        <Navbar />
         <div className="p-4 flex justify-center">
         <form className="w-80" onSubmit={handleSubmit}>
             
@@ -74,4 +72,4 @@ function RegisterDevicePage() {
   );
 }
 
-export default RegisterDevicePage
+export default RegisterDevice
