@@ -68,7 +68,7 @@ function InventoryPage() {
             />
           </Table.Td>
           { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td></Table.Td>)}
-          <Table.Td>{item.department.name}</Table.Td>
+          { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td></Table.Td>)}
           { item.checkout.length === 1 ? (<Table.Td>Checked out</Table.Td>) : (<Table.Td>Checked in</Table.Td>)}
           { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td></Table.Td>)}
           <Table.Td>{item.name}</Table.Td>
