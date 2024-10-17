@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Text, Button } from '@mantine/core';
 import Navbar from '../../components/Navbar';
+import Popup from '../../components/Popup';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function InventoryPage() {
   const [inventory, setInventory] = useState([]);
   const [selectedInventory, setSelectedInventory] = useState([]);
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
-  // Dummy data for employees and devices
+
+  // fetch data from the backend
   useEffect(() => {
-    const dummyData = [
-      {
-        id: '1',
-        employeeName: 'John Doe',
-        department: 'Department 1',
-        status: 'Checked Out',
-        location: 'Irving Office',
-        deviceMake: 'Dell',
-        deviceModel: 'Model 1',
-        serialNumber: 'ABC12345',
-        checkoutDate: '2024-09-10',
-      },
-      {
-        id: '2',
-        employeeName: 'Jane Doe',
-        department: 'Department 2',
-        status: 'Checked In',
-        location: 'Richardson',
-        deviceMake: 'Apple',
-        deviceModel: 'MacBook',
-        serialNumber: '123tfa',
-        checkoutDate: '2024-09-15',
-      },
-    ];
-    setInventory(dummyData);
+    const fetchInventory = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllDevices`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (response.status === 200) {
+          const devices = response.data; 
+          setInventory(devices);
+        } else {
+          console.log('No devices found.');
+        }
+      } catch (error) {
+        console.error('Error fetching inventory:', error);
+      }
+    };
+
+    fetchInventory();
   }, []);
+  
 
   const toggleRow = (id) => {
     setSelectedInventory((current) =>
@@ -64,12 +64,12 @@ function InventoryPage() {
             />
           </Table.Td>
           <Table.Td>{item.employeeName}</Table.Td>
-          <Table.Td>{item.department}</Table.Td>
+          <Table.Td>{item.department.name}</Table.Td>
           <Table.Td>{item.status}</Table.Td>
-          <Table.Td>{item.location}</Table.Td>
-          <Table.Td>{`${item.deviceMake} ${item.deviceModel}`}</Table.Td>
+          <Table.Td>{item.location.locationName}</Table.Td>
+          <Table.Td>{item.name}</Table.Td>
           <Table.Td>{item.serialNumber}</Table.Td>
-          <Table.Td>{item.checkoutDate}</Table.Td>
+          
         </Table.Tr>
       );
     })
@@ -89,7 +89,7 @@ function InventoryPage() {
         <div className="font-bold font-mono text-2xl">Inventory</div> 
         <Button variant="filled" color="green" onClick={() => {navigate('/admin/register-device')}}>
             Register new device
-          </Button>
+        </Button>
         </div>
         <div className="md:flex md:justify-center">
           <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
@@ -114,3 +114,4 @@ function InventoryPage() {
 }
 
 export default InventoryPage;
+ 

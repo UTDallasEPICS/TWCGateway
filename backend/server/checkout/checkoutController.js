@@ -58,7 +58,7 @@ module.exports = {
     }
     if (
       await isRoleAdmin(req.headers.authorization.split(' ')[1])
-    ) {
+    ) { 
       try {
         const checkouts = await prisma.Checkout.findMany({
           where: {
