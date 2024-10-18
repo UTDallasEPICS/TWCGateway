@@ -53,7 +53,7 @@ getAllDevices: async (req, res) => {
               user: true,
               checkoutDate: true,
             },
-            
+  
           },
           department: {
             select: {
