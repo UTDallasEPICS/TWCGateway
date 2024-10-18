@@ -49,7 +49,12 @@ function InventoryPage() {
   const rows = inventory.length > 0 ? (
     inventory.map((item, index) => {
       const selected = selectedInventory.includes(item.id);
-
+      const  changeStatus = () => {
+      const newInventory = [...inventory];
+      newInventory[index].status = newInventory[index].status === 'Checked In' ? 'Checked Out' : 'Checked In'; 
+      setInventory(newInventory);
+        }
+        //might need to get rid of checkbox feature 
       return (
         <tr
           key={item.id}
@@ -71,6 +76,9 @@ function InventoryPage() {
               variant={item.status === 'Checked In' ? 'filled' : 'outline'}
               color={item.status === 'Checked In' ? 'blue' : 'gray'}
               size="xs"
+              onClick={() => {
+                changeStatus(index)
+              }}
             >
               {item.status}
             </Button>
@@ -89,7 +97,8 @@ function InventoryPage() {
       </td>
     </tr>
   );
-
+//go to the change status button add functionality it pulls input from all rows and changes all the statuses
+//might just need to remove checkboxes
   return (
     <div>
       <Navbar />
@@ -98,6 +107,9 @@ function InventoryPage() {
           <Text size="xl" weight={700}>
             Inventory
           </Text>
+            <input type="search" id="query" name="q" placeholder="Search to filter...." aria-label="Search through site content" style = {{ display: 'flex',
+          alignItems: 'center',  width: '400px',
+          padding: '10px 20px', borderRadius: '50px',   border: '2px solid #ccc',  backgroundColor: 'white'}}/>
           <Button
             variant="filled"
             color="green"
