@@ -52,15 +52,25 @@ function InventoryPage() {
   const rows = inventory.length > 0 ? (
     inventory.map((item) => {
       const selected = selectedInventory.includes(item.id);
+      const changeStatus = (id) => {
+        setInventory((prevInventory) =>
+          prevInventory.map((item) =>
+            item.id === id
+              ? { ...item, status: item.status === 'Checked In' ? 'Checked Out' : 'Checked In' }
+              : item
+          )
+        );
+      };
+      
 
       return (
         <Table.Tr
           key={item.id}
           style={{
-            backgroundColor: selected ? 'var(--mantine-color-gray-5)' : 'transparent',
+            backgroundColor: selected ? '#E0E8F9' : '#F9FAFB',
           }}
         >
-          <Table.Td>
+          <Table.Td style={{ padding: '10px' }}>
             <Checkbox
               aria-label="Select row"
               onChange={() => toggleRow(item.id)}
@@ -69,10 +79,19 @@ function InventoryPage() {
           </Table.Td>
           { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td></Table.Td>)}
           { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td></Table.Td>)}
-          { item.checkout.length === 1 ? (<Table.Td>Checked out</Table.Td>) : (<Table.Td>Checked in</Table.Td>)}
+          { item.checkout.length === 1 ? (<Table.Td> <Button
+              variant={item.status === 'Checked In' ? 'filled' : 'outline'}
+              color={item.status === 'Checked In' ? 'blue' : 'gray'}
+              size="xs"
+              onClick={() => {
+                changeStatus(item.id)
+              }}
+            >
+              {item.status}
+            </Button></Table.Td>) : (<Table.Td>Checked in</Table.Td>)}
           { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td></Table.Td>)}
           <Table.Td>{item.name}</Table.Td>
-          <Table.Td>{item.serialNumber}</Table.Td>
+          <Table.Td style={{ color: 'red' }}>{item.serialNumber}</Table.Td>
         </Table.Tr>
       );
     })
@@ -90,6 +109,9 @@ function InventoryPage() {
       <div className="flex flex-col bg-white bg-opacity-100 border-white border-2 rounded-lg p-2 m-5 overflow-x-auto">
       <div className="flex justify-between items-center">
         <div className="font-bold font-mono text-2xl">Inventory</div> 
+        <input type="search" id="query" name="q" placeholder="Search to filter...." aria-label="Search through site content" style = {{ display: 'flex',
+          alignItems: 'center',  width: '400px',
+          padding: '10px 20px', borderRadius: '50px',   border: '2px solid #ccc',  backgroundColor: 'white'}}/>
         <Button variant="filled" color="green" onClick={() => setTrigger(true)}>
             Register new device
         </Button>
