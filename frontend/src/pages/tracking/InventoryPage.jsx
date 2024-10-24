@@ -54,10 +54,10 @@ function InventoryPage() {
 
   const rows = inventory.length > 0 ? (
     inventory.filter((item) => {
-      return  search.toLowerCase() === ''? true: item.checkout[0].user.name.toLowerCase().includes(search)
-      || item.department.toLowerCase().includes(search)
-      || item.location.locationName.toLowerCase().includes(search)
-      || item.serialNumber.toLowerCase().includes(search)
+      return  search.toLowerCase() === ''? true: item.checkout[0].user.name.toLowerCase().includes(search.toLowerCase())
+      || item.department.toLowerCase().includes(search.toLowerCase())
+      || item.location.locationName.toLowerCase().includes(search.toLowerCase())
+      || item.serialNumber.toLowerCase().includes(search.toLowerCase())
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
