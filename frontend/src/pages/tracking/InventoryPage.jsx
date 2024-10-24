@@ -146,7 +146,7 @@ map((item) => {
                 <th style={{ padding: '10px 20px' }}>Status</th>
                 <th style={{ padding: '10px 20px' }}>Location</th>
                 <th style={{ padding: '10px 20px' }}>Device Make/Model</th>
-                <th style={{ padding: '10px 20px', color: 'red' }}>Serial Number</th>
+                <th style={{ padding: '10px 20px', color: 'black' }}>Serial Number</th>
                 <th style={{ padding: '10px 20px' }}>Checkout Date</th>
               </tr>
             </thead>
