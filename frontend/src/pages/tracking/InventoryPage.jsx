@@ -5,6 +5,8 @@ import Navbar from '../../components/Navbar';
 import { useNavigate } from 'react-router-dom';
 
 function InventoryPage() {
+  const [search, setSearch] = useState('')
+  console.log(search)
   const [inventory, setInventory] = useState([]);
   const [selectedInventory, setSelectedInventory] = useState([]);
   const navigate = useNavigate();
@@ -47,7 +49,12 @@ function InventoryPage() {
   };
 
   const rows = inventory.length > 0 ? (
-    inventory.map((item, index) => {
+    inventory.filter((item) => {
+      return  search.toLowerCase() === ''? true: item.employeeName.toLowerCase().includes(search.toLowerCase())
+      || item.department.toLowerCase().includes(search.toLowerCase())
+      || item.location.toLowerCase().includes(search.toLowerCase())
+      || item.serialNumber.toLowerCase().includes(search.toLowerCase());
+    }).map((item, index) => {
       const selected = selectedInventory.includes(item.id);
       const  changeStatus = () => {
       const newInventory = [...inventory];
@@ -107,9 +114,9 @@ function InventoryPage() {
           <Text size="xl" weight={700}>
             Inventory
           </Text>
-            <input type="search" id="query" name="q" placeholder="Search to filter...." aria-label="Search through site content" style = {{ display: 'flex',
+            <input type="text" id="query" name="q" placeholder="Search to filter...." aria-label="Search through site content" style = {{ display: 'flex',
           alignItems: 'center',  width: '400px',
-          padding: '10px 20px', borderRadius: '50px',   border: '2px solid #ccc',  backgroundColor: 'white'}}/>
+          padding: '10px 20px', borderRadius: '50px',   border: '2px solid #ccc',  backgroundColor: 'white'}} value= {search} onChange={(e) => setSearch(e.target.value)}/>
           <Button
             variant="filled"
             color="green"
