@@ -9,6 +9,7 @@ function RegisterDevice() {
   const [departmentId, setDepartmentId] = useState('');
   const [locationId, setLocationId] = useState('');
   const navigate = useNavigate();
+  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -22,13 +23,11 @@ function RegisterDevice() {
     const deviceData = {
       name,
       serialNumber,
-      departmentId,
-      locationId,
+      departmentId: parseInt(departmentId, 10),
+      locationId: parseInt(locationId, 10),
     };
 
       try {
-    const token =
-              'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InMxc3FvNTJ1RDNacDdhcjNMUTNIQSJ9.eyJuaWNrbmFtZSI6ImFhcnlhcmF2aXNoYW5rYXIiLCJuYW1lIjoiYWFyeWFyYXZpc2hhbmthckBnbWFpbC5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9zLmdyYXZhdGFyLmNvbS9hdmF0YXIvNTFjOTk2MjJjYWJjMTE2M2QxNjY0YTQyZmQ0NTE0OTg_cz00ODAmcj1wZyZkPWh0dHBzJTNBJTJGJTJGY2RuLmF1dGgwLmNvbSUyRmF2YXRhcnMlMkZhYS5wbmciLCJ1cGRhdGVkX2F0IjoiMjAyNC0xMC0yM1QxNjo1NjozOS44ODhaIiwiZW1haWwiOiJhYXJ5YXJhdmlzaGFua2FyQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJpc3MiOiJodHRwczovL3RoZS13YXJyZW4tY2VudGVyLnVzLmF1dGgwLmNvbS8iLCJhdWQiOiJodnNiaHBRYzVJbXBLODVHcG9vM01ybGViYmZzMW9nWiIsImlhdCI6MTcyOTcwMjg5OCwiZXhwIjoxNzI5NzM4ODk4LCJzdWIiOiJhdXRoMHw2NmM3YjA1ZTE0ODkxZWY3OTljYjQyNTkiLCJzaWQiOiJKeWl5T05IYUNMZkVLbUxGeE0xZmdfSlgyYkJwaEVQXyIsIm5vbmNlIjoiWmpjdGNERjJPRkpyWVRkQ1ptcE9ORlZWWXkxblltZ3lNM1l5Y2xKd1ZGUjRNVGhZYTNKQk9UZEJkUT09In0.u4z7f33t8GWVvQlC2Vwy9e0KlAji4SWCd6OrqZKY7D3BpCD9oVr9gYAstC4EvpQjZ2H6x7GWLUxxeuVsuTmt4J7mqfUB7WKEIW7eklIAA0TvBslTZ3hdEcp2rGMInO1eagCVt2z1EGg5USrObDe2cyp9GQLxkTYxyCgVQekkgOAS9yNqRVF0N8ljdXkh5Q99dn8ag193xLP9qNbEaEybeqY7X34zhnetrfpQKrPdA_r0v0l1XeYn50Lem5XWrsBQZr9rRxtOyQ58gGefANaFcPD6rr6YStvnlztQRFs50e0CNXh - i0cq3x266BMzgVq5vybe75VJWjVqc1Uu - BWQmQ';
       const response = await fetch(
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/createDevice`,
         {
