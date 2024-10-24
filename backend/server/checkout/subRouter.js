@@ -11,7 +11,7 @@ router.get('/checkouts', controller.getCheckouts);
 router.get('/checkouts/user/:userId', controller.getCheckoutsByUser);
 router.get('/checkouts/device/:deviceId', controller.getCheckoutsByDevice);
 router.put('/checkouts/:id', controller.updateCheckout);
-router.post('/checkouts', controller.createCheckout);
+router.post('/createCheckout', controller.createCheckout);
   };
   
   module.exports = {

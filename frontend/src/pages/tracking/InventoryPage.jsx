@@ -55,7 +55,7 @@ function InventoryPage() {
   const rows = inventory.length > 0 ? (
     inventory.filter((item) => {
       return  search.toLowerCase() === ''? true: item.checkout[0].user.name.toLowerCase().includes(search.toLowerCase())
-      || item.department.toLowerCase().includes(search.toLowerCase())
+      || item.department.name.toLowerCase().includes(search.toLowerCase())
       || item.location.locationName.toLowerCase().includes(search.toLowerCase())
       || item.serialNumber.toLowerCase().includes(search.toLowerCase())
       || `${item.deviceMake} ${item.deviceModel}`.toLowerCase().includes(search.toLowerCase())
@@ -127,9 +127,7 @@ map((item) => {
           <Button
             variant="filled"
             color="green"
-            onClick={() => {
-              navigate('/admin/register-device');
-            }}
+            onClick={() => setTrigger(true)}
           >
             Register new device
           </Button>
