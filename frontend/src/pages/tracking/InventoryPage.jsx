@@ -6,8 +6,6 @@ import Popup from '../../components/Popup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RegisterDevice from '../../components/RegisterDevice';
-import Cookies from 'js-cookie'; 
-import * as XLSX from 'xlsx'; 
 
 
 function InventoryPage() {
@@ -18,8 +16,24 @@ function InventoryPage() {
   const [selectedInventory, setSelectedInventory] = useState([]);
   const [trigger, setTrigger] = useState(false);
   const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
-
+  const key = localStorage.key(1); 
+  if (key) {
+    const storedItem = localStorage.getItem(key);
+    if (storedItem) {
+      try {
+        const tokenData = JSON.parse(storedItem); 
+        const token = tokenData.id_token; 
+        console.log(token); 
+      } catch (error) {
+        console.error("Failed to parse JSON:", error);
+      }
+    } else {
+      console.error("No item found in localStorage for the given key.");
+    }
+  } else {
+    console.error("No key found in localStorage at the given index.");
+  }
+  
   useEffect(() => {
     const fetchInventory = async () => {
       try {
@@ -34,14 +48,6 @@ function InventoryPage() {
           const devices = response.data; 
           setInventory(devices);
           console.log(inventory[0]);
-          const updatedInventory = devices.map((item) => ({
-            ...item, // Spread the existing properties of the item
-            status: item.checkout.length === 1 ? 'Checked Out' : 'Checked In', 
-          }));
-        
-          setInventory(updatedInventory); 
-          console.log('========================')
-          console.log(inventory);
         } else {
           console.log('No devices found.');
         }
@@ -52,25 +58,6 @@ function InventoryPage() {
 
     fetchInventory();
   }, []);
-
-  const exportToSpreadsheet = () => {
-    // Create a new array for the spreadsheet
-    const dataToExport = inventory.map(item => ({
-      'Employee Name': item.checkout[0]?.user?.name || '',
-      'Department Name': item.department?.name || '',
-      'Status': item.status,
-      'Location Name': item.location?.locationName || '',
-      'Device Make/Model': item.name,
-      'Serial Number': item.serialNumber,
-    }));
-    // Create a new workbook and add a sheet
-    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Inventory Data');
-
-    // Generate a download
-    XLSX.writeFile(workbook, 'inventory_data.xlsx');
-  };
   
 
   const toggleRow = (id) => {
@@ -83,11 +70,11 @@ function InventoryPage() {
 
   const rows = inventory.length > 0 ? (
     inventory.filter((item) => {
-      return  search.toLowerCase() === '' ? true : item.status.toLowerCase().includes(search.toLowerCase())
+      return  search.toLowerCase() === ''? true: (item.checkout[0] === false ? item.name.toLowerCase().includes(search.toLowerCase()):false)
       || item.department.name.toLowerCase().includes(search.toLowerCase())
       || item.location.locationName.toLowerCase().includes(search.toLowerCase())
       || item.serialNumber.toLowerCase().includes(search.toLowerCase())
-      || item.name.toLowerCase().includes(search.toLowerCase())
+      || `${item.deviceMake} ${item.deviceModel}`.toLowerCase().includes(search.toLowerCase())
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
@@ -95,11 +82,12 @@ map((item) => {
         setInventory((prevInventory) =>
           prevInventory.map((item) =>
             item.id === id
-              ? { ...item, status: item.status === 'Checked In' ? 'Checked Out' : 'Checked In' }
+              ? { ...item, status: item.checkout[0] === false ? (item.checkout[0] = 1, 'Checked In') : 'Checked Out' }
               : item
           )
         );
       };
+   
         //might need to get rid of checkbox feature 
       return (
         <tr
@@ -115,21 +103,19 @@ map((item) => {
               checked={selected}
             />
           </td>
-          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
-          { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
-          <Table.Td> 
-            <Button
-              variant={item.checkout.length === 1 ? 'outline' : 'filled'}
-              color={item.checkout.length === 1 ? 'gray' : 'blue'}
+          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td></Table.Td>)}
+          { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td></Table.Td>)}
+          { item.checkout.length === 1 ? (<Table.Td> <Button
+              variant={item.status === 'Checked In' ? 'filled' : 'outline'}
+              color={item.status === 'Checked In' ? 'blue' : 'gray'}
               size="xs"
               onClick={() => {
                 changeStatus(item.id)
               }}
             >
-              {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
-            </Button>
-          </Table.Td>
-            { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td>------</Table.Td>)}
+              {item.status}
+            </Button></Table.Td>) : (<Table.Td>Checked in</Table.Td>)}
+            { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td></Table.Td>)}
           <Table.Td>{item.name}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
         </tr>
@@ -152,40 +138,19 @@ map((item) => {
           <Text size="xl" weight={700}>
             Inventory
           </Text>
-          <input
-            type="search"
-            id="query"
-            name="q"
-            placeholder="Search to filter...."
-            aria-label="Search through site content"
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '400px',
-              padding: '10px 20px',
-              borderRadius: '50px',
-              border: '2px solid #ccc',
-              backgroundColor: 'white',
-            }}
-            onChange={e => setSearch(e.target.value)}
-          />
-          <Button
+            <input type="search" id="query" name="q" placeholder="Search to filter...." aria-label="Search through site content" style = {{ display: 'flex',
+          alignItems: 'center',  width: '400px',
+          padding: '10px 20px', borderRadius: '50px',   border: '2px solid #ccc',  backgroundColor: 'white'}} onChange={(e) => setSearch(e.target.value)}/>
+            <Button
             variant="filled"
             color="green"
             onClick={() => setTrigger(true)}
           >
             Register new device
           </Button>
-          <Button
-            variant="filled"
-            color="blue"
-            onClick={exportToSpreadsheet}
-          >
-            Export to Excel
-          </Button>
           <Popup trigger={trigger} setTrigger={setTrigger}>
-            <RegisterDevice />
-          </Popup>
+          <RegisterDevice />
+        </Popup>
         </div>
         <div className="md:flex md:justify-center">
           <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
@@ -197,9 +162,7 @@ map((item) => {
                 <th style={{ padding: '10px 20px' }}>Status</th>
                 <th style={{ padding: '10px 20px' }}>Location</th>
                 <th style={{ padding: '10px 20px' }}>Device Make/Model</th>
-                <th style={{ padding: '10px 20px', color: 'black' }}>
-                  Serial Number
-                </th>
+                <th style={{ padding: '10px 20px', color: 'black' }}>Serial Number</th>
                 <th style={{ padding: '10px 20px' }}>Checkout Date</th>
               </tr>
             </thead>

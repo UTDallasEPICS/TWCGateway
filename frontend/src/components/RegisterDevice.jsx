@@ -2,15 +2,30 @@ import React from 'react';
 import { useState } from 'react';
 import { Button } from '@mantine/core';
 import { Navigate, useNavigate } from 'react-router-dom';
-
+//create onClick functionality on the register button
 function RegisterDevice() {
   const [name, setName] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
   const [departmentId, setDepartmentId] = useState('');
   const [locationId, setLocationId] = useState('');
   const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
-
+  const key = localStorage.key(1); 
+  if (key) {
+    const storedItem = localStorage.getItem(key);
+    if (storedItem) {
+      try {
+        const tokenData = JSON.parse(storedItem);
+         const token = tokenData.id_token;
+        console.log(token);
+      } catch (error) {
+        console.error("Failed to parse JSON:", error);
+      }
+    } else {
+      console.error("No item found in localStorage for the given key.");
+    }
+  } else {
+    console.error("No key found in localStorage at the given index.");
+  }
   const handleSubmit = async e => {
     e.preventDefault();
     console.log('Form submitted:', {
