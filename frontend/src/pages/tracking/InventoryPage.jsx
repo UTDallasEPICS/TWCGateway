@@ -6,6 +6,7 @@ import Popup from '../../components/Popup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RegisterDevice from '../../components/RegisterDevice';
+import Cookies from 'js-cookie'; 
 
 
 function InventoryPage() {
@@ -100,7 +101,7 @@ map((item) => {
             </Button></Table.Td>) : (<Table.Td>Checked in</Table.Td>)}
             { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td></Table.Td>)}
           <Table.Td>{item.name}</Table.Td>
-          <Table.Td style={{ color: 'red' }}>{item.serialNumber}</Table.Td>
+          <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
         </tr>
       );
     })
