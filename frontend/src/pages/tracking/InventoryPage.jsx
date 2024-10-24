@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RegisterDevice from '../../components/RegisterDevice';
 import Cookies from 'js-cookie'; 
+import * as XLSX from 'xlsx'; 
 
 
 function InventoryPage() {
@@ -43,6 +44,25 @@ function InventoryPage() {
 
     fetchInventory();
   }, []);
+
+  const exportToSpreadsheet = () => {
+    // Create a new array for the spreadsheet
+    const dataToExport = inventory.map(item => ({
+      'Employee Name': item.checkout[0]?.user?.name || '',
+      'Department Name': item.department?.name || '',
+      'Status': item.status,
+      'Location Name': item.location?.locationName || '',
+      'Device Make/Model': item.name,
+      'Serial Number': item.serialNumber,
+    }));
+    // Create a new workbook and add a sheet
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Inventory Data');
+
+    // Generate a download
+    XLSX.writeFile(workbook, 'inventory_data.xlsx');
+  };
   
 
   const toggleRow = (id) => {
@@ -122,9 +142,23 @@ map((item) => {
           <Text size="xl" weight={700}>
             Inventory
           </Text>
-            <input type="search" id="query" name="q" placeholder="Search to filter...." aria-label="Search through site content" style = {{ display: 'flex',
-          alignItems: 'center',  width: '400px',
-          padding: '10px 20px', borderRadius: '50px',   border: '2px solid #ccc',  backgroundColor: 'white'}} onChange={(e) => setSearch(e.target.value)}/>
+          <input
+            type="search"
+            id="query"
+            name="q"
+            placeholder="Search to filter...."
+            aria-label="Search through site content"
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '400px',
+              padding: '10px 20px',
+              borderRadius: '50px',
+              border: '2px solid #ccc',
+              backgroundColor: 'white',
+            }}
+            onChange={e => setSearch(e.target.value)}
+          />
           <Button
             variant="filled"
             color="green"
@@ -132,9 +166,16 @@ map((item) => {
           >
             Register new device
           </Button>
+          <Button
+            variant="filled"
+            color="blue"
+            onClick={exportToSpreadsheet}
+          >
+            Export to Excel
+          </Button>
           <Popup trigger={trigger} setTrigger={setTrigger}>
-          <RegisterDevice />
-        </Popup>
+            <RegisterDevice />
+          </Popup>
         </div>
         <div className="md:flex md:justify-center">
           <Table withTableBorder withColumnBorders className="mt-4 bg-gray-100">
@@ -146,7 +187,9 @@ map((item) => {
                 <th style={{ padding: '10px 20px' }}>Status</th>
                 <th style={{ padding: '10px 20px' }}>Location</th>
                 <th style={{ padding: '10px 20px' }}>Device Make/Model</th>
-                <th style={{ padding: '10px 20px', color: 'black' }}>Serial Number</th>
+                <th style={{ padding: '10px 20px', color: 'black' }}>
+                  Serial Number
+                </th>
                 <th style={{ padding: '10px 20px' }}>Checkout Date</th>
               </tr>
             </thead>
