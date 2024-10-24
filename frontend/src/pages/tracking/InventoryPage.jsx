@@ -58,6 +58,7 @@ function InventoryPage() {
       || item.department.toLowerCase().includes(search.toLowerCase())
       || item.location.locationName.toLowerCase().includes(search.toLowerCase())
       || item.serialNumber.toLowerCase().includes(search.toLowerCase())
+      || `${item.deviceMake} ${item.deviceModel}`.toLowerCase().includes(search.toLowerCase())
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
