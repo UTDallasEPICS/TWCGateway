@@ -22,7 +22,7 @@ function InventoryPage() {
         location: 'Irving Office',
         deviceMake: 'Dell',
         deviceModel: 'Model 1',
-        serialNumber: 'ABC12345',
+        serialNumber: 'ft25gh38',
         checkoutDate: '2024-09-10',
       },
       {
@@ -33,7 +33,7 @@ function InventoryPage() {
         location: 'Richardson',
         deviceMake: 'Apple',
         deviceModel: 'MacBook',
-        serialNumber: '123tfa',
+        serialNumber: 'ft12gh34',
         checkoutDate: '2024-09-15',
       },
     ];
@@ -53,7 +53,8 @@ function InventoryPage() {
       return  search.toLowerCase() === ''? true: item.employeeName.toLowerCase().includes(search.toLowerCase())
       || item.department.toLowerCase().includes(search.toLowerCase())
       || item.location.toLowerCase().includes(search.toLowerCase())
-      || item.serialNumber.toLowerCase().includes(search.toLowerCase());
+      || item.serialNumber.toLowerCase().includes(search.toLowerCase())
+      || `${item.deviceMake} ${item.deviceModel}`.toLowerCase().includes(search.toLowerCase())
     }).map((item, index) => {
       const selected = selectedInventory.includes(item.id);
       const  changeStatus = () => {
