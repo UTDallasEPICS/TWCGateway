@@ -33,6 +33,14 @@ function InventoryPage() {
           const devices = response.data; 
           setInventory(devices);
           console.log(inventory[0]);
+          const updatedInventory = devices.map((item) => ({
+            ...item, // Spread the existing properties of the item
+            status: item.checkout.length === 1 ? 'Checked Out' : 'Checked In', 
+          }));
+        
+          setInventory(updatedInventory); 
+          console.log('========================')
+          console.log(inventory);
         } else {
           console.log('No devices found.');
         }
@@ -55,11 +63,11 @@ function InventoryPage() {
 
   const rows = inventory.length > 0 ? (
     inventory.filter((item) => {
-      return  search.toLowerCase() === ''? true: item.checkout[0].user.name.toLowerCase().includes(search.toLowerCase())
+      return  search.toLowerCase() === '' ? true : item.status.toLowerCase().includes(search.toLowerCase())
       || item.department.name.toLowerCase().includes(search.toLowerCase())
       || item.location.locationName.toLowerCase().includes(search.toLowerCase())
       || item.serialNumber.toLowerCase().includes(search.toLowerCase())
-      || `${item.deviceMake} ${item.deviceModel}`.toLowerCase().includes(search.toLowerCase())
+      || item.name.toLowerCase().includes(search.toLowerCase())
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
@@ -87,19 +95,21 @@ map((item) => {
               checked={selected}
             />
           </td>
-          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td></Table.Td>)}
-          { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td></Table.Td>)}
-          { item.checkout.length === 1 ? (<Table.Td> <Button
-              variant={item.status === 'Checked In' ? 'filled' : 'outline'}
-              color={item.status === 'Checked In' ? 'blue' : 'gray'}
+          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
+          { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
+          <Table.Td> 
+            <Button
+              variant={item.checkout.length === 1 ? 'outline' : 'filled'}
+              color={item.checkout.length === 1 ? 'gray' : 'blue'}
               size="xs"
               onClick={() => {
                 changeStatus(item.id)
               }}
             >
-              {item.status}
-            </Button></Table.Td>) : (<Table.Td>Checked in</Table.Td>)}
-            { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td></Table.Td>)}
+              {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
+            </Button>
+          </Table.Td>
+            { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td>------</Table.Td>)}
           <Table.Td>{item.name}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
         </tr>
