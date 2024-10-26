@@ -1,4 +1,3 @@
-//cook here
 import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Text, Button } from '@mantine/core';
 import Navbar from '../../components/Navbar';
@@ -6,17 +5,20 @@ import Popup from '../../components/Popup';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RegisterDevice from '../../components/RegisterDevice';
+import Checkout from '../../components/Checkout';
+import Checkin from '../../components/Checkin';
 import Cookies from 'js-cookie'; 
 import * as XLSX from 'xlsx'; 
 
 
 function InventoryPage() {
   const [search, setSearch] = useState('')
-  //debugging 
-  console.log(search)
   const [inventory, setInventory] = useState([]);
   const [selectedInventory, setSelectedInventory] = useState([]);
-  const [trigger, setTrigger] = useState(false);
+  const [registerTrigger, setRegisterTrigger] = useState(false);
+  const [checkoutTrigger, setCheckoutTrigger] = useState(false);
+  const [checkinTrigger, setCheckinTrigger] = useState(false);
+  const [selectedSerialNumber, setSelectedSerialNumber] = useState(null);
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
@@ -71,6 +73,15 @@ function InventoryPage() {
     // Generate a download
     XLSX.writeFile(workbook, 'inventory_data.xlsx');
   };
+
+  const handleCheckout = (serialNumber) => {
+    setCheckoutTrigger(true);
+    setSelectedSerialNumber(serialNumber)
+  }
+  const handleCheckin = (serialNumber) => {
+    setCheckinTrigger(true);
+    setSelectedSerialNumber(serialNumber)
+  }
   
 
   const toggleRow = (id) => {
@@ -91,15 +102,6 @@ function InventoryPage() {
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
-      const changeStatus = (id) => {
-        setInventory((prevInventory) =>
-          prevInventory.map((item) =>
-            item.id === id
-              ? { ...item, status: item.status === 'Checked In' ? 'Checked Out' : 'Checked In' }
-              : item
-          )
-        );
-      };
         //might need to get rid of checkbox feature 
       return (
         <tr
@@ -123,7 +125,7 @@ map((item) => {
               color={item.checkout.length === 1 ? 'gray' : 'blue'}
               size="xs"
               onClick={() => {
-                changeStatus(item.id)
+                item.checkout.length === 1 ? handleCheckin(item.serialNumber) : handleCheckout(item.serialNumber)
               }}
             >
               {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
@@ -172,7 +174,7 @@ map((item) => {
           <Button
             variant="filled"
             color="green"
-            onClick={() => setTrigger(true)}
+            onClick={() => setRegisterTrigger(true)}
           >
             Register new device
           </Button>
@@ -183,8 +185,14 @@ map((item) => {
           >
             Export to Excel
           </Button>
-          <Popup trigger={trigger} setTrigger={setTrigger}>
+          <Popup trigger={registerTrigger} setTrigger={setRegisterTrigger}>
             <RegisterDevice />
+          </Popup>
+          <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
+            <Checkout serialNumber={selectedSerialNumber} />
+          </Popup>
+          <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
+            <Checkin serialNumber={selectedSerialNumber} />
           </Popup>
         </div>
         <div className="md:flex md:justify-center">
