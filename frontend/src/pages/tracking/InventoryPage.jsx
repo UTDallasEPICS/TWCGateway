@@ -171,20 +171,22 @@ map((item) => {
             }}
             onChange={e => setSearch(e.target.value)}
           />
-          <Button
-            variant="filled"
-            color="green"
-            onClick={() => setRegisterTrigger(true)}
-          >
-            Register new device
-          </Button>
-          <Button
-            variant="filled"
-            color="blue"
-            onClick={exportToSpreadsheet}
-          >
-            Export to Excel
-          </Button>
+          <div className="flex space-x-2"> 
+            <Button
+              variant="filled"
+              color="green"
+              onClick={() => setRegisterTrigger(true)}
+            >
+              Register new device
+            </Button>
+            <Button
+              variant="filled"
+              color="blue"
+              onClick={exportToSpreadsheet}
+            >
+              Export to Excel
+            </Button>
+          </div>
           <Popup trigger={registerTrigger} setTrigger={setRegisterTrigger}>
             <RegisterDevice />
           </Popup>

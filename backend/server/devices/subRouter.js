@@ -9,6 +9,7 @@ const addRoutes = router => {
   router.put('/deleteDevice', controller.deleteDevice);
   router.get('/getDeviceByUser/:userId', controller.getDeviceByUser);
   router.post('/addLocation', controller.addLocation);
+  router.get('/getAllLocations', controller.getAllLocations);
 };
 
 module.exports = {

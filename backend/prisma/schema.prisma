@@ -115,8 +115,6 @@ model Checkout {
   userId       Int
   device       Device   @relation(fields: [deviceId], references: [id])
   deviceId     Int
-  checkoutDate DateTime 
+  checkoutDate DateTime
   archived     Boolean  @default(false)
 }
-
-

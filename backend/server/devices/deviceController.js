@@ -154,17 +154,21 @@ createDevice: async (req, res) => {
   if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
     try {
       const { name, serialNumber, departmentId, locationId } = req.body;
-      if (!name || !serialNumber || !departmentId || !locationId) {
+      //const { name, serialNumber } = req.body;
+      if (!name || !serialNumber) {
         return res.status(400).json({
-          message: 'Missing required fields: name, serialNumber, departmentId, locationId'
+          message: 'Missing required fields: name, serialNumber'
         });
       }
+
+
+
       const newDevice = await prisma.device.create({
         data: {
           name,
           serialNumber,
           departmentId,
-          locationId
+          locationId,
         },
       });
 
@@ -204,6 +208,42 @@ createDevice: async (req, res) => {
       res.status(401).json({ message: 'Not Authorized for this Data' });
     }
 },
+
+// get all locations
+getAllLocations: async (req, res) => {
+  if (!req.headers.authorization) {
+    return res.status(400).json({ message: 'No Authorization Header Found' });
+  }
+
+  if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+    try {
+      const allLocations = await prisma.location.findMany({
+        where: {
+          archived: false,
+        },
+        select: {
+          id: true, // include the location ID
+          locationName: true, // getting the location name 
+        },
+      });
+      console.log('Locations fetched from database:', allLocations);
+
+      if (allLocations === null || allLocations.length === 0) {
+        res.status(200).json({
+          message: 'No Locations Found or All Locations Archived',
+        });
+      } else {
+        res.status(200).json(allLocations);
+      }
+    } catch (error) {
+      console.log('Error Getting all Locations', error);
+      res.status(500).json({ message: 'Error Getting all Locations' });
+    }
+  } else {
+    res.status(401).json({ message: 'Not Authorized for this Data' });
+  }
+},
+
 
 // update device - do we update user or name of device?
 updateDevice: async (req, res) => {

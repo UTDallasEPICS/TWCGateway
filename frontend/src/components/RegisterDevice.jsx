@@ -1,31 +1,90 @@
 import React from 'react';
-import { useState } from 'react';
-import { Button } from '@mantine/core';
+import { useState, useEffect } from 'react'; 
+import { Button, Select } from '@mantine/core';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 function RegisterDevice() {
   const [name, setName] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
   const [departmentId, setDepartmentId] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [locationId, setLocationId] = useState('');
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
+  // Fetch departments 
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllDepartments`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          // format for Select component
+          setDepartments(data.map(dept => ({ value: String(dept.id), label: dept.name })));
+        } else {
+          console.error('Failed to fetch departments:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllLocations`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          // format for Select component
+          setLocations(data.map(loc => ({ value: String(loc.id), label: loc.locationName })));
+        } else {
+          console.error('Failed to fetch locations:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+
+
+
+    fetchDepartments();
+    fetchLocations();
+  }, [token]);
+
+
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('Form submitted:', {
-      name,
-      serialNumber,
-      departmentId: parseInt(departmentId, 10),
-      locationId: parseInt(locationId, 10),
-    });
 
     const deviceData = {
       name,
       serialNumber,
       departmentId: parseInt(departmentId, 10),
-      locationId: parseInt(locationId, 10),
+      locationId: parseInt(departmentId, 10),
     };
+
+    console.log("Form submitted! ", deviceData)
 
       try {
       const response = await fetch(
@@ -92,38 +151,37 @@ function RegisterDevice() {
               placeholder="eg. C02WK32QJ1WL"
               required
             />
-
+            {/* */}
             <label
-              htmlFor="departmentId"
+              htmlFor="departmentName"
               className="block text-gray-700 font-medium mb-2"
             >
-              Department ID
+              Department
             </label>
-            <input
-              type="text"
-              id="departmentId"
+            <Select
+              id="departmentName"
+              data={departments}
               value={departmentId}
-              onChange={e => setDepartmentId(e.target.value)}
-              className="w-full p-3 border-2 rounded-md focus:outline-none"
-              placeholder="Enter Department ID"
+              onChange={setDepartmentId}
+              placeholder="Select Department"
               required
             />
 
             <label
-              htmlFor="locationId"
+              htmlFor="locationName"
               className="block text-gray-700 font-medium mb-2"
             >
-              Location ID
+              Location
             </label>
-            <input
-              type="text"
-              id="locationId"
+            <Select
+              id="locationName"
+              data={locations}
               value={locationId}
-              onChange={e => setLocationId(e.target.value)}
-              className="w-full p-3 border-2 rounded-md focus:outline-none"
-              placeholder="Enter Location ID"
+              onChange={setLocationId}
+              placeholder="Select Location"
               required
             />
+            
           </div>
 
           <Button className="mt-5" variant="filled" color="green" type="submit">
