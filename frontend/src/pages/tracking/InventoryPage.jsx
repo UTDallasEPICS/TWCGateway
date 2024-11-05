@@ -128,7 +128,7 @@ map((item) => {
                 item.checkout.length === 1 ? handleCheckin(item.serialNumber) : handleCheckout(item.serialNumber)
               }}
             >
-              {item.checkout.length === 1 ? 'Check In' : 'Check Out'}
+              {item.checkout.length === 1 ? 'Checked In' : 'Checked Out'}
             </Button>
           </Table.Td>
             { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td>------</Table.Td>)}
@@ -190,10 +190,10 @@ map((item) => {
           <Popup trigger={registerTrigger} setTrigger={setRegisterTrigger}>
             <RegisterDevice />
           </Popup>
-          <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
+          <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
             <Checkout serialNumber={selectedSerialNumber} />
           </Popup>
-          <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
+          <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
             <Checkin serialNumber={selectedSerialNumber} />
           </Popup>
         </div>

@@ -102,9 +102,24 @@ module.exports = {
   updateCheckout: async (req, res) => {
     const { id } = req.params;
     const { userId, deviceId, checkoutDate } = req.body;
+//debugging statements to check if any of these exist
+    if (!id) {
+      return res.status(400).json({ message: 'Checkout ID is required' });
+    }
+    if (!userId) {
+      return res.status(400).json({ message: 'User ID is required' });
+    }
+    if (!deviceId) {
+      return res.status(400).json({ message: 'Device ID is required' });
+    }
+    if (!checkoutDate) {
+      return res.status(400).json({ message: 'Checkout date is required' });
+    }
+   
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
+    
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
         const updatedCheckout = await prisma.checkout.update({
