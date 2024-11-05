@@ -10,7 +10,7 @@ const addRoutes = (router) => {
 router.get('/checkouts', controller.getCheckouts);
 router.get('/checkouts/user/:userId', controller.getCheckoutsByUser);
 router.get('/checkouts/device/:deviceId', controller.getCheckoutsByDevice);
-router.put('/checkouts/:id', controller.updateCheckout);
+router.put('/updateCheckout/:id', controller.updateCheckout);
 router.post('/createCheckout', controller.createCheckout);
   };
   

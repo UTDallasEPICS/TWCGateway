@@ -121,14 +121,14 @@ map((item) => {
           { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
           <Table.Td> 
             <Button
-              variant={item.checkout.length === 1 ? 'outline' : 'filled'}
-              color={item.checkout.length === 1 ? 'gray' : 'blue'}
+              variant={item.checkout.length === 1 ? 'filled' : 'filled'}
+              color={item.checkout.length === 1 ? 'orange' : 'green'}
               size="xs"
               onClick={() => {
                 item.checkout.length === 1 ? handleCheckin(item.serialNumber) : handleCheckout(item.serialNumber)
               }}
             >
-              {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
+              {item.checkout.length === 1 ? 'Check In' : 'Check Out'}
             </Button>
           </Table.Td>
             { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td>------</Table.Td>)}

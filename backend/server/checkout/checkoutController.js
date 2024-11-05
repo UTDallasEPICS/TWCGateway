@@ -44,7 +44,9 @@ module.exports = {
         res.status(200).json(checkouts);
       } catch (error) {
         console.log('Error Getting Checkouts:', error);
-        res.status(500).json({ message: 'Error Getting Checkouts', error_message: error });
+        res
+          .status(500)
+          .json({ message: 'Error Getting Checkouts', error_message: error });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });
@@ -56,9 +58,7 @@ module.exports = {
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    if (
-      await isRoleAdmin(req.headers.authorization.split(' ')[1])
-    ) { 
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
         const checkouts = await prisma.Checkout.findMany({
           where: {
@@ -81,9 +81,7 @@ module.exports = {
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    if (
-      await isRoleAdmin(req.headers.authorization.split(' ')[1])
-    ) {
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
         const checkouts = await prisma.checkout.findMany({
           where: {
@@ -107,9 +105,7 @@ module.exports = {
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    if (
-      await isRoleAdmin(req.headers.authorization.split(' ')[1])
-    ) {
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
         const updatedCheckout = await prisma.checkout.update({
           where: { id: parseInt(id) },
@@ -135,9 +131,7 @@ module.exports = {
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    if (
-      await isRoleAdmin(req.headers.authorization.split(' ')[1])
-    ) {
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
         const newCheckout = await prisma.checkout.create({
           data: {
