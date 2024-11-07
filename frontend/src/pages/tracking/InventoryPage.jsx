@@ -121,14 +121,14 @@ map((item) => {
           { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
           <Table.Td> 
             <Button
-              variant={item.checkout.length === 1 ? 'filled' : 'filled'}
-              color={item.checkout.length === 1 ? 'orange' : 'green'}
+              variant={item.checkout.length === 1 ? 'outline' : 'filled'}
+              color={item.checkout.length === 1 ? 'gray' : 'blue'}
               size="xs"
               onClick={() => {
                 item.checkout.length === 1 ? handleCheckin(item.serialNumber) : handleCheckout(item.serialNumber)
               }}
             >
-              {item.checkout.length === 1 ? 'Checked In' : 'Checked Out'}
+              {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
             </Button>
           </Table.Td>
             { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td>------</Table.Td>)}
@@ -190,10 +190,10 @@ map((item) => {
           <Popup trigger={registerTrigger} setTrigger={setRegisterTrigger}>
             <RegisterDevice />
           </Popup>
-          <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
+          <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
             <Checkout serialNumber={selectedSerialNumber} />
           </Popup>
-          <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
+          <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
             <Checkin serialNumber={selectedSerialNumber} />
           </Popup>
         </div>

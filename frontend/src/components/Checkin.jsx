@@ -8,21 +8,13 @@ function Checkin({}) {
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token; // Retrieve the token
   const userId = null 
-  // Function to handle the check-in confirmation
-  const handleCheckinClick = id => {
-    setDeviceId(id); // Set the device ID to check in
-    setIsOpen(true); // Open the confirmation dialog
-  };
 
   // Function to handle confirming the check-in
   const handleConfirmCheckin = async () => {
-    setIsOpen(false); // Close the confirmation dialog
 
     // Prepare the data to update the checkout
     const updatedData = {
       userId,
-      //departmentId: null,
-      //locationId: null,
       name: null,
     };
 
@@ -60,26 +52,12 @@ function Checkin({}) {
 
   return (
     <div>
-      
-      <h1>Check In Device</h1>
-      <Button onClick={() => handleCheckinClick('device.id')}>
-        Check In Device
-      </Button>
-     
-
-  
-      <Modal
-        opened={isOpen}
-        onClose={() => setIsOpen(false)}
-        title="Confirm Check-In"
-      >
-        <p>Are you sure you want to check in this device?</p>
+        <p>Device is currently checked out</p>
+        <p>Do you want to check in device?</p>
         <Stack spacing="sm">
-        <Button  onClick={handleConfirmCheckin}>Yes</Button>
-        <Button  onClick={() => setIsOpen(false)}>No</Button>
+          <Button  onClick={handleConfirmCheckin}>Yes</Button>
+          <Button  onClick={() => setIsOpen(false)}>No</Button>
         </Stack>
-        
-      </Modal>
     </div>
   );
 }
