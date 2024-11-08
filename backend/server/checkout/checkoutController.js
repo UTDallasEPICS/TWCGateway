@@ -106,11 +106,11 @@ module.exports = {
     if (!id || !userId || !deviceId || !checkoutDate) {
       return res.status(400).json({ message: 'All fields are required' });
     }
-   
+
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }
-    
+
     if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
       try {
         const updatedCheckout = await prisma.checkout.update({
@@ -151,6 +151,54 @@ module.exports = {
         console.log('Error creating Checkout', error);
 
         res.status(500).json({ error: 'Error creating checkout.' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+
+  archiveCheckout: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+
+    // Check if the user is an admin
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const { id } = req.params;
+
+        // Find the checkout by id to ensure it exists before archiving
+        const checkout = await prisma.checkout.findUnique({
+          where: {
+            id: parseInt(id),
+          },
+        });
+
+        if (!checkout) {
+          return res.status(404).json({ message: 'Checkout not found' });
+        }
+
+        // Archive the checkout
+        const updatedCheckout = await prisma.checkout.update({
+          where: {
+            id: parseInt(id),
+          },
+          data: {
+            archived: true,
+          },
+        });
+
+        res
+          .status(200)
+          .json({ message: 'Checkout archived successfully', updatedCheckout });
+      } catch (error) {
+        console.error('Error archiving checkout', error);
+        res
+          .status(500)
+          .json({
+            message: 'Error archiving checkout',
+            error_message: error.message,
+          });
       }
     } else {
       res.status(401).json({ message: 'Not Authorized for this Data' });

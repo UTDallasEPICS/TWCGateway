@@ -58,10 +58,10 @@ function InventoryPage() {
   const exportToSpreadsheet = () => {
     // Create a new array for the spreadsheet
     const dataToExport = inventory.map(item => ({
-      'Employee Name': item.checkout[0]?.user?.name || '',
-      'Department Name': item.department?.name || '',
+      'Employee Name': item.checkout[0]?.user?.name || ' ',
+      'Department Name': item.department?.name || ' ',
       'Status': item.status,
-      'Location Name': item.location?.locationName || '',
+      'Location Name': item.location?.locationName || ' ',
       'Device Make/Model': item.name,
       'Serial Number': item.serialNumber,
     }));
