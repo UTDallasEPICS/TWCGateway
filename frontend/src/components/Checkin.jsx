@@ -22,26 +22,26 @@ function Checkin({serialNumber}) {
       const response = await fetch(
         `${
           import.meta.env.VITE_APP_EXPRESS_BASE_URL
-        }/updateCheckout/${deviceId}`,
+        }/archiveCheckout`,
         {
-          method: 'PUT',
+          method: 'PATCH',
           headers: {
-            'Content-Type': 'application/json',
+            //'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`, // Use the retrieved token
           },
-          body: JSON.stringify(updatedData),
+          //body: JSON.stringify(updatedData),
         }
       );
-
+      console.log(response);
       if (response.ok) {
         const jsonResponse = await response.json();
-        console.log('Device checked in successfully:', jsonResponse);
+        console.log('Device checked in/ archived successfully:', jsonResponse);
         // Redirect or update UI after successful check-in
         navigate('/some/redirect/path'); // Replace with your desired path
       } else {
         const errorData = await response.json();
         console.error(
-          'Failed to check in device:',
+          'Failed to check in/ archive device:',
           errorData.message || response.statusText
         );
       }

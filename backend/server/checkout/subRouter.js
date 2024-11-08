@@ -12,10 +12,10 @@ router.get('/checkouts/user/:userId', controller.getCheckoutsByUser);
 router.get('/checkouts/device/:deviceId', controller.getCheckoutsByDevice);
 router.put('/updateCheckout/:id', controller.updateCheckout);
 router.post('/createCheckout', controller.createCheckout);
+router.patch('/archiveCheckout', controller.archiveCheckout);
   };
   
   module.exports = {
     addRoutes,
   };
 
-  
