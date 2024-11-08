@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal, Stack } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 
-function Checkin({}) {
+function Checkin({serialNumber}) {
   const [isOpen, setIsOpen] = useState(false); // State for the confirmation dialog
   const [deviceId, setDeviceId] = useState(''); // Replace with actual device ID or serial number
   const navigate = useNavigate();
@@ -55,8 +55,8 @@ function Checkin({}) {
         <p>Device is currently checked out</p>
         <p>Do you want to check in device?</p>
         <Stack spacing="sm">
-          <Button  onClick={handleConfirmCheckin}>Yes</Button>
-          <Button  onClick={() => setIsOpen(false)}>No</Button>
+          <Button onClick={handleConfirmCheckin}>Yes</Button>
+          <Button onClick={() => setIsOpen(false)}>No</Button>
         </Stack>
     </div>
   );

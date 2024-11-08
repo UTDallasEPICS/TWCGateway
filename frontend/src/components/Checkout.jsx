@@ -1,18 +1,27 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button } from '@mantine/core';
+import { Button, Select } from '@mantine/core';
 import axios from 'axios';
 
 function Checkout({ serialNumber }) {
   const [name, setName] = useState('');
+  const [users, setUsers] = useState([]);
+  const [userId, setUserId] = useState('');
+
   const [department, setDepartment] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [departmentId, setDepartmentId] = useState('');
+
   const [location, setLocation] = useState('');
+  const [locationId, setLocationId] = useState('')
+  const [locations, setLocations] = useState([]);
+
   const [inventory, setInventory] = useState([]);
   const [device, setDevice] = useState(null);
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
-  // fetch data from the backend
+  
   useEffect(() => {
     const fetchInventory = async () => {
       try {
@@ -37,9 +46,87 @@ function Checkout({ serialNumber }) {
         console.error('Error fetching inventory:', error);
       }
     };
+    const fetchDepartments = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllDepartments`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
 
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          // format for Select component
+          setDepartments(data.map(dept => ({ value: String(dept.id), label: dept.name })));
+        } else {
+          console.error('Failed to fetch departments:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    };
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllLocations`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+          // format for Select component
+          setLocations(data.map(loc => ({ value: String(loc.id), label: loc.locationName })));
+        } else {
+          console.error('Failed to fetch locations:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/getAllUsers`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          // format for Select component
+          setUsers(data.map(user => ({ value: String(user.id), label: user.name })));
+        } else {
+          console.error('Failed to fetch locations:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+
+    fetchDepartments();
+    fetchLocations();
     fetchInventory();
+    fetchUsers();
   }, []);
+
 
   useEffect(() => {
     // find the device with the matching serial number
@@ -51,15 +138,14 @@ function Checkout({ serialNumber }) {
       console.log('inventory length > 0');
       if (foundDevice) {
         setDevice(foundDevice);
-        //foundDevice.checkout.length === 1 ? setCheckedIn(false) : setCheckedIn(true);
-        //console.log(checkedIn);
       }
     }
   }, [serialNumber, inventory]);
 
+
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('Form submitted:', { name, department, location });
+    console.log('Form submitted:', { name, departmentId, locationId, userId });
     setDepartment(department);
     setLocation(location);
     setName(name);
@@ -67,15 +153,14 @@ function Checkout({ serialNumber }) {
     const formattedDate = date.toISOString();
     // checkout logic
     try {
-      const response = await axios.put(
-        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/updateCheckout/${device.id}`,
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/createCheckout`,
         {
-          //userId: 1,
-          deviceId:device.id, // use the device ID from the found device
-          checkoutDate: date,
-          name,
-          department,
-          location
+          deviceId: device.id, // use the device ID from the found device
+          departmentId,
+          locationId,
+          userId,
+          checkoutDate: formattedDate,
         },
         {
           headers: {
@@ -99,15 +184,14 @@ function Checkout({ serialNumber }) {
           >
             Employee Name
           </label>
-          <input
-            type="text"
-            id="name"
-            value={name}
-            onChange={e => setName(e.target.value)}
-            className="w-full p-3 border-2 rounded-md focus:outline-none"
-            placeholder="John Doe"
-            required
-          />
+          <Select
+              id="name"
+              data={users}
+              value={userId}
+              onChange={setUserId}
+              placeholder="Select Employee"
+              required
+            />
 
           <label
             htmlFor="department"
@@ -115,15 +199,14 @@ function Checkout({ serialNumber }) {
           >
             Department
           </label>
-          <input
-            type="text"
-            id="department"
-            value={department}
-            onChange={e => setDepartment(e.target.value)}
-            className="w-full p-3 border-2 rounded-md focus:outline-none"
-            placeholder="Technology"
-            required
-          />
+          <Select
+              id="locationName"
+              data={departments}
+              value={departmentId}
+              onChange={setDepartmentId}
+              placeholder="Select Department"
+              required
+            />
 
           <label
             htmlFor="location"
@@ -131,15 +214,15 @@ function Checkout({ serialNumber }) {
           >
             Location
           </label>
-          <input
-            type="text"
-            id="location"
-            value={location}
-            onChange={e => setLocation(e.target.value)}
-            className="w-full p-3 border-2 rounded-md focus:outline-none"
-            placeholder="Richardson"
-            required
-          />
+          <Select
+              id="locationName"
+              data={locations}
+              value={locationId}
+              onChange={setLocationId}
+              placeholder="Select Location"
+              required
+            />
+          
 
           <label
             htmlFor="serialNumber"

@@ -133,7 +133,8 @@ module.exports = {
   },
 
   createCheckout: async (req, res) => {
-    const { userId, deviceId, checkoutDate } = req.body;
+    const { deviceId, checkoutDate, locationId, departmentId, userId } = req.body;
+    console.log('recieved data: ', req.body)
     if (!req.headers.authorization) {
       return res.status(400).json({ message: 'No Authorization Header Found' });
     }

@@ -19,7 +19,6 @@ function InventoryPage() {
   const [checkoutTrigger, setCheckoutTrigger] = useState(false);
   const [checkinTrigger, setCheckinTrigger] = useState(false);
   const [selectedSerialNumber, setSelectedSerialNumber] = useState(null);
-  const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   useEffect(() => {
@@ -38,7 +37,7 @@ function InventoryPage() {
           console.log(inventory[0]);
           const updatedInventory = devices.map((item) => ({
             ...item, // Spread the existing properties of the item
-            status: item.checkout.length === 1 ? 'Checked Out' : 'Checked In', 
+            status: (item.checkout.length === 0 || item.checkout.archived === true) ? 'Checked In' : 'Checked Out', 
           }));
         
           setInventory(updatedInventory); 
@@ -102,7 +101,6 @@ function InventoryPage() {
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
-        //might need to get rid of checkbox feature 
       return (
         <tr
           key={item.id}
@@ -144,8 +142,7 @@ map((item) => {
       </td>
     </tr>
   );
-//go to the change status button add functionality it pulls input from all rows and changes all the statuses
-//might just need to remove checkboxes
+
   return (
     <div>
       <Navbar />
