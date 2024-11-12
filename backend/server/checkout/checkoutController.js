@@ -133,6 +133,7 @@ module.exports = {
   },
 
   createCheckout: async (req, res) => {
+    //const { userId, deviceId, checkoutDate } = req.body;
     const { deviceId, checkoutDate, locationId, departmentId, userId } = req.body;
     console.log('recieved data: ', req.body)
     if (!req.headers.authorization) {
@@ -146,6 +147,17 @@ module.exports = {
             deviceId: parseInt(deviceId),
             checkoutDate: new Date(checkoutDate),
           },
+
+          //Department ID and Location ID
+          include: {
+            device: {
+              select: {
+                departmentId: true,
+                locationId: true
+              }
+            }
+          }
+            
         });
         res.status(201).json(newCheckout);
       } catch (error) {
