@@ -146,20 +146,18 @@ module.exports = {
             userId: parseInt(userId),
             deviceId: parseInt(deviceId),
             checkoutDate: new Date(checkoutDate),
-          },
-
-          //Department ID and Location ID
-          include: {
-            device: {
-              select: {
-                departmentId: true,
-                locationId: true
-              }
-            }
           }
-            
         });
-        res.status(201).json(newCheckout);
+        const updateDevice = await prisma.device.update({
+          where: {
+            id: parseInt(deviceId),
+          },
+          data: {
+            departmentId: parseInt(departmentId),
+            locationId: parseInt(locationId),
+          },
+        });
+        res.status(201).json({newCheckout, updateDevice});
       } catch (error) {
         console.log('Error creating Checkout', error);
 
