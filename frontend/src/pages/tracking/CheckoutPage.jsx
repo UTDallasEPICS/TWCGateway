@@ -3,12 +3,11 @@ import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import { Button } from '@mantine/core';
 import { useParams } from 'react-router-dom';
+import Checkout from '../../components/Checkout';
 
 function CheckoutPage() {
   const { serialNumber } = useParams();
   const [name, setName] = useState('');
-  const [department, setDepartment] = useState('');
-  const [location, setLocation] = useState('');
   const [device, setDevice] = useState(null);
   const [checkedIn, setCheckedIn] = useState(false);
   const [inventory, setInventory] = useState([]);
@@ -28,7 +27,7 @@ function CheckoutPage() {
         if (response.status === 200) {
           const devices = response.data; 
           setInventory(devices);
-          //console.log(inventory[0]);
+          //console.log(inventory)
         } else {
           console.log('No devices found.');
         }
@@ -40,9 +39,8 @@ function CheckoutPage() {
     fetchInventory();
   }, []);
 
-
+  // find the device with the matching serial number
   useEffect(() => {
-    // find the device with the matching serial number
     const foundDevice = inventory.find(device => device.serialNumber === serialNumber);
     console.log(inventory.length);
     if (inventory.length > 0) {
@@ -53,7 +51,8 @@ function CheckoutPage() {
         console.log(checkedIn);
       }
     }
-  }, [serialNumber]);
+  }, [inventory]);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -89,63 +88,7 @@ function CheckoutPage() {
         {!device ? (
           <p>Device not found</p>
         ) : checkedIn ? (
-          <form className="w-80" onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="name" className="block text-gray-700 font-medium mb-2">
-                Employee Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full p-3 border-2 rounded-md focus:outline-none"
-                placeholder="John Doe"
-                required
-              />
-
-              <label htmlFor="department" className="block text-gray-700 font-medium mb-2">
-                Department
-              </label>
-              <input
-                type="text"
-                id="department"
-                value={department}
-                onChange={(e) => setDepartment(e.target.value)}
-                className="w-full p-3 border-2 rounded-md focus:outline-none"
-                placeholder="Technology"
-                required
-              />
-
-              <label htmlFor="location" className="block text-gray-700 font-medium mb-2">
-                Location
-              </label>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full p-3 border-2 rounded-md focus:outline-none"
-                placeholder="Richardson"
-                required
-              />
-
-              <label htmlFor="serialNumber" className="block text-gray-700 font-medium mb-2">
-                Serial Number
-              </label>
-              <input
-                type="text"
-                id="serialNumber"
-                value={serialNumber}
-                className="w-full p-3 border-2 rounded-md focus:outline-none"
-                disabled
-              />
-            </div>
-
-            <Button className="mt-5" variant="filled" color="green" type="submit">
-              Check out
-            </Button>
-          </form>
+          <Checkout serialNumber={serialNumber} />
         ) : (
           <div className="text-center">
             <h1 className="text-3xl font-bold">Checked in successfully!</h1>
