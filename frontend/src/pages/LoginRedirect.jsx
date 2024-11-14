@@ -48,6 +48,11 @@ export default function LoginRedirect({ event }) {
       }
       Cookies.set('token', token);
       Cookies.set('user', JSON.stringify(loggedinUser));
+
+      let redirectPath = localStorage.getItem('redirectPath') || '/admin/users';
+      localStorage.removeItem('redirectPath');
+      redirectPath = new URL(redirectPath, window.location.origin).pathname;
+      navigate(redirectPath);
     }
   }
 

@@ -38,6 +38,8 @@ function App() {
 
   const token = Cookies.get('token');
   if (!token && !window.location.href.includes('/login-redirect')) {
+    const currentPath = window.location.href;
+    localStorage.setItem('redirectPath', currentPath)
     loginWithRedirect();
   }
 

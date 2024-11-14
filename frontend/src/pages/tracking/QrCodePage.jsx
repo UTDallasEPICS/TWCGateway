@@ -11,7 +11,7 @@ function QrCodePage() {
   const { id } = useParams()
 
   useEffect(() => {
-    QRCode.toDataURL(`https://example.com/${id}`).then(setSrc).catch((err) => {
+    QRCode.toDataURL(`http://localhost:5173/admin/inventory-page`).then(setSrc).catch((err) => {
       console.error(err);  
     });
   })
