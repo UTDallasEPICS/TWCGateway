@@ -1,65 +1,72 @@
-import React, { useState } from 'react';
-import { Button, Modal, Stack } from '@mantine/core';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import axios from 'axios';
+import { Button } from '@mantine/core';
 
-function Checkin({serialNumber}) {
-  const [isOpen, setIsOpen] = useState(false); // State for the confirmation dialog
-  const [deviceId, setDeviceId] = useState(''); // Replace with actual device ID or serial number
-  const navigate = useNavigate();
-  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token; // Retrieve the token
-  const userId = null 
+const Checkin = ({ serialNumber, onClose }) => {
+  const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
-  // Function to handle confirming the check-in
-  const handleConfirmCheckin = async () => {
-
-    // Prepare the data to update the checkout
-    const updatedData = {
-      userId,
-      name: null,
-    };
-
+  const handleCheckin = async () => {
     try {
-      const response = await fetch(
+      // Get the active checkout ID by serial number
+      const deviceCheckouts = await axios.get(
         `${
           import.meta.env.VITE_APP_EXPRESS_BASE_URL
-        }/archiveCheckout`,
+        }/getDeviceSerial/${serialNumber}`,
         {
-          method: 'PATCH',
           headers: {
-            //'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Use the retrieved token
+            Authorization: `Bearer ${token}`,
           },
-          //body: JSON.stringify(updatedData),
         }
       );
-      console.log(response);
-      if (response.ok) {
-        const jsonResponse = await response.json();
-        console.log('Device checked in/ archived successfully:', jsonResponse);
-        // Redirect or update UI after successful check-in
-        navigate('/some/redirect/path'); // Replace with your desired path
-      } else {
-        const errorData = await response.json();
-        console.error(
-          'Failed to check in/ archive device:',
-          errorData.message || response.statusText
-        );
+      console.log('Device checkouts data:', deviceCheckouts.data);
+      // Find the active checkout (non-archived)
+      const activeCheckout = deviceCheckouts.data.find(
+        checkout => !checkout.archived
+      );
+
+      if (!activeCheckout) {
+        alert('No active checkout found for this device.');
+        return;
       }
+
+      //  Archive the active checkout to check in the device
+      const response = await axios.post(
+        `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/archiveCheckout/${
+          activeCheckout.id
+        }`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert(response.data.message); // Success message from backend
+      onClose();
     } catch (error) {
-      console.error('Error during check-in:', error);
+      console.error('Error checking in the device:', error);
+      alert(error.response?.data?.message || 'Failed to check in the device.');
     }
   };
 
   return (
     <div>
-        <p>Device is currently checked out</p>
-        <p>Do you want to check in device?</p>
-        <Stack spacing="sm">
-          <Button onClick={handleConfirmCheckin}>Yes</Button>
-          <Button onClick={() => setIsOpen(false)}>No</Button>
-        </Stack>
+      <h3>Check-in Device</h3>
+      <p>
+        Are you sure you want to check in the device with serial number{' '}
+        {serialNumber}?
+      </p>
+      <Button onClick={handleCheckin} color="green">
+        Confirm Check-in
+      </Button>
+      <Button onClick={onClose} color="red">
+        Cancel
+      </Button>
+      
+    
     </div>
   );
-}
+};
 
 export default Checkin;
