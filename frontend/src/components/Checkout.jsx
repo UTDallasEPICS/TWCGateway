@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Select } from '@mantine/core';
 import axios from 'axios';
 
-function Checkout({ serialNumber }) {
+function Checkout({ serialNumber, close }) {
   const [name, setName] = useState('');
   const [users, setUsers] = useState([]);
   const [userId, setUserId] = useState('');
@@ -169,6 +169,8 @@ function Checkout({ serialNumber }) {
         }
       );
       console.log(response);
+      alert(`device checked out successfully!`)
+      close()
     } catch (error) {
       console.error('Error creating checkout:', error);
     }

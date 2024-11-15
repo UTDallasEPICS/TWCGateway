@@ -169,50 +169,76 @@ module.exports = {
   },
 
   archiveCheckout: async (req, res) => {
+    // Check for authorization header
     if (!req.headers.authorization) {
-      return res.status(400).json({ message: 'No Authorization Header Found' });
+      console.error("No Authorization Header Found");
+      return res.status(400).json({ message: "No Authorization Header Found" });
     }
-
-    // Check if the user is an admin
-    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
-      try {
-        const { id } = req.params;
-
-        // Find the checkout by id to ensure it exists before archiving
-        const checkout = await prisma.checkout.findUnique({
-          where: {
-            id: parseInt(id),
-          },
-        });
-
-        if (!checkout) {
-          return res.status(404).json({ message: 'Checkout not found' });
-        }
-
-        // Archive the checkout
-        const updatedCheckout = await prisma.checkout.update({
-          where: {
-            id: parseInt(id),
-          },
-          data: {
-            archived: true,
-          },
-        });
-
-        res
-          .status(200)
-          .json({ message: 'Checkout archived successfully', updatedCheckout });
-      } catch (error) {
-        console.error('Error archiving checkout', error);
-        res
-          .status(500)
-          .json({
-            message: 'Error archiving checkout',
-            error_message: error.message,
-          });
+  
+    // Validate if user is an admin
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const isAdmin = await isRoleAdmin(token);
+      if (!isAdmin) {
+        console.warn("User is not authorized to archive checkout.");
+        return res.status(401).json({ message: "Not Authorized for this Data" });
       }
-    } else {
-      res.status(401).json({ message: 'Not Authorized for this Data' });
+    } catch (authError) {
+      console.error("Error checking admin role:", authError);
+      return res.status(500).json({
+        message: "Error validating admin role",
+        error_message: authError.message,
+      });
+    }
+  
+    try {
+      const { deviceId } = req.body;
+      console.log("Archiving checkout with deviceId:", deviceId);
+  
+      // Validate input
+      if (!deviceId) {
+        console.error("No deviceId provided in request body.");
+        return res.status(400).json({ message: "No deviceId provided" });
+      }
+  
+      // Find the first checkout with the given deviceId and archived = false
+      const checkout = await prisma.checkout.findFirst({
+        where: {
+          deviceId: parseInt(deviceId),
+          archived: false, // Only find active (non-archived) checkouts
+        },
+      });
+  
+      if (!checkout) {
+        console.warn(`No active checkout found for deviceId ${deviceId}.`);
+        return res.status(404).json({ message: "No active checkout found." });
+      }
+  
+      console.log("Active checkout found:", checkout);
+  
+      // Archive the checkout
+      const updatedCheckout = await prisma.checkout.update({
+        where: {
+          id: checkout.id, // Use the unique ID from the found record
+        },
+        data: {
+          archived: true,
+        },
+      });
+  
+      console.log("Checkout archived successfully:", updatedCheckout);
+      res.status(200).json({
+        message: "Checkout archived successfully",
+        updatedCheckout,
+      });
+    } catch (error) {
+      console.error("Error archiving checkout:", error);
+      res.status(500).json({
+        message: "Error archiving checkout",
+        error_message: error.message,
+      });
     }
   },
+  
+  
 };

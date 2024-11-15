@@ -68,7 +68,7 @@ getAllDevices: async (req, res) => {
           },
         },
       });
-      console.log('Devices fetched from database:', allDevices);
+      //console.log('Devices fetched from database:', allDevices);
 
       if (allDevices === null || allDevices.length === 0) {
         res.status(200).json({

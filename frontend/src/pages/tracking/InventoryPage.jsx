@@ -19,6 +19,7 @@ function InventoryPage() {
   const [checkoutTrigger, setCheckoutTrigger] = useState(false);
   const [checkinTrigger, setCheckinTrigger] = useState(false);
   const [selectedSerialNumber, setSelectedSerialNumber] = useState(null);
+  const [selectedDeviceId, setSelectedDeviceId] = useState(null);
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   useEffect(() => {
@@ -77,9 +78,10 @@ function InventoryPage() {
     setCheckoutTrigger(true);
     setSelectedSerialNumber(serialNumber)
   }
-  const handleCheckin = (serialNumber) => {
+  const handleCheckin = (serialNumber, deviceId) => {
     setCheckinTrigger(true);
     setSelectedSerialNumber(serialNumber)
+    setSelectedDeviceId(deviceId)
   }
   
 
@@ -123,7 +125,7 @@ map((item) => {
               color={item.checkout.length === 1 ? 'gray' : 'blue'}
               size="xs"
               onClick={() => {
-                item.checkout.length === 1 ? handleCheckin(item.serialNumber) : handleCheckout(item.serialNumber)
+                item.checkout.length === 1 ? handleCheckin(item.serialNumber, item.id) : handleCheckout(item.serialNumber)
               }}
             >
               {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
@@ -188,10 +190,10 @@ map((item) => {
             <RegisterDevice />
           </Popup>
           <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
-            <Checkout serialNumber={selectedSerialNumber} />
+            <Checkout serialNumber={selectedSerialNumber} close={()=>setCheckoutTrigger(false)}/>
           </Popup>
           <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
-            <Checkin serialNumber={selectedSerialNumber} />
+            <Checkin serialNumber={selectedSerialNumber} deviceId={selectedDeviceId} close={()=>setCheckinTrigger(false)} />
           </Popup>
         </div>
         <div className="md:flex md:justify-center">
