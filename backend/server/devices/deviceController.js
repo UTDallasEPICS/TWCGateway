@@ -153,7 +153,7 @@ createDevice: async (req, res) => {
   }
   if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
     try {
-      const { name, serialNumber, departmentId, locationId } = req.body;
+      const { name, serialNumber, departmentId, locationId , cost} = req.body;
       //const { name, serialNumber } = req.body;
       if (!name || !serialNumber) {
         return res.status(400).json({
@@ -169,6 +169,7 @@ createDevice: async (req, res) => {
           serialNumber,
           departmentId,
           locationId,
+          cost,
         },
       });
 

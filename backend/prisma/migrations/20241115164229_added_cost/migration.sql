@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Device" ADD COLUMN     "cost" INTEGER NOT NULL DEFAULT 0;

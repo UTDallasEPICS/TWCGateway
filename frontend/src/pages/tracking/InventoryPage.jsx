@@ -64,6 +64,7 @@ function InventoryPage() {
       'Location Name': item.location?.locationName || ' ',
       'Device Make/Model': item.name,
       'Serial Number': item.serialNumber,
+      'Cost': item.cost,
     }));
     // Create a new workbook and add a sheet
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -117,23 +118,38 @@ map((item) => {
               checked={selected}
             />
           </td>
-          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].user.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
-          { item.checkout.length === 1 ? (<Table.Td>{item.department.name}</Table.Td>) : (<Table.Td>------</Table.Td>)}
-          <Table.Td> 
+          {item.checkout.length === 1 ? (
+            <Table.Td>{item.checkout[0].user.name}</Table.Td>
+          ) : (
+            <Table.Td>------</Table.Td>
+          )}
+          {item.checkout.length === 1 ? (
+            <Table.Td>{item.department.name}</Table.Td>
+          ) : (
+            <Table.Td>------</Table.Td>
+          )}
+          <Table.Td>
             <Button
               variant={item.checkout.length === 1 ? 'outline' : 'filled'}
               color={item.checkout.length === 1 ? 'gray' : 'blue'}
               size="xs"
               onClick={() => {
-                item.checkout.length === 1 ? handleCheckin(item.serialNumber, item.id) : handleCheckout(item.serialNumber)
+                item.checkout.length === 1
+                  ? handleCheckin(item.serialNumber, item.id)
+                  : handleCheckout(item.serialNumber);
               }}
             >
               {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
             </Button>
           </Table.Td>
-            { item.checkout.length === 1 ? (<Table.Td>{item.location.locationName}</Table.Td>) : (<Table.Td>------</Table.Td>)}
+          {item.checkout.length === 1 ? (
+            <Table.Td>{item.location.locationName}</Table.Td>
+          ) : (
+            <Table.Td>------</Table.Td>
+          )}
           <Table.Td>{item.name}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
+          <Table.Td style={{ color: 'black' }}>{item.cost}</Table.Td>
         </tr>
       );
     })
@@ -170,7 +186,7 @@ map((item) => {
             }}
             onChange={e => setSearch(e.target.value)}
           />
-          <div className="flex space-x-2"> 
+          <div className="flex space-x-2">
             <Button
               variant="filled"
               color="green"
@@ -178,11 +194,7 @@ map((item) => {
             >
               Register new device
             </Button>
-            <Button
-              variant="filled"
-              color="blue"
-              onClick={exportToSpreadsheet}
-            >
+            <Button variant="filled" color="blue" onClick={exportToSpreadsheet}>
               Export to Excel
             </Button>
           </div>
@@ -190,10 +202,17 @@ map((item) => {
             <RegisterDevice />
           </Popup>
           <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
-            <Checkout serialNumber={selectedSerialNumber} close={()=>setCheckoutTrigger(false)}/>
+            <Checkout
+              serialNumber={selectedSerialNumber}
+              close={() => setCheckoutTrigger(false)}
+            />
           </Popup>
           <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
-            <Checkin serialNumber={selectedSerialNumber} deviceId={selectedDeviceId} close={()=>setCheckinTrigger(false)} />
+            <Checkin
+              serialNumber={selectedSerialNumber}
+              deviceId={selectedDeviceId}
+              close={() => setCheckinTrigger(false)}
+            />
           </Popup>
         </div>
         <div className="md:flex md:justify-center">
@@ -209,6 +228,7 @@ map((item) => {
                 <th style={{ padding: '10px 20px', color: 'black' }}>
                   Serial Number
                 </th>
+                <th style={{ padding: '10px 20px' }}>Cost</th>
                 <th style={{ padding: '10px 20px' }}>Checkout Date</th>
               </tr>
             </thead>

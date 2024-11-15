@@ -97,6 +97,7 @@ model Device {
   departmentId Int
   location     Location   @relation(fields: [locationId], references: [id])
   locationId   Int
+  cost         Int        @default(0)
   checkout     Checkout[]
   archived     Boolean    @default(false)
 }

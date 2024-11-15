@@ -10,6 +10,7 @@ function RegisterDevice() {
   const [departments, setDepartments] = useState([]);
   const [locations, setLocations] = useState([]);
   const [locationId, setLocationId] = useState('');
+  const [cost, setCost] = useState('');
   const navigate = useNavigate();
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
@@ -82,6 +83,7 @@ function RegisterDevice() {
       serialNumber,
       departmentId: parseInt(departmentId, 10),
       locationId: parseInt(departmentId, 10),
+      cost: parseInt(cost,10),
     };
 
     console.log("Form submitted! ", deviceData)
@@ -151,6 +153,21 @@ function RegisterDevice() {
               placeholder="eg. C02WK32QJ1WL"
               required
             />
+            <label
+              htmlFor="serialNumber"
+              className="block text-gray-700 font-medium mb-2"
+            >
+              Cost $$
+            </label>
+            <input
+              type="text"
+              id="Cost $$"
+              value={cost}
+              onChange={e => setCost(e.target.value)}
+              className="w-full p-3 border-2 rounded-md focus:outline-none"
+              placeholder="eg. C02WK32QJ1WL"
+              required
+            />
             {/* */}
             <label
               htmlFor="departmentName"
@@ -181,7 +198,6 @@ function RegisterDevice() {
               placeholder="Select Location"
               required
             />
-            
           </div>
 
           <Button className="mt-5" variant="filled" color="green" type="submit">
