@@ -100,7 +100,8 @@ function InventoryPage() {
       || item.department.name.toLowerCase().includes(search.toLowerCase())
       || item.location.locationName.toLowerCase().includes(search.toLowerCase())
       || item.serialNumber.toLowerCase().includes(search.toLowerCase())
-      || item.name.toLowerCase().includes(search.toLowerCase())
+      ||  item.checkout[0]?.user?.name.toLowerCase().includes(search.toLowerCase())
+      || item.checkout[0]?.checkoutDate?.toString().toLowerCase().includes(search.toLowerCase())    
     }).
 map((item) => {
       const selected = selectedInventory.includes(item.id);
@@ -150,6 +151,7 @@ map((item) => {
           <Table.Td>{item.name}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.cost}</Table.Td>
+          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].checkoutDate}</Table.Td>) : (<Table.Td>------</Table.Td>)}
         </tr>
       );
     })
