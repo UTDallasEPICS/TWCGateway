@@ -20,6 +20,7 @@ function InventoryPage() {
   const [checkinTrigger, setCheckinTrigger] = useState(false);
   const [selectedSerialNumber, setSelectedSerialNumber] = useState(null);
   const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+  const [refresh, setRefresh] = useState(0)
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   useEffect(() => {
@@ -53,7 +54,7 @@ function InventoryPage() {
     };
 
     fetchInventory();
-  }, []);
+  }, [refresh]);
 
   const exportToSpreadsheet = () => {
     // Create a new array for the spreadsheet
@@ -98,6 +99,8 @@ function InventoryPage() {
     inventory.filter((item) => {
       return  search.toLowerCase() === '' ? true : item.status.toLowerCase().includes(search.toLowerCase())
       || item.department.name.toLowerCase().includes(search.toLowerCase())
+      || item.name.toLowerCase().includes(search.toLowerCase())
+      || item.cost.toString().toLowerCase().includes(search.toLowerCase())
       || item.location.locationName.toLowerCase().includes(search.toLowerCase())
       || item.serialNumber.toLowerCase().includes(search.toLowerCase())
       ||  item.checkout[0]?.user?.name.toLowerCase().includes(search.toLowerCase())
@@ -201,12 +204,13 @@ map((item) => {
             </Button>
           </div>
           <Popup trigger={registerTrigger} setTrigger={setRegisterTrigger}>
-            <RegisterDevice />
+            <RegisterDevice setRefresh={setRefresh} />
           </Popup>
           <Popup trigger={checkoutTrigger} setTrigger={setCheckoutTrigger}>
             <Checkout
               serialNumber={selectedSerialNumber}
               close={() => setCheckoutTrigger(false)}
+              setRefresh={setRefresh}
             />
           </Popup>
           <Popup trigger={checkinTrigger} setTrigger={setCheckinTrigger}>
@@ -214,6 +218,7 @@ map((item) => {
               serialNumber={selectedSerialNumber}
               deviceId={selectedDeviceId}
               close={() => setCheckinTrigger(false)}
+              setRefresh={setRefresh}
             />
           </Popup>
         </div>

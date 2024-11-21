@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import { Button } from '@mantine/core';
 
-const Checkin = ({ serialNumber, deviceId, close }) => {
+const Checkin = ({ serialNumber, deviceId, close, setRefresh }) => {
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
 
   const handleCheckin = async () => {
@@ -22,6 +22,7 @@ const Checkin = ({ serialNumber, deviceId, close }) => {
       
   
       alert(`Device checked in successfully!`);
+      setRefresh((prev)=>prev+1)
       close()
     } catch (error) {
       console.error('Error checking in the device:', error);

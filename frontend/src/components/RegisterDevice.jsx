@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Button, Select } from '@mantine/core';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-function RegisterDevice() {
+function RegisterDevice({setRefresh}) {
   const [name, setName] = useState('');
   const [serialNumber, setSerialNumber] = useState('');
   const [departmentId, setDepartmentId] = useState('');
@@ -72,6 +72,7 @@ function RegisterDevice() {
 
     fetchDepartments();
     fetchLocations();
+    setRefresh((prev)=>prev+1)
   }, [token]);
 
 
@@ -181,6 +182,7 @@ function RegisterDevice() {
               value={departmentId}
               onChange={setDepartmentId}
               placeholder="Select Department"
+              size="md"
               required
             />
 
@@ -196,6 +198,7 @@ function RegisterDevice() {
               value={locationId}
               onChange={setLocationId}
               placeholder="Select Location"
+              size="md"
               required
             />
           </div>
