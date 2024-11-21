@@ -157,15 +157,15 @@ function RegisterDevice() {
               htmlFor="serialNumber"
               className="block text-gray-700 font-medium mb-2"
             >
-              Cost $$
+              Cost(dollars)
             </label>
             <input
               type="text"
-              id="Cost $$"
+              id="Cost"
               value={cost}
               onChange={e => setCost(e.target.value)}
               className="w-full p-3 border-2 rounded-md focus:outline-none"
-              placeholder="eg. C02WK32QJ1WL"
+              placeholder="eg. 1000"
               required
             />
             {/* */}

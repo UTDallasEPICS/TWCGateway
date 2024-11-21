@@ -604,6 +604,61 @@ async function main() {
     },
   });
 
+  // LOCATIONS
+
+  await prisma.location.create({
+    data: {
+      locationName: "Richardson",
+      address: "320 Custer Rd. Richardson, TX 75080"
+    },
+  });
+
+  await prisma.location.create({
+    data: {
+      locationName: "Garland",
+      address: "2625 Anita Dr. Garland, TX 75041"
+    },
+  });
+
+  await prisma.location.create({
+    data: {
+      locationName: "Irving",
+      address: "400 East Royal Lane, Suite 112 Irving, TX 75039"
+    },
+  });
+
+  // DEVICES
+
+  await prisma.device.create({
+    data: {
+      name: "Macbook Air",
+      serialNumber: "12345",
+      departmentId: 1,
+      locationId: 1,
+      cost: 1000,
+    },
+  });
+
+  await prisma.device.create({
+    data: {
+      name: "Lenovo Thinkpad",
+      serialNumber: "abc123",
+      departmentId: 1,
+      locationId: 2,
+      cost: 1000,
+    },
+  });
+
+  await prisma.device.create({
+    data: {
+      name: "Canon PIXMA",
+      serialNumber: '83nfewl',
+      departmentId: 2,
+      locationId: 3,
+      cost: 400,
+    },
+  });
+
   // ----------------------------------------------------
 }
 
