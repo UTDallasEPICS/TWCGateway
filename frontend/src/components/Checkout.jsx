@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Button, Select } from '@mantine/core';
 import axios from 'axios';
 
-function Checkout({ serialNumber, close }) {
+function Checkout({ serialNumber, close, setRefresh }) {
   const [name, setName] = useState('');
   const [users, setUsers] = useState([]);
   const [userId, setUserId] = useState('');
@@ -125,6 +125,7 @@ function Checkout({ serialNumber, close }) {
     fetchLocations();
     fetchInventory();
     fetchUsers();
+    setRefresh((prev)=> prev+1)
   }, []);
 
 
@@ -170,6 +171,7 @@ function Checkout({ serialNumber, close }) {
       );
       console.log(response);
       alert(`device checked out successfully!`)
+      setRefresh((prev)=>prev+1)
       close()
     } catch (error) {
       console.error('Error creating checkout:', error);
@@ -192,6 +194,7 @@ function Checkout({ serialNumber, close }) {
               value={userId}
               onChange={setUserId}
               placeholder="Select Employee"
+              size="md"
               required
             />
 
@@ -207,6 +210,7 @@ function Checkout({ serialNumber, close }) {
               value={departmentId}
               onChange={setDepartmentId}
               placeholder="Select Department"
+              size="md"
               required
             />
 
@@ -222,6 +226,7 @@ function Checkout({ serialNumber, close }) {
               value={locationId}
               onChange={setLocationId}
               placeholder="Select Location"
+              size="md"
               required
             />
           
