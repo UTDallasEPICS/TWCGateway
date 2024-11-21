@@ -65,6 +65,7 @@ function InventoryPage() {
       'Device Make/Model': item.name,
       'Serial Number': item.serialNumber,
       'Cost': item.cost,
+      'Checkout Date': item.checkout[0]?.checkoutDate,
     }));
     // Create a new workbook and add a sheet
     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -96,13 +97,15 @@ function InventoryPage() {
 
   const rows = inventory.length > 0 ? (
     inventory.filter((item) => {
-      return  search.toLowerCase() === '' ? true : item.status.toLowerCase().includes(search.toLowerCase())
-      || item.department.name.toLowerCase().includes(search.toLowerCase())
-      || item.location.locationName.toLowerCase().includes(search.toLowerCase())
-      || item.serialNumber.toLowerCase().includes(search.toLowerCase())
-      ||  item.checkout[0]?.user?.name.toLowerCase().includes(search.toLowerCase())
-      || item.checkout[0]?.checkoutDate?.toString().toLowerCase().includes(search.toLowerCase())    
+      return search.toLowerCase() === '' ? true : item.status.toLowerCase().includes(search.toLowerCase())
+        || item.department.name.toLowerCase().includes(search.toLowerCase())
+        || item.location.locationName.toLowerCase().includes(search.toLowerCase())
+        || item.serialNumber.toLowerCase().includes(search.toLowerCase())
+        || item.checkout[0]?.user?.name.toLowerCase().includes(search.toLowerCase())
+        || item.checkout[0]?.checkoutDate?.toString().toLowerCase().includes(search.toLowerCase())
     }).
+      
+      
 map((item) => {
       const selected = selectedInventory.includes(item.id);
       return (
@@ -124,11 +127,12 @@ map((item) => {
           ) : (
             <Table.Td>------</Table.Td>
           )}
-          {item.checkout.length === 1 ? (
+          {/* {item.checkout.length === 1 ? (
             <Table.Td>{item.department.name}</Table.Td>
           ) : (
             <Table.Td>------</Table.Td>
-          )}
+          )} */}
+          <Table.Td>{item.department.name}</Table.Td>
           <Table.Td>
             <Button
               variant={item.checkout.length === 1 ? 'outline' : 'filled'}
@@ -143,15 +147,20 @@ map((item) => {
               {item.checkout.length === 1 ? 'Checked Out' : 'Checked In'}
             </Button>
           </Table.Td>
-          {item.checkout.length === 1 ? (
+          {/* {item.checkout.length === 1 ? (
             <Table.Td>{item.location.locationName}</Table.Td>
           ) : (
             <Table.Td>------</Table.Td>
-          )}
+          )} */}
+          <Table.Td>{item.location.locationName}</Table.Td>
           <Table.Td>{item.name}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.cost}</Table.Td>
-          { item.checkout.length === 1 ? (<Table.Td>{item.checkout[0].checkoutDate}</Table.Td>) : (<Table.Td>------</Table.Td>)}
+          {item.checkout.length === 1 ? (
+            <Table.Td>{item.checkout[0].checkoutDate}</Table.Td>
+          ) : (
+            <Table.Td>------</Table.Td>
+          )}
         </tr>
       );
     })
