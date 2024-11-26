@@ -127,7 +127,7 @@ function RegisterDevice({setRefresh}) {
               htmlFor="make"
               className="block text-gray-700 font-medium mb-2"
             >
-              Make
+              Make and Model
             </label>
             <input
               type="text"
@@ -135,7 +135,7 @@ function RegisterDevice({setRefresh}) {
               value={name}
               onChange={e => setName(e.target.value)}
               className="w-full p-3 border-2 rounded-md focus:outline-none"
-              placeholder="eg. Apple"
+              placeholder="eg. Apple Mac Air"
               required
             />
 

@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import { Button } from '@mantine/core';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Checkout from '../../components/Checkout';
+import Checkin from '../../components/Checkin'
 
 function CheckoutPage() {
   const { serialNumber } = useParams();
@@ -11,7 +12,9 @@ function CheckoutPage() {
   const [device, setDevice] = useState(null);
   const [checkedIn, setCheckedIn] = useState(false);
   const [inventory, setInventory] = useState([]);
+  const [refresh, setRefresh] = useState(0)
   const token = JSON.parse(localStorage.getItem(localStorage.key(1))).id_token;
+  const navigate = useNavigate()
 
   // fetch data from the backend
   useEffect(() => {
@@ -88,11 +91,18 @@ function CheckoutPage() {
         {!device ? (
           <p>Device not found</p>
         ) : checkedIn ? (
-          <Checkout serialNumber={serialNumber} />
+          <Checkout
+              serialNumber={serialNumber}
+              close={() => navigate('/admin/inventory-page')}
+              setRefresh={setRefresh}
+            />
         ) : (
-          <div className="text-center">
-            <h1 className="text-3xl font-bold">Checked in successfully!</h1>
-          </div>
+          <Checkin
+              serialNumber={serialNumber}
+              deviceId={device.id}
+              close={() => navigate('/admin/inventory-page')}
+              setRefresh={setRefresh}
+            />
         )}
       </div>
     </div>
