@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Table, Checkbox, Text, Button } from '@mantine/core';
 import Navbar from '../../components/Navbar';
 import Popup from '../../components/Popup';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import RegisterDevice from '../../components/RegisterDevice';
 import Checkout from '../../components/Checkout';
@@ -156,7 +156,19 @@ map((item) => {
             <Table.Td>------</Table.Td>
           )} */}
           <Table.Td>{item.location.locationName}</Table.Td>
-          <Table.Td>{item.name}</Table.Td>
+          <Table.Td>
+            <Link
+              to={`/admin/device-info/${item.serialNumber}`}
+              style={{
+                color: '#007bff', 
+                textDecoration: 'underline', 
+                cursor: 'pointer', 
+              }}
+            >
+              {item.name}
+            </Link>
+        </Table.Td>
+
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
           <Table.Td style={{ color: 'black' }}>{item.cost}</Table.Td>
           {/* {item.checkout.length === 1 ? (

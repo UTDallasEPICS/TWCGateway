@@ -99,6 +99,43 @@ module.exports = {
     }
   },
 
+  getCheckoutsByDeviceSerial: async (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(400).json({ message: 'No Authorization Header Found' });
+    }
+  
+    if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
+      try {
+        const { serialNumber } = req.params;
+  
+        // Find the device by serialNumber
+        const device = await prisma.device.findUnique({
+          where: { serialNumber },
+        });
+  
+        if (!device) {
+          return res.status(404).json({ message: 'Device not found' });
+        }
+  
+        // Get all checkouts for the device
+        const checkouts = await prisma.checkout.findMany({
+          where: { deviceId: device.id },
+          include: {
+            user: true, // Include user details if needed
+          },
+        });
+  
+        res.status(200).json(checkouts);
+      } catch (error) {
+        console.error('Error getting checkouts by device', error);
+        res.status(500).json({ error: 'Error getting checkouts by device' });
+      }
+    } else {
+      res.status(401).json({ message: 'Not Authorized for this Data' });
+    }
+  },
+  
+
   updateCheckout: async (req, res) => {
     const { id } = req.params;
     const { userId, deviceId, checkoutDate } = req.body;
@@ -174,7 +211,7 @@ module.exports = {
       console.error("No Authorization Header Found");
       return res.status(400).json({ message: "No Authorization Header Found" });
     }
-  
+
     // Validate if user is an admin
     try {
       const token = req.headers.authorization.split(" ")[1];
@@ -190,17 +227,16 @@ module.exports = {
         error_message: authError.message,
       });
     }
-  
+
     try {
-      const { deviceId } = req.body;
+      const { deviceId, checkInDate } = req.body; // Expecting checkInDate in the request body
       console.log("Archiving checkout with deviceId:", deviceId);
-  
-      // Validate input
+
       if (!deviceId) {
         console.error("No deviceId provided in request body.");
         return res.status(400).json({ message: "No deviceId provided" });
       }
-  
+
       // Find the first checkout with the given deviceId and archived = false
       const checkout = await prisma.checkout.findFirst({
         where: {
@@ -208,24 +244,25 @@ module.exports = {
           archived: false, // Only find active (non-archived) checkouts
         },
       });
-  
+
       if (!checkout) {
         console.warn(`No active checkout found for deviceId ${deviceId}.`);
         return res.status(404).json({ message: "No active checkout found." });
       }
-  
+
       console.log("Active checkout found:", checkout);
-  
-      // Archive the checkout
+
+      // Archive the checkout and optionally set the checkInDate
       const updatedCheckout = await prisma.checkout.update({
         where: {
           id: checkout.id, // Use the unique ID from the found record
         },
         data: {
           archived: true,
+          checkInDate: checkInDate ? new Date(checkInDate) : null, // Set checkInDate if provided
         },
       });
-  
+
       console.log("Checkout archived successfully:", updatedCheckout);
       res.status(200).json({
         message: "Checkout archived successfully",
@@ -239,6 +276,7 @@ module.exports = {
       });
     }
   },
+
   
   
 };

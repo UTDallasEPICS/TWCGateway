@@ -17,6 +17,7 @@ import InventoryPage from './pages/tracking/InventoryPage';
 import CheckoutPage from './pages/tracking/CheckoutPage';
 import Cookies from 'js-cookie';
 import { nanoid } from 'nanoid';
+import DeviceInfoPage from './pages/tracking/DeviceInfoPage';
 
 let state = {};
 const genState = () => {
@@ -72,6 +73,7 @@ function App() {
         <Route path="/admin/generate-qr-code/:id" element={<QrCodePage />} />
         <Route path="/admin/inventory-page" element={<InventoryPage />} />
         <Route path="/admin/checkout/:serialNumber" element={<CheckoutPage />} />
+        <Route path="/admin/device-info/:serialNumber" element={<DeviceInfoPage />} />
         <Route path="/supervisor" element={<SupervisorHomepage />} />
         <Route path="/onboarding-employee" element={<EmployeeHomepage />} />
       </Routes>

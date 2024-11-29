@@ -6,7 +6,7 @@ const addRoutes = router => {
   router.get('/getDeviceSerial/:serialNumber', controller.getDeviceSerial);
   router.post('/createDevice', controller.createDevice);
   router.put('/updateDevice', controller.updateDevice);
-  router.put('/deleteDevice', controller.deleteDevice);
+  router.put('/deleteDevice/:id', controller.deleteDevice);
   router.get('/getDeviceByUser/:userId', controller.getDeviceByUser);
   router.post('/addLocation', controller.addLocation);
   router.get('/getAllLocations', controller.getAllLocations);

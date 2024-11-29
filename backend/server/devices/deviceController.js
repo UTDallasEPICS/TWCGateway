@@ -125,10 +125,33 @@ getDeviceSerial: async (req, res) => {
     try {
       //const deviceId = req.params.id
       const { serialNumber } = req.params;
-      const device = await prisma.device.findUnique({
+      const device = await prisma.device.findFirst({
         where: {
-          id: parseInt(serialNumber),
+          serialNumber: serialNumber,
           archived: false,
+        },
+        include: {
+          checkout: {
+            where: {
+              archived: false,
+            },
+            select: {
+              userId: true,
+              user: true,
+              checkoutDate: true,
+            },
+  
+          },
+          department: {
+            select: {
+              name: true, // getting the department name 
+            },
+          },
+          location: {
+            select: {
+              locationName: true, //getting location name 
+            },
+          },
         },
       });
 
@@ -138,7 +161,11 @@ getDeviceSerial: async (req, res) => {
         res.status(200).json(device);
       }
     } catch (error) {
-      console.log('Error getting device serial number', error);
+      console.error('Error getting device serial number:', {
+        message: error.message,
+        stack: error.stack,
+        error,
+      });
       res.status(500).json({ message: 'Error getting device serial number' });
     }
   } else {
@@ -275,60 +302,64 @@ updateDevice: async (req, res) => {
 
 //------------------ COME BACK TO THIS !!!!! -----------------------
 // archive/delete device
- deleteDevice: async (req, res) => {
+deleteDevice: async (req, res) => {
+  // Check for authorization header
   if (!req.headers.authorization) {
     return res.status(400).json({ message: 'No Authorization Header Found' });
   }
-  if (await isRoleAdmin(req.headers.authorization.split(' ')[1])) {
-    try {
-      const { id } = req.params;
-      // checking if device exists and not alr archived
-      const device = await prisma.device.update({
-        where: {
-          id: parseInt(id),
-        },
-      });
 
-      if (!device) {
-        return res.status(404).json({ message: 'Device not found' });
-      }
-      if (device.archived) {
-        return res.status(400).json({ message: 'Device already archived' });
-      }
+  const authToken = req.headers.authorization.split(' ')[1];
+  if (!authToken) {
+    return res.status(400).json({ message: 'Invalid Authorization Header' });
+  }
 
-      //archive the device
-      const archiveDevice = await prisma.device.update({
-        where: {
-          id: parseInt(id),
-        },
-        data: {
-          archived: true,
-        },
-      });
-
-      //archive the related checkouts as well
-      await prisma.checkout.updateMany({
-        where: {
-          deviceId: parseInt(id),
-          archived: false,
-        },
-        data: {
-          archived: true,
-        },
-      });
-
-      return res.status(200).json({
-        message: 'Device successfully archived',
-        device: archivedDevice,
-      });
-    } catch (error) {
-      console.error('Error Archiving Device ', error);
-      return res.status(500).json({ message: 'Error Archiving Device' });
-    }
-  } else {
+  // Check if user is admin
+  if (!(await isRoleAdmin(authToken))) {
     return res.status(401).json({ message: 'Not Authorized for this Data' });
   }
+
+  try {
+    const { id } = req.params;
+
+    // Check if the device exists
+    const device = await prisma.device.findUnique({
+      where: { id: parseInt(id) },
+    });
+
+    if (!device) {
+      return res.status(404).json({ message: 'Device not found' });
+    }
+
+    // Check if the device is already archived
+    if (device.archived) {
+      return res.status(400).json({ message: 'Device already archived' });
+    }
+
+    // Archive the device
+    const archivedDevice = await prisma.device.update({
+      where: { id: parseInt(id) },
+      data: { archived: true },
+    });
+
+    // Archive related checkouts
+    await prisma.checkout.updateMany({
+      where: {
+        deviceId: parseInt(id),
+        archived: false,
+      },
+      data: { archived: true },
+    });
+
+    return res.status(200).json({
+      message: 'Device successfully archived',
+      device: archivedDevice,
+    });
+  } catch (error) {
+    console.error('Error Archiving Device:', error);
+    return res.status(500).json({ message: 'Error Archiving Device' });
+  }
 },
+
 // delete device based on id and serial number
 //get all archived Devices
 

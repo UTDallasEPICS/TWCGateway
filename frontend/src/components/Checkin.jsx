@@ -7,11 +7,15 @@ const Checkin = ({ serialNumber, deviceId, close, setRefresh }) => {
 
   const handleCheckin = async () => {
     try {
+      // Get the current date and time for check-in
+      const checkInDate = new Date().toISOString(); 
+      
       // Archive the active checkout to check in the device
       const response = await axios.patch(
         `${import.meta.env.VITE_APP_EXPRESS_BASE_URL}/archiveCheckout`,
         {
-          deviceId
+          deviceId,
+          checkInDate, // Send the check-in date with the request
         },
         {
           headers: {
@@ -20,15 +24,15 @@ const Checkin = ({ serialNumber, deviceId, close, setRefresh }) => {
         }
       );
       
-  
       alert(`Device checked in successfully!`);
-      setRefresh((prev)=>prev+1)
-      close()
+      setRefresh((prev) => prev + 1);
+      close();
     } catch (error) {
       console.error('Error checking in the device:', error);
       alert(error.response?.data?.message || 'Failed to check in the device.');
     }
   };
+  
   
 
   return (

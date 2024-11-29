@@ -111,11 +111,12 @@ model Location {
 }
 
 model Checkout {
-  id           Int      @id @default(autoincrement())
-  user         User?    @relation(fields: [userId], references: [id])
+  id           Int       @id @default(autoincrement())
+  user         User?     @relation(fields: [userId], references: [id])
   userId       Int
-  device       Device   @relation(fields: [deviceId], references: [id])
+  device       Device    @relation(fields: [deviceId], references: [id])
   deviceId     Int
   checkoutDate DateTime
-  archived     Boolean  @default(false)
+  checkInDate  DateTime?
+  archived     Boolean   @default(false)
 }
