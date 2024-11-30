@@ -119,6 +119,10 @@ On this page the admins and supervisors will be able to see all the users curren
 
 On this page the admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
 
+### Inventory
+
+On this page the admins will be able to view a table view the inventory of all devices in the system. The admin will be able to register new devices, check in/out devices, export device data, view the checkout history of a device, download its QR code, and delete it if needed
+
 ### Archive
 
 This page will have three tabs: Archived Users, Archived Departments, Archived Tasks. The admins and supervisors will be able to see all the archived users, departments, and tasks. The admin will have the ability to either permanently delete or restore users, departments, and tasks. Whereas the supervisor will only be able to view the archived users, departments, and tasks.
