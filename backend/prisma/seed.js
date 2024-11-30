@@ -8,20 +8,35 @@ const { PrismaClient, UserRole } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  const userAdmin1 = await prisma.user.create({
-    data: {
-      name: 'Tushar Wani',
-      email: 'reachtusharwani@gmail.com',
-      role: UserRole.ADMIN,
-    },
-  });
+  // const userAdmin1 = await prisma.user.create({
+  //   data: {
+  //     name: 'Tushar Wani',
+  //     email: 'reachtusharwani@gmail.com',
+  //     role: UserRole.ADMIN,
+  //   },
+  // });
 
-  const userAdmin2 = await prisma.user.create({
-    data: {
-      name: 'Brandy Lindsey',
-      email: 'Brandy.Lindsey@thewarrencenter.org',
-      role: UserRole.ADMIN,
-    },
+  // const userAdmin2 = await prisma.user.create({
+  //   data: {
+  //     name: 'Brandy Lindsey',
+  //     email: 'Brandy.Lindsey@thewarrencenter.org',
+  //     role: UserRole.ADMIN,
+  //   },
+  // });
+
+  const admins = await prisma.user.createMany({
+    data: [
+      {
+        name: 'Tushar Wani',
+        email: 'reachtusharwani@gmail.com',
+        role: UserRole.ADMIN,
+      },
+      {
+        name: 'Brandy Lindsey',
+        email: 'Brandy.Lindsey@thewarrencenter.org',
+        role: UserRole.ADMIN,
+      },
+    ],
   });
 
   // ----------------------------------------------------
