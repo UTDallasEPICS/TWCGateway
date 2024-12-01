@@ -133,17 +133,20 @@ Employees will not be able to see any other page except this one. They can't edi
 
 ## Database Tables
 
-| **Tables**                        | **Attributes**                                                                |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **User**                          | Name, <br>Email (unique) <br>Archived (boolean)                               |
-| **Department**                    | Name <br>Archived (boolean)                                                   |
-| **Task**                          | Description <br>Archived (boolean)                                            |
-| **Role**                          | roleName <br>Archived (boolean)                                               |
-| **UserRoleMapping**               | Relates a user to a role - <br>(userId, roleId)                               |
-| **DepartmentTaskMapping**         | Relates a department to a task - <br>(departmentId, taskId)                   |
-| **DepartmentUserMapping**         | Relates a user to a department - <br>(userId, departmentId)                   |
-| **ApproverTaskMapping**           | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId) |
-| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId)    |
+| **Tables**                        | **Attributes**                                                                                                                         |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **User**                          | Name, <br>Email (unique) <br>Archived (boolean)                                                                                        |
+| **Department**                    | Name <br>Archived (boolean)                                                                                                            |
+| **Task**                          | Description <br>Archived (boolean)                                                                                                     |
+| **Role**                          | roleName <br>Archived (boolean)                                                                                                        |
+| **UserRoleMapping**               | Relates a user to a role - <br>(userId, roleId)                                                                                        |
+| **DepartmentTaskMapping**         | Relates a department to a task - <br>(departmentId, taskId)                                                                            |
+| **DepartmentUserMapping**         | Relates a user to a department - <br>(userId, departmentId)                                                                            |
+| **ApproverTaskMapping**           | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId)                                                          |
+| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId)                                                             |
+| **Device**                        | Relates to department and location - (departmentId, locationId), <br>SerialNumber (Unique), <br>Name, <br>Cost, <br>Archived (boolean) |
+| **Location**                      | Relates to a device - (locationId), <br>locationName, <br>address, <br>Archived (Boolean)                                              |
+| **Checkout**                      | Relates a user to a device - (userId, deviceId), <br>CheckoutDate, <br>CheckInDate, <br>Archived (boolean)                             |
 
 ## Stack
 
