@@ -170,7 +170,7 @@ map((item) => {
         </Table.Td>
 
           <Table.Td style={{ color: 'black' }}>{item.serialNumber}</Table.Td>
-          <Table.Td style={{ color: 'black' }}>{item.cost}</Table.Td>
+          <Table.Td style={{ color: 'black' }}>${item.cost}</Table.Td>
           {/* {item.checkout.length === 1 ? (
             <Table.Td>{item.checkout[0].checkoutDate}</Table.Td>
           ) : (
