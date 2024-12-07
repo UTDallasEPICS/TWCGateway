@@ -119,6 +119,10 @@ On this page the admins and supervisors will be able to see all the users curren
 
 On this page the admins and supervisors will be able to see all the departments currently in the system. The admin will have the ability to CRUD departments on this page, whereas the supervisor will only be able to view the departments. Upon clicking on a specific department, the department's task list will open up. The admin will be able to perform CRUD on tasks. Whereas, the supervisor will only be able to view the tasks assigned to that deparment.
 
+### Inventory
+
+On this page the admins will be able to view a table view the inventory of all devices in the system. The admin will be able to register new devices, check in/out devices, export device data, view the checkout history of a device, download its QR code, and delete it if needed
+
 ### Archive
 
 This page will have three tabs: Archived Users, Archived Departments, Archived Tasks. The admins and supervisors will be able to see all the archived users, departments, and tasks. The admin will have the ability to either permanently delete or restore users, departments, and tasks. Whereas the supervisor will only be able to view the archived users, departments, and tasks.
@@ -129,17 +133,20 @@ Employees will not be able to see any other page except this one. They can't edi
 
 ## Database Tables
 
-| **Tables**                        | **Attributes**                                                                |
-| --------------------------------- | ----------------------------------------------------------------------------- |
-| **User**                          | Name, <br>Email (unique) <br>Archived (boolean)                               |
-| **Department**                    | Name <br>Archived (boolean)                                                   |
-| **Task**                          | Description <br>Archived (boolean)                                            |
-| **Role**                          | roleName <br>Archived (boolean)                                               |
-| **UserRoleMapping**               | Relates a user to a role - <br>(userId, roleId)                               |
-| **DepartmentTaskMapping**         | Relates a department to a task - <br>(departmentId, taskId)                   |
-| **DepartmentUserMapping**         | Relates a user to a department - <br>(userId, departmentId)                   |
-| **ApproverTaskMapping**           | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId) |
-| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId)    |
+| **Tables**                        | **Attributes**                                                                                                                         |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **User**                          | Name, <br>Email (unique) <br>Archived (boolean)                                                                                        |
+| **Department**                    | Name <br>Archived (boolean)                                                                                                            |
+| **Task**                          | Description <br>Archived (boolean)                                                                                                     |
+| **Role**                          | roleName <br>Archived (boolean)                                                                                                        |
+| **UserRoleMapping**               | Relates a user to a role - <br>(userId, roleId)                                                                                        |
+| **DepartmentTaskMapping**         | Relates a department to a task - <br>(departmentId, taskId)                                                                            |
+| **DepartmentUserMapping**         | Relates a user to a department - <br>(userId, departmentId)                                                                            |
+| **ApproverTaskMapping**           | Relates a supervisor to a task - <br>(userId (needs supervisor role), taskId)                                                          |
+| **OnboardingEmployeeTaskMapping** | Relates an employee to a task - <br>(userId (needs employee role), taskId)                                                             |
+| **Device**                        | Relates to department and location - (departmentId, locationId), <br>SerialNumber (Unique), <br>Name, <br>Cost, <br>Archived (boolean) |
+| **Location**                      | Relates to a device - (locationId), <br>locationName, <br>address, <br>Archived (Boolean)                                              |
+| **Checkout**                      | Relates a user to a device - (userId, deviceId), <br>CheckoutDate, <br>CheckInDate, <br>Archived (boolean)                             |
 
 ## Stack
 
