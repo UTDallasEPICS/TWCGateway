@@ -127,6 +127,29 @@ This page will have three tabs: Archived Users, Archived Departments, Archived T
 
 Employees will not be able to see any other page except this one. They can't edit anything on this page. They can only interact with the profile button and the supervisor's name. The profile button will open a modal with their profile information. Upon clicking the supervisor's name, it will open a modal with the supervisor's profile information. The idea is that the employee can see their tasks and then be able to see their supervisor's information in case they need to contact them.
 
+### Inventory Table
+
+This page holds the Data table thhat keeps track of all the devices, in their respective departments and locations. The table can be filtered through the search bar to find specfic devices. New devices can be added using the "Register Device" button on the table, which creates a new device and unique QR code for that device using the serial number, device make/model and it's location. The table also shows the status of each device, of whether it's in use by an employee or not, this can be changed manually on the table by clicking the "Checked In" or "Checked Out" button displays a pop up that gives you the opportunity to check in or out. Clicking the device make/model will redirect you to the Device Info Page. The table gives you the ability to create an excel spreadsheet using the infromation from the device. 
+
+### Device Information
+
+This page gives you more comprehensive information relating to one device, It tells you the Make/Model, Department, Location, Status, Cost etc but also gives you the history of the employees who have used the device as well as the dates of when they returned that device, if they returned the device. The page allows you to delete that device as and can also redirect you back to the QR code page.
+
+### QRCode 
+
+Contains the specific QR code of a device redirected from either registering a new device or from the Device Info page. You are able to download this QR code as a pdf. 
+
+### Checkout 
+
+When scanning the QR code, if the device is checked-in and an employee seeks to use the device it will direct you to the checkout page, where the Employee name and the department they work for will be asked to successfully checkout the device.
+
+### Check In
+
+This page simply acts as a confirmation page when the user wants to return a device using the QR code, as it displays a confirmation message telling you the device has been checked-in.
+
+
+
+
 ## Database Tables
 
 | **Tables**                        | **Attributes**                                                                |
