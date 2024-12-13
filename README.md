@@ -1,6 +1,6 @@
 # Conceptual Overview
 
-This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). The objective is to improve and streamline their current manual onboarding process, aiming for enhanced user efficiency and overall ease of use. The application has three types of users: admins, supervisors, and employees. Admins control all the CRUD modifications on the app. Supervisors can perform only one update action, but they have the ability to view all the pages accessible to the admin. Employees can perform no modifications and can only see their page.
+This is a web application to help onboard new employees designed specifically for [the Warren Center](https://thewarrencenter.org/). The objective is to improve and streamline their current manual onboarding process, aiming for enhanced user efficiency and overall ease of use. The application has three types of users: admins, supervisors, and employees. Admins control all the CRUD modifications on the app. Supervisors can perform only one update action, but they have the ability to view all the pages accessible to the admin. Employees can perform no modifications and can only see their page. Added to this project is the Inventory Management project. The objective is to properly manage devices that The Warren Center has knowing what employees has which device along with their dates and all other comprehensive information. Devices can be added deleted, checked in or out. All this information will be stored on the table along with an info page that gives comprehensive information specific to that device. This page will only be available to admin. 
 
 # Project Setup
 
@@ -122,6 +122,10 @@ On this page the admins and supervisors will be able to see all the departments 
 ### Inventory
 
 On this page the admins will be able to view a table view the inventory of all devices in the system. The admin will be able to register new devices, check in/out devices, export device data, view the checkout history of a device, download its QR code, and delete it if needed
+
+### Device Information
+
+An extension of the Inventory page, this page is specified based on the device and gives comprehensive information for that device, such as the Device Name, cost, status etc. It also shows the history of who has used this device when each employee borrowed them, if they returned them and if so the date it was returned. You have the ability to access the QR code of the device as well as archive that device.
 
 ### Archive
 
