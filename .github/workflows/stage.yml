@@ -1,9 +1,9 @@
-name: CI/CD Pipeline
+name: CI/CD Pipeline - Stage
 
 on:
   push:
     branches:
-      - main
+      - stage
 
 jobs:
   build-and-deploy-frontend:
@@ -77,11 +77,11 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry}}
           REPOSITORY: wc-repo
-          IMAGE_TAG: ${{ github.sha}}
+          IMAGE_TAG: ${{ github.sha}}-stage
         run: |
           docker build -t $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG .
-          docker build -t $ECR_REGISTRY/$REPOSITORY:latest .
+          docker build -t $ECR_REGISTRY/$REPOSITORY:stage .
           docker push $ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG
-          docker push $ECR_REGISTRY/$REPOSITORY:latest
+          docker push $ECR_REGISTRY/$REPOSITORY:stage
           echo "image=$ECR_REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
-          echo "image=$ECR_REGISTRY/$REPOSITORY:latest" >> $GITHUB_OUTPUT
+          echo "image=$ECR_REGISTRY/$REPOSITORY:stage" >> $GITHUB_OUTPUT
